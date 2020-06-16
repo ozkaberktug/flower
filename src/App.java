@@ -8,25 +8,30 @@ public class App extends JFrame implements WindowListener {
     public static final String version_string = "ALPHA_1";
     public static final Dimension minSizeDim = new Dimension(400, 300);
 
-    public static DrawPanel drawPanel = null;
+    public DrawPanel drawPanel = null;
 
     public App() {
         super();
-        configureUI();
-        initUI();
+        setUI();
+        addUI();
     }
 
-    private void initUI() {
+    // create and add components to UI
+    private void addUI() {
+        GridBagConstraints gbcDrawPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
         drawPanel = new DrawPanel(this);
+        add(drawPanel, gbcDrawPanel);
         pack();
     }
 
-    private void configureUI() {
+    // setup configurations
+    private void setUI() {
         setTitle("Flower - The Flowchart Designer");
         setMinimumSize(minSizeDim);
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
         addWindowListener(this);
     }
 
@@ -35,6 +40,7 @@ public class App extends JFrame implements WindowListener {
 
     @Override
     public void windowClosing(WindowEvent e) {
+        // TODO handle closing operations
         setVisible(false);
         dispose();
         System.exit(0);
@@ -50,7 +56,7 @@ public class App extends JFrame implements WindowListener {
     public void windowDeiconified(WindowEvent e) { }
 
     @Override
-    public void windowActivated(WindowEvent e) {    }
+    public void windowActivated(WindowEvent e) { }
 
     @Override
     public void windowDeactivated(WindowEvent e) { }
