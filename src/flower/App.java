@@ -1,3 +1,5 @@
+package flower;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -7,6 +9,8 @@ public class App extends JFrame implements WindowListener {
 
     public static final String version_string = "ALPHA_1";
     public static final Dimension minSizeDim = new Dimension(400, 300);
+
+    public Project project = new Project();
 
     public DrawPanel drawPanel = null;
 

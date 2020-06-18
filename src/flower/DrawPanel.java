@@ -1,3 +1,7 @@
+package flower;
+
+import flower.blocks.Line;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -41,13 +45,18 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         return new Point(hoverX, hoverY);
     }
 
+
     public static final int TILESIZE = 16;
+    public static final int PADDING = 7;
     public static final Dimension PREFERRED_SIZE = new Dimension(TILESIZE * 40, TILESIZE * 30);
 
     public App app = null;
     private final AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
+    private boolean dragging = false;
     private int click = MouseEvent.NOBUTTON;
+    private Point ptBegin = null;
+    private Point ptEnd = null;
 
     public DrawPanel(App app) {
         super();
@@ -87,17 +96,16 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         try {
             Point2D ptULC = toScreen.inverseTransform(new Point2D.Double(0.f, 0.f), null);
             Point2D ptLRC = toScreen.inverseTransform(new Point2D.Double(getWidth(), getHeight()), null);
-            final int padding = 7;
             for (int i = (int) (ptULC.getX() / TILESIZE) - 1; i < ptLRC.getX() / TILESIZE; i++) {
                 for (int j = (int) (ptULC.getY() / TILESIZE) - 1; j < ptLRC.getY() / TILESIZE; j++) {
-                    Rectangle dot = new Rectangle(i * TILESIZE + padding, j * TILESIZE + padding, TILESIZE - padding * 2, TILESIZE - padding * 2);
+                    Rectangle dot = new Rectangle(i * TILESIZE + PADDING, j * TILESIZE + PADDING, TILESIZE - PADDING * 2, TILESIZE - PADDING * 2);
                     graphics2D.fillOval(dot.x, dot.y, dot.width, dot.height);
                     if (mouse != null) {
                         Rectangle cell = new Rectangle(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE);
                         if (cell.contains(mouse)) {
                             graphics2D.setColor(Color.GREEN);
                             graphics2D.setStroke(new BasicStroke(3.f));
-                            graphics2D.drawOval(cell.x + padding / 2, cell.y + padding / 2, cell.width - padding, cell.height - padding);
+                            graphics2D.drawOval(cell.x + PADDING / 2, cell.y + PADDING / 2, cell.width - PADDING, cell.height - PADDING);
                             graphics2D.setColor(Color.BLACK);
                         }
                     }
@@ -105,6 +113,18 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             }
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
+        }
+
+        // draw lines
+        graphics2D.setStroke(new BasicStroke(3.f));
+        if (mouse != null && dragging && click == MouseEvent.BUTTON1) {
+            graphics2D.setColor(Color.GRAY);
+            Line line = new Line(ptBegin, ptEnd);
+            line.draw(graphics2D);
+        }
+        for (Line line : app.project.lines) {
+            graphics2D.setColor(Color.BLACK);
+            line.draw(graphics2D);
         }
 
         graphics2D.dispose();
@@ -118,14 +138,33 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void mousePressed(MouseEvent e) {
         if (click != MouseEvent.NOBUTTON) return;
         click = e.getButton();
+        if (click == MouseEvent.BUTTON1) {
+            ptEnd = ptBegin = getCellCoords();
+        }
         if (click == MouseEvent.BUTTON3) {
-            // todo popup menu
+            for (Line line : app.project.lines) {
+                if (line.contains(getCellCoords())) {
+                    app.project.lines.remove(line);
+                    break;
+                }
+            }
         }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (click == e.getButton()) click = MouseEvent.NOBUTTON;
+        if (click != e.getButton()) return;
+        click = MouseEvent.NOBUTTON;
+        dragging = false;
+
+        if (e.getButton() == MouseEvent.BUTTON1) {
+            Point tmp = getCellCoords();
+            if (tmp.x == ptBegin.x || tmp.y == ptBegin.y) {
+                ptEnd = tmp;
+                if (!ptBegin.equals(ptEnd)) app.project.lines.add(new Line(ptBegin, ptEnd));
+            }
+            ptBegin = ptEnd = null;
+        }
     }
 
     @Override
@@ -133,19 +172,25 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
 
     @Override
     public void mouseExited(MouseEvent e) {
-        mouse = null;
+//        mouse = null;
     }
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
+        dragging = true;
         try {
             Point2D target = toScreen.inverseTransform(mouseEvent.getPoint(), null);
             Point2D dist = new Point2D.Double(target.getX() - mouse.getX(), target.getY() - mouse.getY());
-            if (click == MouseEvent.BUTTON1) toScreen.translate(dist.getX(), dist.getY());
+            if (click == MouseEvent.BUTTON2) toScreen.translate(dist.getX(), dist.getY());
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
         }
+        if (click == MouseEvent.BUTTON1) {
+            Point tmp = getCellCoords();
+            if (tmp.x == ptBegin.x || tmp.y == ptBegin.y) ptEnd = tmp;
+        }
+
     }
 
     @Override

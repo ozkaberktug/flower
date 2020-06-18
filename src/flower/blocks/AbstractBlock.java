@@ -1,4 +1,4 @@
-package blocks;
+package flower.blocks;
 
 import java.awt.*;
 import java.util.ArrayList;

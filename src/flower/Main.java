@@ -1,3 +1,5 @@
+package flower;
+
 import javax.swing.*;
 
 public class Main {
