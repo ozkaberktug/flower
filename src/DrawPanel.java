@@ -42,16 +42,17 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     }
 
     public static final int TILESIZE = 16;
+    public static final Dimension PREFERRED_SIZE = new Dimension(TILESIZE * 40, TILESIZE * 30);
 
     public App app = null;
-    private AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
+    private final AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
     private int click = MouseEvent.NOBUTTON;
 
     public DrawPanel(App app) {
         super();
         this.app = app;
-        setPreferredSize(App.minSizeDim);
+        setPreferredSize(PREFERRED_SIZE);
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
@@ -61,8 +62,8 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics.create();
-        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+//        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
         graphics2D.setColor(Color.GRAY);
         FontMetrics fm = graphics2D.getFontMetrics();
@@ -75,15 +76,36 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             graphics2D.drawString(coordsTxt, getWidth() - fm.stringWidth(coordsTxt), getHeight() - fm.getDescent());
         }
         // print cell coords
-        if(mouse != null) {
+        if (mouse != null) {
             String cellTxt = String.format(" (%d, %d) ", getCellCoords().x, getCellCoords().y);
             graphics2D.drawString(cellTxt, getWidth() - fm.stringWidth(cellTxt), getHeight() - fm.getHeight());
         }
         graphics2D.setColor(Color.BLACK);
         graphics2D.setTransform(toScreen);
 
-        String dummyTxt = "dummy_text";
-        graphics2D.drawString(dummyTxt, 0, fm.getHeight());
+        // draw points
+        try {
+            Point2D ptULC = toScreen.inverseTransform(new Point2D.Double(0.f, 0.f), null);
+            Point2D ptLRC = toScreen.inverseTransform(new Point2D.Double(getWidth(), getHeight()), null);
+            final int padding = 7;
+            for (int i = (int) (ptULC.getX() / TILESIZE) - 1; i < ptLRC.getX() / TILESIZE; i++) {
+                for (int j = (int) (ptULC.getY() / TILESIZE) - 1; j < ptLRC.getY() / TILESIZE; j++) {
+                    Rectangle dot = new Rectangle(i * TILESIZE + padding, j * TILESIZE + padding, TILESIZE - padding * 2, TILESIZE - padding * 2);
+                    graphics2D.fillOval(dot.x, dot.y, dot.width, dot.height);
+                    if (mouse != null) {
+                        Rectangle cell = new Rectangle(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE);
+                        if (cell.contains(mouse)) {
+                            graphics2D.setColor(Color.GREEN);
+                            graphics2D.setStroke(new BasicStroke(3.f));
+                            graphics2D.drawOval(cell.x + padding / 2, cell.y + padding / 2, cell.width - padding, cell.height - padding);
+                            graphics2D.setColor(Color.BLACK);
+                        }
+                    }
+                }
+            }
+        } catch (NoninvertibleTransformException e) {
+            e.printStackTrace();
+        }
 
         graphics2D.dispose();
         Toolkit.getDefaultToolkit().sync();
@@ -110,7 +132,9 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void mouseEntered(MouseEvent e) { }
 
     @Override
-    public void mouseExited(MouseEvent e) { }
+    public void mouseExited(MouseEvent e) {
+        mouse = null;
+    }
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {

@@ -12,12 +12,13 @@ public class App extends JFrame implements WindowListener {
 
     public App() {
         super();
-        setUI();
         addUI();
+        setUI();
     }
 
     // create and add components to UI
     private void addUI() {
+        setLayout(new GridBagLayout());
         GridBagConstraints gbcDrawPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
         drawPanel = new DrawPanel(this);
         add(drawPanel, gbcDrawPanel);
@@ -31,7 +32,6 @@ public class App extends JFrame implements WindowListener {
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
-        setLayout(new GridBagLayout());
         addWindowListener(this);
     }
 
