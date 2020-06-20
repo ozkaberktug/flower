@@ -4,40 +4,54 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class SelectPanel extends JPanel {
 
-    public App app;
+    public final App app;
     private JTree tree;
 
     public SelectPanel(App app) {
-        super(new GridLayout(0, 1));
+        super(new BorderLayout(10,10));
         this.app = app;
-        setMinimumSize(new Dimension(100, 100));
+        setMinimumSize(new Dimension(150, 100));
         setPreferredSize(new Dimension(150, 100));
         setBorder(BorderFactory.createTitledBorder("Add to Flow"));
         constructTree();
-        add(tree);
+        add(tree, BorderLayout.CENTER);
+        JToggleButton toggleButton = new JToggleButton(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                app.drawPanel.toggleGrids = !app.drawPanel.toggleGrids;
+            }
+        });
+        toggleButton.setSelected(true);
+        toggleButton.setText("Toggle Grids");
+        add(toggleButton, BorderLayout.PAGE_END);
     }
 
     private void constructTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();
-        DefaultMutableTreeNode block = new DefaultMutableTreeNode("Elementary Blocks");
+        DefaultMutableTreeNode elementaryBlocks = new DefaultMutableTreeNode("Elementary Blocks");
+        DefaultMutableTreeNode misc = new DefaultMutableTreeNode("Misc");
         DefaultMutableTreeNode nStart = new DefaultMutableTreeNode("START");
         DefaultMutableTreeNode nStop = new DefaultMutableTreeNode("STOP");
         DefaultMutableTreeNode nInput = new DefaultMutableTreeNode("INPUT");
         DefaultMutableTreeNode nOutput = new DefaultMutableTreeNode("OUTPUT");
         DefaultMutableTreeNode nIf = new DefaultMutableTreeNode("IF");
         DefaultMutableTreeNode nCommand = new DefaultMutableTreeNode("COMMAND");
-        block.add(nStart);
-        block.add(nStop);
-        block.add(nInput);
-        block.add(nOutput);
-        block.add(nIf);
-        block.add(nCommand);
-        root.add(block);
+        DefaultMutableTreeNode nLabel = new DefaultMutableTreeNode("LABEL");
+        elementaryBlocks.add(nStart);
+        elementaryBlocks.add(nStop);
+        elementaryBlocks.add(nInput);
+        elementaryBlocks.add(nOutput);
+        elementaryBlocks.add(nIf);
+        elementaryBlocks.add(nCommand);
+        misc.add(nLabel);
+        root.add(elementaryBlocks);
+        root.add(misc);
         tree = new JTree(root);
         tree.setRootVisible(false);
         for (int i = 0; i < tree.getRowCount(); i++) {

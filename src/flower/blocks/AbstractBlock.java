@@ -19,14 +19,12 @@ abstract public class AbstractBlock {
     /* do-able functions */
     abstract public void draw(Graphics2D graphics2D);
 
-    abstract public void showDialog();
+    abstract public void showDialog(Point location);
 
     abstract public void moveTo(Point delta);
 
     /* getter functions */
-    abstract public Rectangle getInnerBounds();
-
-    abstract public Rectangle getOuterBounds();
+    abstract public Rectangle getBounds();
 
     abstract public Point[] getInputPins();
 

@@ -7,8 +7,12 @@ import static flower.DrawPanel.PADDING;
 
 public class Line {
 
-    public Point begin;
-    public Point end;
+    public static final int NORTH = 0;
+    public static final int EAST = 1;
+    public static final int SOUTH = 2;
+    public static final int WEST = 3;
+    public final Point begin;
+    public final Point end;
     private boolean selected = false;
 
     public Line(int x1, int y1, int x2, int y2) {
@@ -66,6 +70,17 @@ public class Line {
 
     public void draw(Graphics2D graphics2D) {
         graphics2D.drawLine(begin.x * TILESIZE + PADDING, begin.y * TILESIZE + PADDING, end.x * TILESIZE + PADDING, end.y * TILESIZE + PADDING);
+    }
+
+    public int getDirection() {
+        if(begin.x == end.x) {
+            if(begin.y <= end.y) return SOUTH;
+            return NORTH;
+        }
+        else { //begin.y == end.y
+            if(begin.x <= end.x) return WEST;
+            return EAST;
+        }
     }
 
 }

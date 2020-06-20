@@ -1,10 +1,6 @@
 package flower;
 
-import flower.blocks.AbstractBlock;
-import flower.blocks.Line;
-import flower.blocks.StartBlock;
-import flower.blocks.StopBlock;
-import jdk.swing.interop.SwingInterOpUtils;
+import flower.blocks.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,8 +8,8 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.function.Predicate;
 
+@SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
 public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener {
 
     @Override
@@ -53,7 +49,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     private AbstractBlock getBlockType() {
         Point m = getCellCoords(mouse);
         for (AbstractBlock ab : app.project.blocks)
-            if (ab.getInnerBounds().contains(m)) return ab;
+            if (ab.getBounds().contains(m)) return ab;
         return null;
     }
 
@@ -63,9 +59,17 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public static final int NO_OPERATION = 0;
     public static final int DRAW_LINE = 1;
     public static final int DRAG_BLOCK = 3;
+    public static final Font CODE_FONT = new Font(Font.MONOSPACED, Font.BOLD, 14);
+    public static final Font COMMENT_FONT = new Font(Font.SERIF, Font.ITALIC, 12);
+    public static final BasicStroke THIN_STROKE = new BasicStroke(1.f);
+    public static final BasicStroke BOLD_STROKE = new BasicStroke(TILESIZE / 4.f);
+    public static final BasicStroke NORMAL_STROKE = new BasicStroke(2.f);
+    public static final BasicStroke DASHED_STROKE = new BasicStroke(1.f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{4}, 0);
+    public static final Color BACKGROUND_COLOR = new Color(220, 220, 220);
 
-    public App app = null;
+    public final App app;
     public String blockToAdd = null;
+    public boolean toggleGrids = true;
     private final AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
     private boolean dragging = false;
@@ -73,24 +77,15 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     private Point ptBegin = null;
     private Point ptEnd = null;
     private int mode = NO_OPERATION;
+    private AbstractBlock hoveringBlock = null;
 
     public DrawPanel(App app) {
-        super();
+        super(null, true);
         this.app = app;
         setPreferredSize(PREFERRED_SIZE);
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
-        getInputMap().put(KeyStroke.getKeyStroke("space"), "dump");
-        getActionMap().put("dump", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (AbstractBlock ab : app.project.blocks) {
-
-                    System.out.println(ab.isSelected());
-                }
-            }
-        });
     }
 
     @Override
@@ -99,9 +94,9 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         Graphics2D graphics2D = (Graphics2D) graphics.create();
 //        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 //        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.setColor(new Color(220, 220, 220));
+        graphics2D.setColor(BACKGROUND_COLOR);
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        graphics2D.setFont(new Font(Font.MONOSPACED, Font.BOLD, 14));
+        graphics2D.setFont(CODE_FONT);
         graphics2D.setColor(Color.GRAY);
         FontMetrics fm = graphics2D.getFontMetrics();
         // print zoom percent
@@ -114,35 +109,36 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         }
         graphics2D.setColor(Color.BLACK);
         graphics2D.setTransform(toScreen);
-        final BasicStroke normalStroke = new BasicStroke(1.f);
-        final BasicStroke boldStroke = new BasicStroke(TILESIZE / 4.f);
+
 
         // draw points
-        try {
-            Point2D ptULC = toScreen.inverseTransform(new Point2D.Double(0.f, 0.f), null);
-            Point2D ptLRC = toScreen.inverseTransform(new Point2D.Double(getWidth(), getHeight()), null);
-            for (int i = (int) (ptULC.getX() / TILESIZE) - 1; i < ptLRC.getX() / TILESIZE; i++) {
-                for (int j = (int) (ptULC.getY() / TILESIZE) - 1; j < ptLRC.getY() / TILESIZE; j++) {
-                    Rectangle dot = new Rectangle(i * TILESIZE + PADDING, j * TILESIZE + PADDING, TILESIZE - PADDING * 2, TILESIZE - PADDING * 2);
-                    graphics2D.fillOval(dot.x, dot.y, dot.width, dot.height);
-                    if (mouse != null) {
-                        Rectangle cell = new Rectangle(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE);
-                        if (cell.contains(mouse)) {
-                            graphics2D.setColor(Color.GREEN);
-                            graphics2D.setStroke(boldStroke);
-                            graphics2D.drawOval(cell.x + PADDING / 2, cell.y + PADDING / 2, cell.width - PADDING, cell.height - PADDING);
-                            graphics2D.setColor(Color.BLACK);
-                            graphics2D.setStroke(boldStroke);
+        if (toggleGrids) {
+            try {
+                Point2D ptULC = toScreen.inverseTransform(new Point2D.Double(0.f, 0.f), null);
+                Point2D ptLRC = toScreen.inverseTransform(new Point2D.Double(getWidth(), getHeight()), null);
+                for (int i = (int) (ptULC.getX() / TILESIZE) - 1; i < ptLRC.getX() / TILESIZE; i++) {
+                    for (int j = (int) (ptULC.getY() / TILESIZE) - 1; j < ptLRC.getY() / TILESIZE; j++) {
+                        Rectangle dot = new Rectangle(i * TILESIZE + PADDING, j * TILESIZE + PADDING, TILESIZE - PADDING * 2, TILESIZE - PADDING * 2);
+                        graphics2D.fillOval(dot.x, dot.y, dot.width, dot.height);
+                        if (mouse != null && hoveringBlock == null) {
+                            Rectangle cell = new Rectangle(i * TILESIZE, j * TILESIZE, TILESIZE, TILESIZE);
+                            if (cell.contains(mouse)) {
+                                graphics2D.setColor(Color.GREEN);
+                                graphics2D.setStroke(BOLD_STROKE);
+                                graphics2D.drawOval(cell.x + PADDING / 2, cell.y + PADDING / 2, cell.width - PADDING, cell.height - PADDING);
+                                graphics2D.setColor(Color.BLACK);
+                                graphics2D.setStroke(BOLD_STROKE);
+                            }
                         }
                     }
                 }
+            } catch (NoninvertibleTransformException e) {
+                e.printStackTrace();
             }
-        } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
         }
 
         // draw lines
-        graphics2D.setStroke(boldStroke);
+        graphics2D.setStroke(BOLD_STROKE);
         if (mouse != null && mode == DRAW_LINE) {
             graphics2D.setColor(Color.GRAY);
             Line line = new Line(ptBegin, ptEnd);
@@ -153,7 +149,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             line.draw(graphics2D);
         }
 
-        graphics2D.setStroke(normalStroke);
+        graphics2D.setStroke(THIN_STROKE);
         for (AbstractBlock ab : app.project.blocks) {
             ab.draw(graphics2D);
         }
@@ -167,12 +163,17 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         if (dragging) return;
         if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
             AbstractBlock ab = getBlockType();
-            if (ab != null) ab.showDialog();
+            if (ab != null) ab.showDialog(e.getLocationOnScreen());
         }
         if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
             switch (blockToAdd) {
                 case "START" -> app.project.blocks.add(new StartBlock(getCellCoords(mouse)));
                 case "STOP" -> app.project.blocks.add(new StopBlock(getCellCoords(mouse)));
+                case "COMMAND" -> app.project.blocks.add(new CommandBlock(getCellCoords(mouse)));
+                case "IF" -> app.project.blocks.add(new IfBlock(getCellCoords(mouse)));
+                case "INPUT" -> app.project.blocks.add(new InputBlock(getCellCoords(mouse)));
+                case "OUTPUT" -> app.project.blocks.add(new OutputBlock(getCellCoords(mouse)));
+                case "LABEL" -> app.project.blocks.add(new LabelBlock(getCellCoords(mouse)));
             }
             app.selectPanel.clearSelection();
         }
@@ -278,11 +279,12 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void mouseMoved(MouseEvent mouseEvent) {
         try {
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
-            for (AbstractBlock b : app.project.blocks) b.setHovered(false);
+            if (hoveringBlock != null) hoveringBlock.setHovered(false);
             AbstractBlock ab = getBlockType();
             if (ab != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 ab.setHovered(true);
+                hoveringBlock = ab;
             } else if (blockToAdd != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             } else {

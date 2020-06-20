@@ -10,8 +10,7 @@ public class App extends JFrame implements WindowListener {
     public static final String version_string = "ALPHA_1";
     public static final Dimension minSizeDim = new Dimension(400, 300);
 
-    public Project project = new Project();
-    public JDesktopPane desktopPane = null;
+    public final Project project = new Project();
     public DrawPanel drawPanel = null;
     public SelectPanel selectPanel = null;
 
@@ -23,8 +22,6 @@ public class App extends JFrame implements WindowListener {
         setLocationRelativeTo(null);
         addWindowListener(this);
         JFrame.setDefaultLookAndFeelDecorated(true);
-        desktopPane = new JDesktopPane();
-        setContentPane(desktopPane);
         setLayout(new GridBagLayout());
         addUI();
         pack();
@@ -42,7 +39,6 @@ public class App extends JFrame implements WindowListener {
         JSplitPane editorPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, selectPanelScrollPane, drawPanel);
         editorPanel.setOneTouchExpandable(true);
         add(editorPanel, gbcEditorPanel);
-
     }
 
 
