@@ -11,33 +11,38 @@ public class App extends JFrame implements WindowListener {
     public static final Dimension minSizeDim = new Dimension(400, 300);
 
     public Project project = new Project();
-
+    public JDesktopPane desktopPane = null;
     public DrawPanel drawPanel = null;
+    public SelectPanel selectPanel = null;
 
     public App() {
-        super();
-        addUI();
-        setUI();
-    }
-
-    // create and add components to UI
-    private void addUI() {
-        setLayout(new GridBagLayout());
-        GridBagConstraints gbcDrawPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-        drawPanel = new DrawPanel(this);
-        add(drawPanel, gbcDrawPanel);
-        pack();
-    }
-
-    // setup configurations
-    private void setUI() {
-        setTitle("Flower - The Flowchart Designer");
+        super("Flower - The Flowchart Designer");
         setMinimumSize(minSizeDim);
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
         addWindowListener(this);
+        JFrame.setDefaultLookAndFeelDecorated(true);
+        desktopPane = new JDesktopPane();
+        setContentPane(desktopPane);
+        setLayout(new GridBagLayout());
+        addUI();
+        pack();
     }
+
+    // create and add components to UI
+    private void addUI() {
+        GridBagConstraints gbcDrawPanel = new GridBagConstraints(1, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        drawPanel = new DrawPanel(this);
+        add(drawPanel, gbcDrawPanel);
+
+        GridBagConstraints gbcSelectPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        selectPanel = new SelectPanel(this);
+        add(selectPanel, gbcSelectPanel);
+
+    }
+
+
 
     @Override
     public void windowOpened(WindowEvent e) { }

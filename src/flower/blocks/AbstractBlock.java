@@ -1,15 +1,12 @@
 package flower.blocks;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 abstract public class AbstractBlock {
 
-    public static final int CLEAR = 0;
-    public static final int SELECTED = 1;
-    public static final int HOVERED = 2;
-    public static final int BREAKPOINT = 3;
-    private int state;
+    protected boolean selected;
+    protected boolean hovered;
+    protected boolean breakpoint;
 
     /* do-able functions */
     abstract public void draw(Graphics2D graphics2D);
@@ -23,21 +20,25 @@ abstract public class AbstractBlock {
 
     abstract public Rectangle getOuterBounds();
 
-    abstract public ArrayList<Point> getInputPins();
+    abstract public Point[] getInputPins();
 
-    abstract public ArrayList<Point> getOutputPins();
+    abstract public Point[] getOutputPins();
 
     abstract public String getCode();
 
     /* setter functions */
-    public void setState(int state) { this.state = state; }
+    public void setSelected(boolean val) {selected = val;}
+
+    public void setHovered(boolean val) {hovered = val;}
+
+    public void setBreakpoint(boolean val) {breakpoint = val;}
 
     /* test functions */
-    public boolean isSelected() {return state == SELECTED;}
+    public boolean isSelected() {return selected;}
 
-    public boolean isHovered() {return state == HOVERED;}
+    public boolean isHovered() {return hovered;}
 
-    public boolean isBreakpoint() {return state == BREAKPOINT;}
+    public boolean isBreakpoint() {return breakpoint;}
 
 
 }

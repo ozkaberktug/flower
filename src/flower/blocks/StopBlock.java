@@ -5,16 +5,16 @@ import java.awt.*;
 import static flower.DrawPanel.PADDING;
 import static flower.DrawPanel.TILESIZE;
 
-public class StartBlock extends AbstractBlock {
+public class StopBlock extends AbstractBlock {
 
     private Rectangle area;
-    private final String code = "START";
+    private final String code = "STOP";
 
-    public StartBlock(Point offset) {
+    public StopBlock(Point offset) {
         area = new Rectangle(offset, new Dimension(5, 2));
     }
 
-    public StartBlock(int x, int y) {
+    public StopBlock(int x, int y) {
         area = new Rectangle(x, y, 5, 2);
     }
 
@@ -30,7 +30,7 @@ public class StartBlock extends AbstractBlock {
         graphics2D.drawRoundRect(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE, TILESIZE * 2, TILESIZE * 2);
         graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
         graphics2D.setColor(Color.ORANGE);
-        graphics2D.fillOval((area.x + 2) * TILESIZE + PADDING / 2, (area.y + 2) * TILESIZE + PADDING / 2, PADDING, PADDING);
+        graphics2D.fillOval((area.x + 2) * TILESIZE + PADDING / 2, (area.y - 1) * TILESIZE + PADDING / 2, PADDING, PADDING);
     }
 
     @Override
@@ -56,14 +56,14 @@ public class StartBlock extends AbstractBlock {
 
     @Override
     public Point[] getInputPins() {
-        return null;
+        Point[] ret = new Point[1];
+        ret[0] = new Point(area.x + 2, area.y - 1);
+        return ret;
     }
 
     @Override
     public Point[] getOutputPins() {
-        Point[] ret = new Point[1];
-        ret[0] = new Point(area.x + 2, area.y + 2);
-        return ret;
+        return null;
     }
 
     @Override
