@@ -32,16 +32,18 @@ public class App extends JFrame implements WindowListener {
 
     // create and add components to UI
     private void addUI() {
-        GridBagConstraints gbcDrawPanel = new GridBagConstraints(1, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
         drawPanel = new DrawPanel(this);
-        add(drawPanel, gbcDrawPanel);
-
-        GridBagConstraints gbcSelectPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
         selectPanel = new SelectPanel(this);
-        add(selectPanel, gbcSelectPanel);
+        JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
+        selectPanelScrollPane.setBorder(null);
+        selectPanelScrollPane.setMinimumSize(selectPanel.getMinimumSize());
+        selectPanelScrollPane.setPreferredSize(selectPanel.getPreferredSize());
+        JSplitPane editorPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, selectPanelScrollPane, drawPanel);
+        editorPanel.setOneTouchExpandable(true);
+        add(editorPanel, gbcEditorPanel);
 
     }
-
 
 
     @Override

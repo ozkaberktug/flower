@@ -29,17 +29,35 @@ public class Line {
         boolean sameX = false;
         boolean sameY = false;
 
-        for (int x = begin.x; x <= end.x; x++) {
-            if (x == p.x) {
-                sameX = true;
-                break;
+        if (begin.x <= end.x) {
+            for (int x = begin.x; x <= end.x; x++) {
+                if (x == p.x) {
+                    sameX = true;
+                    break;
+                }
+            }
+        } else {
+            for (int x = begin.x; x >= end.x; x--) {
+                if (x == p.x) {
+                    sameX = true;
+                    break;
+                }
             }
         }
 
-        for (int y = begin.y; y <= end.y; y++) {
-            if (y == p.y) {
-                sameY = true;
-                break;
+        if (begin.y <= end.y) {
+            for (int y = begin.y; y <= end.y; y++) {
+                if (y == p.y) {
+                    sameY = true;
+                    break;
+                }
+            }
+        } else {
+            for (int y = begin.y; y >= end.y; y--) {
+                if (y == p.y) {
+                    sameY = true;
+                    break;
+                }
             }
         }
 

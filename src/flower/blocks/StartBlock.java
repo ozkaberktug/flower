@@ -28,6 +28,7 @@ public class StartBlock extends AbstractBlock {
         else if (isBreakpoint()) graphics2D.setColor(Color.RED);
         else graphics2D.setColor(Color.BLACK);
         graphics2D.drawRoundRect(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE, TILESIZE * 2, TILESIZE * 2);
+        graphics2D.setColor(Color.BLACK);
         graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
         graphics2D.setColor(Color.ORANGE);
         graphics2D.fillOval((area.x + 2) * TILESIZE + PADDING / 2, (area.y + 2) * TILESIZE + PADDING / 2, PADDING, PADDING);

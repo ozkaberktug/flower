@@ -4,6 +4,7 @@ import flower.blocks.AbstractBlock;
 import flower.blocks.Line;
 import flower.blocks.StartBlock;
 import flower.blocks.StopBlock;
+import jdk.swing.interop.SwingInterOpUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -189,7 +190,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (b == null) {    // empty space clicked
                 mode = DRAW_LINE;
                 ptEnd = ptBegin = getCellCoords(mouse);
-
             } else {    // block clicked
                 mode = DRAG_BLOCK;
                 ptEnd = ptBegin = getCellCoords(mouse);
@@ -199,7 +199,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
 
         if (click == MouseEvent.BUTTON3) {  // right mouse click - delete item
             AbstractBlock b = getBlockType();   // get the block under the mouse
-            if (b == null) {    // there is a line remove it
+            if (b == null) {    // it is a line remove it
                 for (Line line : app.project.lines) {
                     if (line.contains(getCellCoords(mouse))) {
                         app.project.lines.remove(line);

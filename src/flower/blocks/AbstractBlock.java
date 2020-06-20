@@ -4,9 +4,17 @@ import java.awt.*;
 
 abstract public class AbstractBlock {
 
+    private static int id_counter = 0;
+
     protected boolean selected;
     protected boolean hovered;
     protected boolean breakpoint;
+
+    private final int id;
+
+    public AbstractBlock() {
+        id = ++id_counter;
+    }
 
     /* do-able functions */
     abstract public void draw(Graphics2D graphics2D);
@@ -25,6 +33,10 @@ abstract public class AbstractBlock {
     abstract public Point[] getOutputPins();
 
     abstract public String getCode();
+
+    public int getId() {
+        return id;
+    }
 
     /* setter functions */
     public void setSelected(boolean val) {selected = val;}
