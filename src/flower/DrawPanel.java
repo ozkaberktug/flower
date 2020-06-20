@@ -21,7 +21,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     @Override
     public void run() {
         do {
-            final long minDelay = 20; // ms
+            final long minDelay = 40; // ms
             long st = System.currentTimeMillis();
             repaint();
             long diff = System.currentTimeMillis() - st;
@@ -59,7 +59,8 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public static final int NO_OPERATION = 0;
     public static final int DRAW_LINE = 1;
     public static final int DRAG_BLOCK = 3;
-    public static final Font CODE_FONT = new Font(Font.MONOSPACED, Font.BOLD, 14);
+    public static final Font HEAD_FONT = new Font(Font.MONOSPACED, Font.BOLD, 14);
+    public static final Font CODE_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 14);
     public static final Font COMMENT_FONT = new Font(Font.SERIF, Font.ITALIC, 12);
     public static final BasicStroke THIN_STROKE = new BasicStroke(1.f);
     public static final BasicStroke BOLD_STROKE = new BasicStroke(TILESIZE / 4.f);
@@ -93,10 +94,10 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics.create();
 //        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setColor(BACKGROUND_COLOR);
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
-        graphics2D.setFont(CODE_FONT);
+        graphics2D.setFont(HEAD_FONT);
         graphics2D.setColor(Color.GRAY);
         FontMetrics fm = graphics2D.getFontMetrics();
         // print zoom percent
@@ -305,7 +306,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                     toScreen.scale(1.1, 1.1);
                 }
             } else if (mouseWheelEvent.getWheelRotation() > 0) {// zoom out
-                if (toScreen.getScaleX() > 0.7) {
+                if (toScreen.getScaleX() > 0.5) {
                     toScreen.translate(target.getX() - target.getX() * 0.9, target.getY() - target.getY() * 0.9);
                     toScreen.scale(0.9, 0.9);
                 }

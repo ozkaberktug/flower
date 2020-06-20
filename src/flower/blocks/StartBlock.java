@@ -16,7 +16,7 @@ public class StartBlock extends AbstractBlock {
 
     @Override
     public void draw(Graphics2D graphics2D) {
-        graphics2D.setFont(CODE_FONT);
+        graphics2D.setFont(HEAD_FONT);
         FontMetrics fm = graphics2D.getFontMetrics();
         graphics2D.setColor(Color.CYAN);
         graphics2D.fillRoundRect(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE, TILESIZE * 2, TILESIZE * 2);

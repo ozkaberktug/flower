@@ -10,11 +10,11 @@ import static flower.DrawPanel.*;
 public class LabelBlock extends AbstractBlock {
 
     private final Rectangle area;
-    private String code = "Type your comment";
+    private String comment = "Type your comment";  // code will be one line expression
 
     public LabelBlock(Point offset) {
         super();
-        area = new Rectangle(offset.x, offset.y, 5, 2);
+        area = new Rectangle(offset.x, offset.y, comment.length()/2, 1);
     }
 
     @Override
@@ -26,7 +26,7 @@ public class LabelBlock extends AbstractBlock {
             graphics2D.setStroke(DASHED_STROKE);
             graphics2D.drawRect(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE);
         }
-        graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
+        graphics2D.drawString(comment, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(comment)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
     }
 
     @Override
@@ -41,12 +41,13 @@ public class LabelBlock extends AbstractBlock {
         contents.setBorder(new EmptyBorder(10, 10, 10, 10));
         JLabel inputTxt = new JLabel("Enter your comment:");
         contents.add(inputTxt, BorderLayout.PAGE_START);
-        JTextField inputField = new JTextField(code, 20);
+        JTextField inputField = new JTextField(comment, 20);
         inputField.setFont(COMMENT_FONT);
         inputField.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (!inputField.getText().isBlank()) code = inputField.getText();
+                if (!inputField.getText().isBlank()) comment = inputField.getText();
+                area.width = comment.length()/2;
                 frame.dispose();
             }
         });
@@ -80,7 +81,7 @@ public class LabelBlock extends AbstractBlock {
 
     @Override
     public String getCode() {
-        return code;
+        return null;
     }
 
 }
