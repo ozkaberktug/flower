@@ -59,22 +59,19 @@ public class CommandBlock extends AbstractBlock {
         JTextArea codeArea = new JTextArea(code, 5, 40);
         codeArea.setFont(CODE_FONT);
         JButton saveBtn = new JButton();
-        saveBtn.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!codeArea.getText().isBlank()) code = codeArea.getText();
-                codeLenMaxH = 0;
-                codeLenMaxW = 0;
-                for (String line : code.split("\\n")) {
-                    if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
-                    codeLenMaxH++;
-                }
-                area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
-                if (area.width % 2 == 0) area.width++;
-                area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
-                if (area.height % 2 == 0) area.height++;
-                frame.dispose();
+        saveBtn.addActionListener(e -> {
+            if (!codeArea.getText().isBlank()) code = codeArea.getText();
+            codeLenMaxH = 0;
+            codeLenMaxW = 0;
+            for (String line : code.split("\\n")) {
+                if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
+                codeLenMaxH++;
             }
+            area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
+            if (area.width % 2 == 0) area.width++;
+            area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
+            if (area.height % 2 == 0) area.height++;
+            frame.dispose();
         });
         saveBtn.setText("Save");
         JScrollPane codeScrollPane = new JScrollPane(codeArea);

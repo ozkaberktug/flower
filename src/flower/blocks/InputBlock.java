@@ -1,5 +1,7 @@
 package flower.blocks;
 
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 
@@ -7,7 +9,7 @@ import static flower.DrawPanel.*;
 
 public class InputBlock extends AbstractBlock {
     private final Rectangle area;
-    private final String code;
+    private String code;
 
     public InputBlock(Point offset) {
         super();
@@ -37,7 +39,7 @@ public class InputBlock extends AbstractBlock {
         graphics2D.setStroke(NORMAL_STROKE);
         graphics2D.draw(shape);
         graphics2D.setColor(Color.BLACK);
-        graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
+        graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, ((area.y + 1) * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
         graphics2D.setColor(Color.ORANGE);
         graphics2D.fillOval((area.x + area.width / 2) * TILESIZE + PADDING / 2, (area.y - 1) * TILESIZE + PADDING / 2, PADDING, PADDING);
         graphics2D.fillOval((area.x + area.width / 2) * TILESIZE + PADDING / 2, (area.y + area.height) * TILESIZE + PADDING / 2, PADDING, PADDING);
@@ -45,7 +47,29 @@ public class InputBlock extends AbstractBlock {
 
     @Override
     public void showDialog(Point location) {
+        JFrame frame = new JFrame("#" + getId() + " - Input Block");
+        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        frame.setResizable(false);
+        frame.setAlwaysOnTop(true);
+        frame.setLocation(location);
 
+        JPanel contents = new JPanel(new BorderLayout(10, 10));
+        contents.setBorder(new EmptyBorder(10, 10, 10, 10));
+        JLabel inputTxt = new JLabel("Enter expression:");
+        contents.add(inputTxt, BorderLayout.PAGE_START);
+        JTextField codeField = new JTextField(code, 20);
+        codeField.setFont(CODE_FONT);
+        codeField.addActionListener(e -> {
+            if (!codeField.getText().isBlank()) code = codeField.getText();
+            area.width = Math.max((int) (code.length() * 0.8f), 9);
+            if (area.width % 2 == 0) area.width++;
+            frame.dispose();
+        });
+        contents.add(codeField, BorderLayout.CENTER);
+
+        frame.setContentPane(contents);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     @Override

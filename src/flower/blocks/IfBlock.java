@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.geom.GeneralPath;
 
 import static flower.DrawPanel.*;
@@ -61,14 +62,11 @@ public class IfBlock extends AbstractBlock {
         contents.add(inputTxt, BorderLayout.PAGE_START);
         JTextField codeField = new JTextField(code, 20);
         codeField.setFont(CODE_FONT);
-        codeField.setAction(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!codeField.getText().isBlank()) code = codeField.getText();
-                area.width = Math.max((int) (code.length() * 0.8f), 9);
-                if (area.width % 2 == 0) area.width++;
-                frame.dispose();
-            }
+        codeField.addActionListener(e -> {
+            if (!codeField.getText().isBlank()) code = codeField.getText();
+            area.width = Math.max((int) (code.length() * 0.8f), 9);
+            if (area.width % 2 == 0) area.width++;
+            frame.dispose();
         });
         contents.add(codeField, BorderLayout.CENTER);
 

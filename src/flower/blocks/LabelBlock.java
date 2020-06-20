@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import static flower.DrawPanel.*;
 
@@ -43,13 +44,10 @@ public class LabelBlock extends AbstractBlock {
         contents.add(inputTxt, BorderLayout.PAGE_START);
         JTextField inputField = new JTextField(comment, 20);
         inputField.setFont(COMMENT_FONT);
-        inputField.setAction(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!inputField.getText().isBlank()) comment = inputField.getText();
-                area.width = comment.length()/2;
-                frame.dispose();
-            }
+        inputField.addActionListener(e -> {
+            if (!inputField.getText().isBlank()) comment = inputField.getText();
+            area.width = comment.length()/2;
+            frame.dispose();
         });
         contents.add(inputField, BorderLayout.CENTER);
 
