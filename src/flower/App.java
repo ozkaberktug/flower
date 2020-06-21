@@ -2,21 +2,18 @@ package flower;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import java.awt.event.*;
 
-public class App extends JFrame implements WindowListener {
+public class App extends JFrame implements WindowListener, ActionListener {
 
     public static final String version_string = "ALPHA_1";
-    public static final Dimension minSizeDim = new Dimension(400, 300);
 
-    public final Project project = new Project();
+    public Project project = new Project();
     public DrawPanel drawPanel = null;
     public SelectPanel selectPanel = null;
 
     public App() {
         super("Flower - The Flowchart Designer");
-        setMinimumSize(minSizeDim);
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -29,6 +26,33 @@ public class App extends JFrame implements WindowListener {
 
     // create and add components to UI
     private void addUI() {
+        JMenuBar menuBar = new JMenuBar();
+        //****//
+        JMenu fileMenu = new JMenu("File");
+        fileMenu.setMnemonic(KeyEvent.VK_F);
+        menuBar.add(fileMenu);
+        JMenuItem newMenuItem = new JMenuItem("New");
+        newMenuItem.setAccelerator(KeyStroke.getKeyStroke("control N"));
+        newMenuItem.setMnemonic(KeyEvent.VK_N);
+        newMenuItem.addActionListener(this);
+        newMenuItem.setToolTipText("Create a blank project.");
+        fileMenu.add(newMenuItem);
+        JMenuItem exitMenuItem = new JMenuItem("Exit");
+        exitMenuItem.setMnemonic(KeyEvent.VK_X);
+        exitMenuItem.addActionListener(this);
+        exitMenuItem.setToolTipText("Exit the application.");
+        fileMenu.add(exitMenuItem);
+        //****//
+        JMenu helpMenu = new JMenu("Help");
+        helpMenu.setMnemonic(KeyEvent.VK_H);
+        menuBar.add(helpMenu);
+        JMenuItem aboutMenuItem = new JMenuItem("About");
+        aboutMenuItem.setMnemonic(KeyEvent.VK_A);
+        aboutMenuItem.addActionListener(this);
+        aboutMenuItem.setToolTipText("About Flowchart Designer");
+        helpMenu.add(aboutMenuItem);
+        setJMenuBar(menuBar);
+
         GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
         drawPanel = new DrawPanel(this);
         selectPanel = new SelectPanel(this);
@@ -41,13 +65,28 @@ public class App extends JFrame implements WindowListener {
         add(editorPanel, gbcEditorPanel);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "New" -> {
+                if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+                    return;
+                project = new Project();
+                selectPanel.clearSelection();
+                drawPanel.clear();
+            }
+            case "Exit" -> windowClosing(null);
+            case "About" -> JOptionPane.showMessageDialog(this, "<html>Version: "+App.version_string+"<br/>This program written by Berktug Kaan Ozkan<br/>github.com/ozkaberktug</html>", "About", JOptionPane.INFORMATION_MESSAGE);
+        }
+    }
 
     @Override
     public void windowOpened(WindowEvent e) { }
 
     @Override
     public void windowClosing(WindowEvent e) {
-        // TODO handle closing operations
+        if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+            return;
         setVisible(false);
         dispose();
         System.exit(0);
@@ -67,4 +106,6 @@ public class App extends JFrame implements WindowListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) { }
+
+
 }

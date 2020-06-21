@@ -57,7 +57,7 @@ public class OutputBlock extends AbstractBlock {
         contents.setBorder(new EmptyBorder(10, 10, 10, 10));
         JLabel inputTxt = new JLabel("Enter expression:");
         contents.add(inputTxt, BorderLayout.PAGE_START);
-        JTextField codeField = new JTextField(code, 20);
+        JTextField codeField = new JTextField(code, 40);
         codeField.setFont(CODE_FONT);
         codeField.addActionListener(e -> {
             if (!codeField.getText().isBlank()) code = codeField.getText();

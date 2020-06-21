@@ -89,12 +89,25 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         addMouseWheelListener(this);
     }
 
+    public void clear() {
+        blockToAdd = null;
+        toggleGrids = true;
+        AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
+        mouse = null;
+        dragging = false;
+        click = MouseEvent.NOBUTTON;
+        ptBegin = null;
+        ptEnd = null;
+        mode = NO_OPERATION;
+        hoveringBlock = null;
+    }
+
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics.create();
 //        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setColor(BACKGROUND_COLOR);
         graphics2D.fillRect(0, 0, getWidth(), getHeight());
         graphics2D.setFont(HEAD_FONT);

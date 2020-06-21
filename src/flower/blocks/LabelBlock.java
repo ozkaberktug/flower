@@ -42,7 +42,7 @@ public class LabelBlock extends AbstractBlock {
         contents.setBorder(new EmptyBorder(10, 10, 10, 10));
         JLabel inputTxt = new JLabel("Enter your comment:");
         contents.add(inputTxt, BorderLayout.PAGE_START);
-        JTextField inputField = new JTextField(comment, 20);
+        JTextField inputField = new JTextField(comment, 30);
         inputField.setFont(COMMENT_FONT);
         inputField.addActionListener(e -> {
             if (!inputField.getText().isBlank()) comment = inputField.getText();
