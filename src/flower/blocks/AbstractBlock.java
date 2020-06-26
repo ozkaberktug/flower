@@ -24,7 +24,12 @@ abstract public class AbstractBlock {
     abstract public void moveTo(Point delta);
 
     /* getter functions */
-    abstract public Rectangle getBounds();
+    abstract public Rectangle getInnerBounds();
+
+    public Rectangle getOuterBounds() {
+        Rectangle inner = getInnerBounds();
+        return new Rectangle(inner.x - 1, inner.y - 1, inner.width + 1, inner.height + 1);
+    }
 
     abstract public Point[] getInputPins();
 

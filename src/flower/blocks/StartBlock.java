@@ -43,7 +43,7 @@ public class StartBlock extends AbstractBlock {
     }
 
     @Override
-    public Rectangle getBounds() {
+    public Rectangle getInnerBounds() {
         return area;
     }
 

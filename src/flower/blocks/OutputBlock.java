@@ -60,7 +60,7 @@ public class OutputBlock extends AbstractBlock {
         JTextField codeField = new JTextField(code, 40);
         codeField.setFont(CODE_FONT);
         codeField.addActionListener(e -> {
-            if (!codeField.getText().isBlank()) code = codeField.getText();
+            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) code = codeField.getText();
             area.width = Math.max((int) (code.length() * 0.8f), 9);
             if (area.width % 2 == 0) area.width++;
             frame.dispose();
@@ -79,7 +79,7 @@ public class OutputBlock extends AbstractBlock {
     }
 
     @Override
-    public Rectangle getBounds() {
+    public Rectangle getInnerBounds() {
         return area;
     }
 

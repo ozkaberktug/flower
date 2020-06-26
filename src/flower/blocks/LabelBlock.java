@@ -3,8 +3,6 @@ package flower.blocks;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import static flower.DrawPanel.*;
 
@@ -45,7 +43,7 @@ public class LabelBlock extends AbstractBlock {
         JTextField inputField = new JTextField(comment, 30);
         inputField.setFont(COMMENT_FONT);
         inputField.addActionListener(e -> {
-            if (!inputField.getText().isBlank()) comment = inputField.getText();
+            if (!inputField.getText().isEmpty() && !inputField.getText().matches("\\s+")) comment = inputField.getText();
             area.width = comment.length()/2;
             frame.dispose();
         });
@@ -63,7 +61,7 @@ public class LabelBlock extends AbstractBlock {
     }
 
     @Override
-    public Rectangle getBounds() {
+    public Rectangle getInnerBounds() {
         return area;
     }
 

@@ -3,8 +3,6 @@ package flower.blocks;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import static flower.DrawPanel.*;
 
@@ -60,7 +58,7 @@ public class CommandBlock extends AbstractBlock {
         codeArea.setFont(CODE_FONT);
         JButton saveBtn = new JButton();
         saveBtn.addActionListener(e -> {
-            if (!codeArea.getText().isBlank()) code = codeArea.getText();
+            if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) code = codeArea.getText();
             codeLenMaxH = 0;
             codeLenMaxW = 0;
             for (String line : code.split("\\n")) {
@@ -90,7 +88,7 @@ public class CommandBlock extends AbstractBlock {
     }
 
     @Override
-    public Rectangle getBounds() {
+    public Rectangle getInnerBounds() {
         return area;
     }
 

@@ -3,8 +3,6 @@ package flower.blocks;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.GeneralPath;
 
 import static flower.DrawPanel.*;
@@ -63,7 +61,7 @@ public class IfBlock extends AbstractBlock {
         JTextField codeField = new JTextField(code, 40);
         codeField.setFont(CODE_FONT);
         codeField.addActionListener(e -> {
-            if (!codeField.getText().isBlank()) code = codeField.getText();
+            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) code = codeField.getText();
             area.width = Math.max((int) (code.length() * 0.8f), 9);
             if (area.width % 2 == 0) area.width++;
             frame.dispose();
@@ -82,7 +80,7 @@ public class IfBlock extends AbstractBlock {
     }
 
     @Override
-    public Rectangle getBounds() {
+    public Rectangle getInnerBounds() {
         return area;
     }
 

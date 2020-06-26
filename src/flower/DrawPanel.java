@@ -1,5 +1,6 @@
 package flower;
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import flower.blocks.*;
 
 import javax.swing.*;
@@ -49,7 +50,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     private AbstractBlock getBlockType() {
         Point m = getCellCoords(mouse);
         for (AbstractBlock ab : app.project.blocks)
-            if (ab.getBounds().contains(m)) return ab;
+            if (ab.getInnerBounds().contains(m)) return ab;
         return null;
     }
 
@@ -87,6 +88,8 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+        setOpaque(true);
+        setBackground(BACKGROUND_COLOR);
     }
 
     public void clear() {
@@ -108,8 +111,9 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         Graphics2D graphics2D = (Graphics2D) graphics.create();
 //        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 //        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        graphics2D.setColor(BACKGROUND_COLOR);
-        graphics2D.fillRect(0, 0, getWidth(), getHeight());
+        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+//        graphics2D.setColor(BACKGROUND_COLOR);
+//        graphics2D.fillRect(0, 0, getWidth(), getHeight());
         graphics2D.setFont(HEAD_FONT);
         graphics2D.setColor(Color.GRAY);
         FontMetrics fm = graphics2D.getFontMetrics();
@@ -163,7 +167,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             line.draw(graphics2D);
         }
 
-        graphics2D.setStroke(THIN_STROKE);
         for (AbstractBlock ab : app.project.blocks) {
             ab.draw(graphics2D);
         }
@@ -181,13 +184,27 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         }
         if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
             switch (blockToAdd) {
-                case "START" -> app.project.blocks.add(new StartBlock(getCellCoords(mouse)));
-                case "STOP" -> app.project.blocks.add(new StopBlock(getCellCoords(mouse)));
-                case "COMMAND" -> app.project.blocks.add(new CommandBlock(getCellCoords(mouse)));
-                case "IF" -> app.project.blocks.add(new IfBlock(getCellCoords(mouse)));
-                case "INPUT" -> app.project.blocks.add(new InputBlock(getCellCoords(mouse)));
-                case "OUTPUT" -> app.project.blocks.add(new OutputBlock(getCellCoords(mouse)));
-                case "LABEL" -> app.project.blocks.add(new LabelBlock(getCellCoords(mouse)));
+                case "START":
+                    app.project.blocks.add(new StartBlock(getCellCoords(mouse)));
+                    break;
+                case "STOP":
+                    app.project.blocks.add(new StopBlock(getCellCoords(mouse)));
+                    break;
+                case "COMMAND":
+                    app.project.blocks.add(new CommandBlock(getCellCoords(mouse)));
+                    break;
+                case "IF":
+                    app.project.blocks.add(new IfBlock(getCellCoords(mouse)));
+                    break;
+                case "INPUT":
+                    app.project.blocks.add(new InputBlock(getCellCoords(mouse)));
+                    break;
+                case "OUTPUT":
+                    app.project.blocks.add(new OutputBlock(getCellCoords(mouse)));
+                    break;
+                case "LABEL":
+                    app.project.blocks.add(new LabelBlock(getCellCoords(mouse)));
+                    break;
             }
             app.selectPanel.clearSelection();
         }
@@ -258,7 +275,10 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     @Override
     public void mouseExited(MouseEvent e) {
         setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        for (AbstractBlock b : app.project.blocks) b.setHovered(false);
+        if (hoveringBlock != null) {
+            hoveringBlock.setHovered(false);
+            hoveringBlock = null;
+        }
     }
 
     @Override
@@ -293,7 +313,10 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void mouseMoved(MouseEvent mouseEvent) {
         try {
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
-            if (hoveringBlock != null) hoveringBlock.setHovered(false);
+            if (hoveringBlock != null) {
+                hoveringBlock.setHovered(false);
+                hoveringBlock = null;
+            }
             AbstractBlock ab = getBlockType();
             if (ab != null) {
                 setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
