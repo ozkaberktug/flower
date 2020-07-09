@@ -6,7 +6,7 @@ import java.awt.event.*;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
-    public static final String version_string = "ALPHA_1";
+    public static final String version_string = "ALPHA_2";
 
     public Project project = new Project();
     public DrawPanel drawPanel = null;
@@ -14,6 +14,11 @@ public class App extends JFrame implements WindowListener, ActionListener {
 
     public App() {
         super("Flower - The Flowchart Designer");
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);

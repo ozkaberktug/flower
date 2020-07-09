@@ -1,6 +1,5 @@
 package flower;
 
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import flower.blocks.*;
 
 import javax.swing.*;
@@ -63,7 +62,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public static final Font HEAD_FONT = new Font(Font.MONOSPACED, Font.BOLD, 14);
     public static final Font CODE_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 14);
     public static final Font COMMENT_FONT = new Font(Font.SERIF, Font.ITALIC, 12);
-    public static final BasicStroke THIN_STROKE = new BasicStroke(1.f);
+//    public static final BasicStroke THIN_STROKE = new BasicStroke(1.f);
     public static final BasicStroke BOLD_STROKE = new BasicStroke(TILESIZE / 4.f);
     public static final BasicStroke NORMAL_STROKE = new BasicStroke(2.f);
     public static final BasicStroke DASHED_STROKE = new BasicStroke(1.f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{4}, 0);
@@ -72,12 +71,13 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public final App app;
     public String blockToAdd = null;
     public boolean toggleGrids = true;
-    private final AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
+    private AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
     private boolean dragging = false;
     private int click = MouseEvent.NOBUTTON;
     private Point ptBegin = null;
     private Point ptEnd = null;
+    private int hub = Line.HUB_NONE;
     private int mode = NO_OPERATION;
     private AbstractBlock hoveringBlock = null;
 
@@ -95,7 +95,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void clear() {
         blockToAdd = null;
         toggleGrids = true;
-        AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
+        toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
         mouse = null;
         dragging = false;
         click = MouseEvent.NOBUTTON;
@@ -103,6 +103,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         ptEnd = null;
         mode = NO_OPERATION;
         hoveringBlock = null;
+        hub = 0;
     }
 
     @Override
@@ -112,8 +113,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
 //        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 //        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-//        graphics2D.setColor(BACKGROUND_COLOR);
-//        graphics2D.fillRect(0, 0, getWidth(), getHeight());
         graphics2D.setFont(HEAD_FONT);
         graphics2D.setColor(Color.GRAY);
         FontMetrics fm = graphics2D.getFontMetrics();
@@ -159,10 +158,9 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         graphics2D.setStroke(BOLD_STROKE);
         if (mouse != null && mode == DRAW_LINE) {
             graphics2D.setColor(Color.GRAY);
-            Line line = new Line(ptBegin, ptEnd);
+            Line line = new Line(ptBegin, ptEnd, hub);
             line.draw(graphics2D);
         }
-        graphics2D.setColor(Color.BLACK);
         for (Line line : app.project.lines) {
             line.draw(graphics2D);
         }
@@ -222,6 +220,9 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (b == null) {    // empty space clicked
                 mode = DRAW_LINE;
                 ptEnd = ptBegin = getCellCoords(mouse);
+                for(Line line : app.project.lines)
+                    if(line.contains(getCellCoords(mouse))) hub |= Line.HUB_BEGIN;
+
             } else {    // block clicked
                 mode = DRAG_BLOCK;
                 ptEnd = ptBegin = getCellCoords(mouse);
@@ -242,6 +243,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                 app.project.blocks.remove(b);
             }
         }
+
     }
 
     @Override
@@ -254,7 +256,11 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             Point tmp = getCellCoords(mouse);
             if (tmp.x == ptBegin.x || tmp.y == ptBegin.y) {
                 ptEnd = tmp;
-                if (!ptBegin.equals(ptEnd)) app.project.lines.add(new Line(ptBegin, ptEnd));
+                if (!ptBegin.equals(ptEnd)) {
+                    for(Line line : app.project.lines)
+                        if(line.contains(getCellCoords(mouse))) hub |= Line.HUB_END;
+                    app.project.lines.add(new Line(ptBegin, ptEnd, hub));
+                }
             }
         }
 
@@ -264,6 +270,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         }
         ptBegin = ptEnd = null;
+        hub = Line.HUB_NONE;
         mode = NO_OPERATION;
     }
 
