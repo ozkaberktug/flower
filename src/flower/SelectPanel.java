@@ -14,22 +14,33 @@ public class SelectPanel extends JPanel {
     private JTree tree;
 
     public SelectPanel(App app) {
-        super(new BorderLayout(10,10));
+        super(new BorderLayout(10, 10));
         this.app = app;
         setMinimumSize(new Dimension(150, 100));
         setPreferredSize(new Dimension(150, 100));
         setBorder(BorderFactory.createTitledBorder("Add to Flow"));
         constructTree();
         add(tree, BorderLayout.CENTER);
-        JToggleButton toggleButton = new JToggleButton(new AbstractAction() {
+        JPanel optPanel = new JPanel();
+        JToggleButton gridToggleBtn = new JToggleButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 app.drawPanel.toggleGrids = !app.drawPanel.toggleGrids;
             }
         });
-        toggleButton.setSelected(true);
-        toggleButton.setText("Toggle Grids");
-        add(toggleButton, BorderLayout.PAGE_END);
+        gridToggleBtn.setSelected(true);
+        gridToggleBtn.setText("G");
+        optPanel.add(gridToggleBtn);
+        JToggleButton qualityToggleBtn = new JToggleButton(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                app.drawPanel.toggleQuality = !app.drawPanel.toggleQuality;
+            }
+        });
+        qualityToggleBtn.setText("Q");
+        optPanel.add(qualityToggleBtn);
+        add(optPanel, BorderLayout.PAGE_END);
+
     }
 
     private void constructTree() {

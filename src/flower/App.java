@@ -20,11 +20,13 @@ public class App extends JFrame implements WindowListener, ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
         initUI();
         pack();
+        setMinimumSize(getSize());
         setLocationRelativeTo(null);
     }
 

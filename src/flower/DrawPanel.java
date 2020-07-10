@@ -62,7 +62,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public static final Font HEAD_FONT = new Font(Font.MONOSPACED, Font.BOLD, 14);
     public static final Font CODE_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 14);
     public static final Font COMMENT_FONT = new Font(Font.SERIF, Font.ITALIC, 12);
-    //    public static final BasicStroke THIN_STROKE = new BasicStroke(1.f);
     public static final BasicStroke BOLD_STROKE = new BasicStroke(TILESIZE / 4.f);
     public static final BasicStroke NORMAL_STROKE = new BasicStroke(2.f);
     public static final BasicStroke DASHED_STROKE = new BasicStroke(1.f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{4}, 0);
@@ -71,6 +70,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public final App app;
     public String blockToAdd = null;
     public boolean toggleGrids = true;
+    public boolean toggleQuality = false;
     private AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
     private boolean dragging = false;
@@ -110,11 +110,10 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D graphics2D = (Graphics2D) graphics.create();
-//        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-//        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-//        graphics2D.setColor(BACKGROUND_COLOR);
-//        graphics2D.fillRect(0,0, getWidth(), getHeight());
-        graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        if (toggleQuality) {
+            graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        }
         graphics2D.setFont(HEAD_FONT);
         graphics2D.setColor(Color.GRAY);
         FontMetrics fm = graphics2D.getFontMetrics();

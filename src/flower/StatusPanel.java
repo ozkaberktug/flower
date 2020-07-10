@@ -2,10 +2,10 @@ package flower;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class StatusPanel extends JPanel {
@@ -16,7 +16,6 @@ public class StatusPanel extends JPanel {
     private final JLabel label;
     private final JTextArea area;
     private final JScrollPane areaScrollPane;
-    private boolean toggle = false;
 
     public StatusPanel(App app) {
         super(new GridBagLayout());
@@ -27,18 +26,12 @@ public class StatusPanel extends JPanel {
 
         label = new JLabel();
         label.setForeground(Color.RED);
-        label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
         label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         label.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (!toggle) {   // expand
-                    areaScrollPane.setVisible(true);
-                    toggle = true;
-                } else {    // minimize
-                    areaScrollPane.setVisible(false);
-                    toggle = false;
-                }
+                areaScrollPane.setVisible(!areaScrollPane.isVisible());
                 updateLog();
                 revalidate();
                 repaint();
@@ -66,7 +59,8 @@ public class StatusPanel extends JPanel {
         add(areaScrollPane, gbcArea);
 
         titles.add("Ready.");
-        texts.add("------");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        texts.add("flower (version: " + App.version_string + ") \nSession started at " + dtf.format(LocalDateTime.now()));
         updateLog();
     }
 
@@ -75,8 +69,8 @@ public class StatusPanel extends JPanel {
             label.setText(titles.get(titles.size() - 1));
             StringBuilder sb = new StringBuilder();
             for (int i = 0; i < titles.size(); i++) {
-                sb.append(titles.get(i));
-                sb.append("\n");
+//                sb.append(titles.get(i));
+//                sb.append("\n");
                 sb.append(texts.get(i));
                 sb.append("\n\n");
             }
