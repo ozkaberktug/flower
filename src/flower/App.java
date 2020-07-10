@@ -12,6 +12,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public DrawPanel drawPanel = null;
     public SelectPanel selectPanel = null;
     public StatusPanel statusPanel = null;
+    public ToolbarPanel toolbarPanel = null;
+    public Interpreter interpreter = null;
 
     public App() {
         super("Flower - The Flowchart Designer");
@@ -70,7 +72,12 @@ public class App extends JFrame implements WindowListener, ActionListener {
         helpMenu.add(aboutMenuItem);
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
-        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(8, 8, 0, 8), 0, 0);
+        /**/
+        GridBagConstraints gbcToolbarPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        toolbarPanel = new ToolbarPanel(this);
+        contentPanel.add(toolbarPanel, gbcToolbarPanel);
+        /**/
+        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 8, 0, 8), 0, 0);
         drawPanel = new DrawPanel(this);
         selectPanel = new SelectPanel(this);
         JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
@@ -81,7 +88,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         editorPanel.setOneTouchExpandable(true);
         contentPanel.add(editorPanel, gbcEditorPanel);
         /**/
-        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0);
+        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
         statusPanel = new StatusPanel(this);
         contentPanel.add(statusPanel, gbcStatusPanel);
 
