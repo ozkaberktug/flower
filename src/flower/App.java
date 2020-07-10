@@ -98,6 +98,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 project = new Project();
                 selectPanel.clearSelection();
                 drawPanel.clear();
+                statusPanel.clear();
                 break;
             case "Export":
                 project.exportDialog(this);

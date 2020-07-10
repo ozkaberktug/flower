@@ -73,6 +73,8 @@ public class SelectPanel extends JPanel {
             DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (selected != null && selected.isLeaf()) {
                 app.drawPanel.blockToAdd = (String) selected.getUserObject();
+                app.statusPanel.title = (String) selected.getUserObject() + " selected.";
+                app.statusPanel.updateLog();
             }
         });
         tree.addMouseListener(new MouseAdapter() {
@@ -88,6 +90,13 @@ public class SelectPanel extends JPanel {
     }
 
     public void clearSelection() {
+        tree.clearSelection();
+        app.drawPanel.blockToAdd = null;
+        app.statusPanel.title = "Ready.";
+        app.statusPanel.updateLog();
+    }
+
+    public void clearSelectionSilent() {
         tree.clearSelection();
         app.drawPanel.blockToAdd = null;
     }

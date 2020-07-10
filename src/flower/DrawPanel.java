@@ -174,30 +174,37 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (ab != null) ab.showDialog(e.getLocationOnScreen());
         }
         if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
+            AbstractBlock block;
             switch (blockToAdd) {
                 case "START":
-                    app.project.blocks.add(new StartBlock(getCellCoords(mouse)));
+                    block = new StartBlock(getCellCoords(mouse));
                     break;
                 case "STOP":
-                    app.project.blocks.add(new StopBlock(getCellCoords(mouse)));
+                    block = new StopBlock(getCellCoords(mouse));
                     break;
                 case "COMMAND":
-                    app.project.blocks.add(new CommandBlock(getCellCoords(mouse)));
+                    block = new CommandBlock(getCellCoords(mouse));
                     break;
                 case "IF":
-                    app.project.blocks.add(new IfBlock(getCellCoords(mouse)));
+                    block = new IfBlock(getCellCoords(mouse));
                     break;
                 case "INPUT":
-                    app.project.blocks.add(new InputBlock(getCellCoords(mouse)));
+                    block = new InputBlock(getCellCoords(mouse));
                     break;
                 case "OUTPUT":
-                    app.project.blocks.add(new OutputBlock(getCellCoords(mouse)));
+                    block = new OutputBlock(getCellCoords(mouse));
                     break;
                 case "LABEL":
-                    app.project.blocks.add(new LabelBlock(getCellCoords(mouse)));
+                    block = new LabelBlock(getCellCoords(mouse));
                     break;
+                default:
+                    throw new UnsupportedOperationException();
             }
-            app.selectPanel.clearSelection();
+            app.project.blocks.add(block);
+            app.statusPanel.title = blockToAdd + " added.";
+            app.statusPanel.texts.add("Created " + blockToAdd + " [id: " + block.getId() + "] at " + getCellCoords(mouse).x + ", " + getCellCoords(mouse).y);
+            app.statusPanel.updateLog();
+            app.selectPanel.clearSelectionSilent();
         }
     }
 
@@ -230,12 +237,18 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                             l.hub.remove(line.begin);
                             l.hub.remove(line.end);
                         }
+                        app.statusPanel.title = "Line removed.";
+                        app.statusPanel.texts.add(String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y));
+                        app.statusPanel.updateLog();
                         break;
                     }
                 }
 
             } else {    // it is a block remove it
                 app.project.blocks.remove(b);
+                app.statusPanel.title = "Block removed.";
+                app.statusPanel.texts.add("Block with id " + b.getId() + " deleted.");
+                app.statusPanel.updateLog();
             }
         }
 
@@ -257,6 +270,9 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                         if (line.contains(createdLine.begin)) line.hub.add(createdLine.begin);
                     }
                     app.project.lines.add(new Line(createdLine.begin, createdLine.end, createdLine.hub));
+                    app.statusPanel.title = "Line added.";
+                    app.statusPanel.texts.add(String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y));
+                    app.statusPanel.updateLog();
                 }
             }
         }

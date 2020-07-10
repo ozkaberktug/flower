@@ -100,7 +100,7 @@ public class Project {
             e.printStackTrace();
             return;
         }
-        JOptionPane.showMessageDialog(null, "Exported file: " + ff.getName(), "Export Successful", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Exported file: " + ff.getAbsolutePath(), "Export Successful", JOptionPane.INFORMATION_MESSAGE);
     }
 
 }

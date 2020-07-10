@@ -10,7 +10,7 @@ import java.util.ArrayList;
 
 public class StatusPanel extends JPanel {
 
-    public ArrayList<String> titles = new ArrayList<>();
+    public String title;
     public ArrayList<String> texts = new ArrayList<>();
     private final App app;
     private final JLabel label;
@@ -58,24 +58,28 @@ public class StatusPanel extends JPanel {
         add(label, gbcLabel);
         add(areaScrollPane, gbcArea);
 
-        titles.add("Ready.");
+        title = "Ready.";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         texts.add("flower (version: " + App.version_string + ") \nSession started at " + dtf.format(LocalDateTime.now()));
         updateLog();
     }
 
     public void updateLog() {
-        if (!titles.isEmpty()) {
-            label.setText(titles.get(titles.size() - 1));
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < titles.size(); i++) {
-//                sb.append(titles.get(i));
-//                sb.append("\n");
-                sb.append(texts.get(i));
-                sb.append("\n\n");
-            }
-            area.setText(sb.toString());
+        label.setText(title);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < texts.size(); i++) {
+            sb.append(texts.get(i));
+            sb.append("\n\n");
         }
+        area.setText(sb.toString());
+    }
+
+    public void clear() {
+        texts.clear();
+        title = "Ready.";
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        texts.add("flower (version: " + App.version_string + ") \nSession started at " + dtf.format(LocalDateTime.now()));
+        updateLog();
     }
 
 }
