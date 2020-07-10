@@ -1,34 +1,38 @@
 package flower.blocks;
 
 import java.awt.*;
+import java.util.ArrayList;
 
 import static flower.DrawPanel.TILESIZE;
 import static flower.DrawPanel.PADDING;
 
 public class Line {
 
-    public static final int HUB_NONE = 0;
-    public static final int HUB_BEGIN = 1;
-    public static final int HUB_END = 2;
-    public static final int HUB_BOTH = HUB_BEGIN | HUB_END;
     public static final int NORTH = 0;
     public static final int EAST = 1;
     public static final int SOUTH = 2;
     public static final int WEST = 3;
-    public final Point begin;
-    public final Point end;
-    public final int hub;
-    private boolean selected = false;
+    public Point begin;
+    public Point end;
+    public ArrayList<Point> hub = null;
+    private boolean ghost = false;
 
-    public Line(Point b, Point e, int hub) {
+    public Line(Point b, Point e) {
         begin = b;
         end = e;
-        this.hub = hub;
+        hub = new ArrayList<>();
     }
 
-    public boolean isSelected() {return selected;}
+    public Line(Point b, Point e, ArrayList<Point> h) {
+        begin = b;
+        end = e;
+        hub = new ArrayList<>();
+        hub.addAll(h);
+    }
 
-    public void setSelected(boolean sel) {selected = sel;}
+    public boolean isGhost() {return ghost;}
+
+    public void setGhost(boolean sel) {ghost = sel;}
 
     public boolean contains(Point p) {
         boolean sameX = false;
@@ -70,12 +74,10 @@ public class Line {
     }
 
     public void draw(Graphics2D graphics2D) {
-        if (selected) graphics2D.setColor(Color.BLUE);
+        if (ghost) graphics2D.setColor(Color.GRAY);
         else graphics2D.setColor(Color.BLACK);
-        if((hub & HUB_BEGIN) == HUB_BEGIN)
-            graphics2D.fillOval(begin.x * TILESIZE, begin.y * TILESIZE, TILESIZE, TILESIZE);
-        if((hub & HUB_END) == HUB_END)
-            graphics2D.fillOval(end.x * TILESIZE, end.y * TILESIZE, TILESIZE, TILESIZE);
+        for (Point pt : hub)
+            graphics2D.fillOval(pt.x * TILESIZE + PADDING / 2, pt.y * TILESIZE + PADDING / 2, TILESIZE - PADDING, TILESIZE - PADDING);
         graphics2D.drawLine(begin.x * TILESIZE + PADDING, begin.y * TILESIZE + PADDING, end.x * TILESIZE + PADDING, end.y * TILESIZE + PADDING);
     }
 
