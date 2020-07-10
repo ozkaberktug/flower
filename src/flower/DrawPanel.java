@@ -53,8 +53,8 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         return null;
     }
 
-    public static final int TILESIZE = 16;
-    public static final int PADDING = 7;
+    public static final int TILESIZE = 14;
+    public static final int PADDING = 6;
     public static final Dimension PREFERRED_SIZE = new Dimension(TILESIZE * 40, TILESIZE * 30);
     public static final int NO_OPERATION = 0;
     public static final int DRAW_LINE = 1;

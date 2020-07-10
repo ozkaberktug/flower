@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import static flower.DrawPanel.*;
 
 public class Project {
+
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
     public final String name;
