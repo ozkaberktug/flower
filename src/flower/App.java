@@ -11,6 +11,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public Project project = new Project();
     public DrawPanel drawPanel = null;
     public SelectPanel selectPanel = null;
+    public StatusPanel statusPanel = null;
 
     public App() {
         super("Flower - The Flowchart Designer");
@@ -67,8 +68,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         helpMenu.add(aboutMenuItem);
 
         JPanel contentPanel = new JPanel(new GridBagLayout());
-        contentPanel.setOpaque(true);
-        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(8, 8, 0, 8), 0, 0);
         drawPanel = new DrawPanel(this);
         selectPanel = new SelectPanel(this);
         JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
@@ -78,6 +78,10 @@ public class App extends JFrame implements WindowListener, ActionListener {
         JSplitPane editorPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, selectPanelScrollPane, drawPanel);
         editorPanel.setOneTouchExpandable(true);
         contentPanel.add(editorPanel, gbcEditorPanel);
+        /**/
+        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0,0,0,0), 0, 0);
+        statusPanel = new StatusPanel(this);
+        contentPanel.add(statusPanel, gbcStatusPanel);
 
         setContentPane(contentPanel);
         setJMenuBar(menuBar);

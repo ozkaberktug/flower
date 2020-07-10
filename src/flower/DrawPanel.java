@@ -86,6 +86,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         addMouseListener(this);
         addMouseMotionListener(this);
         addMouseWheelListener(this);
+        setBorder(BorderFactory.createRaisedBevelBorder());
         setOpaque(true);
         setBackground(BACKGROUND_COLOR);
         createdLine.setGhost(true);
@@ -111,6 +112,8 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         Graphics2D graphics2D = (Graphics2D) graphics.create();
 //        graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 //        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+//        graphics2D.setColor(BACKGROUND_COLOR);
+//        graphics2D.fillRect(0,0, getWidth(), getHeight());
         graphics2D.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
         graphics2D.setFont(HEAD_FONT);
         graphics2D.setColor(Color.GRAY);
@@ -211,9 +214,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (b == null) {    // empty space clicked
                 mode = DRAW_LINE;
                 createdLine.end = createdLine.begin = getCellCoords(mouse);
-                for (Line line : app.project.lines)
-                    if (line.contains(getCellCoords(mouse))) line.hub.add(createdLine.begin);
-
             } else {    // block clicked
                 mode = DRAG_BLOCK;
                 createdLine.end = createdLine.begin = getCellCoords(mouse);
@@ -227,7 +227,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                 for (Line line : app.project.lines) {
                     if (line.contains(getCellCoords(mouse))) {      // found the line
                         app.project.lines.remove(line);     // removed the line
-                        for(Line l : app.project.lines) {   // clear nodes of other hubs
+                        for (Line l : app.project.lines) {   // clear nodes of other hubs
                             l.hub.remove(line.begin);
                             l.hub.remove(line.end);
                         }
@@ -253,8 +253,10 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (tmp.x == createdLine.begin.x || tmp.y == createdLine.begin.y) {
                 createdLine.end = tmp;
                 if (!createdLine.begin.equals(createdLine.end)) {
-                    for (Line line : app.project.lines)
-                        if (line.contains(getCellCoords(mouse))) line.hub.add(createdLine.end);
+                    for (Line line : app.project.lines) {
+                        if (line.contains(createdLine.end)) line.hub.add(createdLine.end);
+                        if (line.contains(createdLine.begin)) line.hub.add(createdLine.begin);
+                    }
                     app.project.lines.add(new Line(createdLine.begin, createdLine.end, createdLine.hub));
                 }
             }
