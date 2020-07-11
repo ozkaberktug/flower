@@ -30,6 +30,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
+
+        interpreter = new Interpreter(this);
     }
 
     // create and add components to UI
