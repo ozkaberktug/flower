@@ -71,10 +71,6 @@ public class StatusPanel extends JPanel {
         updateLog();
     }
 
-    public void appendLog(String title, String text) {
-        appendLog(title, text, PLAIN_MSG);
-    }
-
     public void appendLog(String title, String text, int msgType) {
         this.title = title;
         label.setForeground(Color.BLACK);
