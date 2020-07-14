@@ -71,6 +71,8 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     public String blockToAdd = null;
     public boolean toggleGrids = true;
     public boolean toggleQuality = false;
+    public boolean toggleInputProcessing = true;
+
     private AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
     private boolean dragging = false;
@@ -169,11 +171,11 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (dragging) return;
-        if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+        if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
             AbstractBlock ab = getBlockType();
             if (ab != null) ab.showDialog(e.getLocationOnScreen());
         }
-        if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
+        if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
             AbstractBlock block;
             switch (blockToAdd) {
                 case "START":
@@ -213,7 +215,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         if (click != MouseEvent.NOBUTTON) return;
         click = e.getButton();
 
-        if (click == MouseEvent.BUTTON1) {  // left mouse click
+        if (toggleInputProcessing && click == MouseEvent.BUTTON1) {  // left mouse click
             AbstractBlock b = getBlockType();   // get the block under the mouse
             for (AbstractBlock ab : app.project.blocks) // clear all the selections
                 ab.setSelected(false);
@@ -227,7 +229,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             }
         }
 
-        if (click == MouseEvent.BUTTON3) {  // right mouse click - delete item
+        if (toggleInputProcessing && click == MouseEvent.BUTTON3) {  // right mouse click - delete item
             AbstractBlock b = getBlockType();   // get the block under the mouse
             if (b == null) {    // it is a line remove it
                 for (Line line : app.project.lines) {
@@ -260,7 +262,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         click = MouseEvent.NOBUTTON;
         dragging = false;
 
-        if (e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
+        if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
             Point tmp = getCellCoords(mouse);
             if (tmp.x == createdLine.begin.x || tmp.y == createdLine.begin.y) {
                 createdLine.end = tmp;
@@ -312,11 +314,11 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                 setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
-            if (mode == DRAW_LINE) {
+            if (toggleInputProcessing && mode == DRAW_LINE) {
                 Point tmp = getCellCoords(mouse);
                 if (tmp.x == createdLine.begin.x || tmp.y == createdLine.begin.y) createdLine.end = tmp;
             }
-            if (mode == DRAG_BLOCK) {
+            if (toggleInputProcessing && mode == DRAG_BLOCK) {
                 createdLine.end = getCellCoords(mouse);
                 Point d = new Point(createdLine.end.x - createdLine.begin.x, createdLine.end.y - createdLine.begin.y);
                 for (AbstractBlock ab : app.project.blocks)
@@ -371,4 +373,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             e.printStackTrace();
         }
     }
+
+
 }

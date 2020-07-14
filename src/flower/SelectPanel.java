@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 public class SelectPanel extends JPanel {
 
     public final App app;
+    public boolean toggleInputProcessing = true;
     private JTree tree;
 
     public SelectPanel(App app) {
@@ -70,6 +71,7 @@ public class SelectPanel extends JPanel {
         }
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(e -> {
+            if(!toggleInputProcessing) return;
             DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (selected != null && selected.isLeaf()) {
                 app.drawPanel.blockToAdd = (String) selected.getUserObject();
@@ -81,6 +83,7 @@ public class SelectPanel extends JPanel {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // for deselection
+                if(!toggleInputProcessing) return;
                 int row = tree.getRowForLocation(e.getX(), e.getY());
                 if (row == -1) { // click on the "empty surface"
                     clearSelection();

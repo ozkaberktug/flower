@@ -67,8 +67,8 @@ public class StatusPanel extends JPanel {
     public void updateLog() {
         label.setText(title);
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < texts.size(); i++) {
-            sb.append(texts.get(i));
+        for (String text : texts) {
+            sb.append(text);
             sb.append("\n\n");
         }
         area.setText(sb.toString());

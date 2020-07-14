@@ -28,10 +28,11 @@ public class ToolbarPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Run")) {
-            if(!app.interpreter.isRunning)
-            app.interpreter.start();
-            runBtn.setEnabled(false);
+            if (!app.interpreter.isRunning) runBtn.setEnabled(false);
             stopBtn.setEnabled(true);
+            app.drawPanel.toggleInputProcessing = false;
+            app.selectPanel.toggleInputProcessing = false;
+            app.interpreter.start();
         }
         if (e.getActionCommand().equals("Stop")) {
             app.interpreter.interrupt();
@@ -41,6 +42,8 @@ public class ToolbarPanel extends JPanel implements ActionListener {
                 interruptedException.printStackTrace();
             }
             app.interpreter = new Interpreter(app);
+            app.drawPanel.toggleInputProcessing = true;
+            app.selectPanel.toggleInputProcessing = true;
             runBtn.setEnabled(true);
             stopBtn.setEnabled(false);
         }
