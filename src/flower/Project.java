@@ -17,13 +17,16 @@ import static flower.DrawPanel.*;
 
 public class Project {
 
+    private final App app;
+
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
     public final String name;
     public final String inputParams;
     public final ArrayList<Project> libs;
 
-    public Project() {
+    public Project(App app) {
+        this.app = app;
         lines = new ArrayList<>();
         blocks = new ArrayList<>();
         name = "Untitled";
@@ -31,7 +34,7 @@ public class Project {
         libs = new ArrayList<>();
     }
 
-    public void exportDialog(App app) {
+    public void showExportDialog(App app) {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileNameExtensionFilter("PNG files", "png"));
@@ -50,6 +53,12 @@ public class Project {
         AffineTransform af = new AffineTransform(1, 0, 0, 1, 0, 0);
         Point ULC = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         Point LRC = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+
+        // check if there is anything
+        if (lines.isEmpty() && blocks.isEmpty()) {
+            app.statusPanel.appendLog("Export failed.", "Nothing on the chart.", StatusPanel.ERROR_MSG);
+            return;
+        }
 
         // check line bounds
         for (Line line : lines) {
@@ -75,15 +84,15 @@ public class Project {
         // move the drawing to 0,0 position
         final int width = Math.abs(LRC.x - ULC.x) * TILESIZE;
         final int height = Math.abs(LRC.y - ULC.y) * TILESIZE;
-        af.translate(-(ULC.x -1 ) * TILESIZE, -(ULC.y - 1) * TILESIZE);
+        af.translate(-(ULC.x - 1) * TILESIZE, -(ULC.y - 1) * TILESIZE);
 
         // draw the image
-        BufferedImage bufferedImage = new BufferedImage(width + 2* TILESIZE, height + 2*TILESIZE, BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(width + 2 * TILESIZE, height + 2 * TILESIZE, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
         graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRect(0, 0, width +  2* TILESIZE, height +  2* TILESIZE);
+        graphics2D.fillRect(0, 0, width + 2 * TILESIZE, height + 2 * TILESIZE);
         graphics2D.setTransform(af);
         graphics2D.setStroke(BOLD_STROKE);
         graphics2D.setColor(Color.BLACK);
@@ -95,12 +104,11 @@ public class Project {
         try {
             if (!ff.getName().toUpperCase().endsWith("PNG")) ff = new File(ff.getAbsolutePath() + ".png");
             ImageIO.write(bufferedImage, "PNG", ff);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage(), "File I/O Error", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
+        } catch (Exception e) {
+            app.statusPanel.appendLog("Export failed.", e.getMessage(), StatusPanel.ERROR_MSG);
             return;
         }
-        JOptionPane.showMessageDialog(null, "Exported file: " + ff.getAbsolutePath(), "Export Successful", JOptionPane.INFORMATION_MESSAGE);
+        app.statusPanel.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanel.PLAIN_MSG);
     }
 
 }

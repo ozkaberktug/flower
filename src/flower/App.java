@@ -8,7 +8,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
 
     public static final String version_string = "ALPHA_2";
 
-    public Project project = new Project();
+    public Project project = null;
     public DrawPanel drawPanel = null;
     public SelectPanel selectPanel = null;
     public StatusPanel statusPanel = null;
@@ -31,6 +31,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
 
+        project = new Project(this);
         interpreter = new Interpreter(this);
     }
 
@@ -104,13 +105,13 @@ public class App extends JFrame implements WindowListener, ActionListener {
             case "New":
                 if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
-                project = new Project();
+                project = new Project(this);
                 selectPanel.clearSelection();
                 drawPanel.clear();
                 statusPanel.clear();
                 break;
             case "Export":
-                project.exportDialog(this);
+                project.showExportDialog(this);
                 break;
             case "Exit":
                 windowClosing(null);
