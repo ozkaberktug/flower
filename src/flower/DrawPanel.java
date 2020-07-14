@@ -177,36 +177,35 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         }
         if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
             AbstractBlock block;
+            Point cellCoords = getCellCoords(mouse);
             switch (blockToAdd) {
                 case "START":
-                    block = new StartBlock(getCellCoords(mouse));
+                    block = new StartBlock(cellCoords);
                     break;
                 case "STOP":
-                    block = new StopBlock(getCellCoords(mouse));
+                    block = new StopBlock(cellCoords);
                     break;
                 case "COMMAND":
-                    block = new CommandBlock(getCellCoords(mouse));
+                    block = new CommandBlock(cellCoords);
                     break;
                 case "IF":
-                    block = new IfBlock(getCellCoords(mouse));
+                    block = new IfBlock(cellCoords);
                     break;
                 case "INPUT":
-                    block = new InputBlock(getCellCoords(mouse));
+                    block = new InputBlock(cellCoords);
                     break;
                 case "OUTPUT":
-                    block = new OutputBlock(getCellCoords(mouse));
+                    block = new OutputBlock(cellCoords);
                     break;
                 case "LABEL":
-                    block = new LabelBlock(getCellCoords(mouse));
+                    block = new LabelBlock(cellCoords);
                     break;
                 default:
                     throw new UnsupportedOperationException();
             }
             app.project.blocks.add(block);
-            app.statusPanel.title = blockToAdd + " added.";
-            app.statusPanel.texts.add("Created " + blockToAdd + " [id: " + block.getId() + "] at " + getCellCoords(mouse).x + ", " + getCellCoords(mouse).y);
-            app.statusPanel.updateLog();
-            app.selectPanel.clearSelectionSilent();
+            app.statusPanel.appendLog(blockToAdd + " added", "Created " + blockToAdd + " [id: " + block.getId() + "] at " + cellCoords.x + ", " + cellCoords.y, StatusPanel.INFO_MSG);
+            app.selectPanel.clearSelection();
         }
     }
 
@@ -239,18 +238,14 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                             l.hub.remove(line.begin);
                             l.hub.remove(line.end);
                         }
-                        app.statusPanel.title = "Line removed.";
-                        app.statusPanel.texts.add(String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y));
-                        app.statusPanel.updateLog();
+                        app.statusPanel.appendLog("Line removed.", String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y), StatusPanel.INFO_MSG);
                         break;
                     }
                 }
 
             } else {    // it is a block remove it
                 app.project.blocks.remove(b);
-                app.statusPanel.title = "Block removed.";
-                app.statusPanel.texts.add("Block with id " + b.getId() + " deleted.");
-                app.statusPanel.updateLog();
+                app.statusPanel.appendLog( "Block removed.","Block with id " + b.getId() + " deleted.", StatusPanel.INFO_MSG);
             }
         }
 
@@ -272,9 +267,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                         if (line.contains(createdLine.begin)) line.hub.add(createdLine.begin);
                     }
                     app.project.lines.add(new Line(createdLine.begin, createdLine.end, createdLine.hub));
-                    app.statusPanel.title = "Line added.";
-                    app.statusPanel.texts.add(String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y));
-                    app.statusPanel.updateLog();
+                    app.statusPanel.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y), StatusPanel.INFO_MSG);
                 }
             }
         }

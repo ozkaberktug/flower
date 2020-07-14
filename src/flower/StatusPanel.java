@@ -10,8 +10,12 @@ import java.util.ArrayList;
 
 public class StatusPanel extends JPanel {
 
-    public String title;
-    public ArrayList<String> texts = new ArrayList<>();
+    public static final int PLAIN_MSG = 0;
+    public static final int INFO_MSG = 1;
+    public static final int ERROR_MSG = 2;
+
+    private String title;
+    private final ArrayList<String> texts = new ArrayList<>();
     private final App app;
     private final JLabel label;
     private final JTextArea area;
@@ -58,9 +62,31 @@ public class StatusPanel extends JPanel {
         add(label, gbcLabel);
         add(areaScrollPane, gbcArea);
 
-        title = "Ready.";
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
-        texts.add("flower (version: " + App.version_string + ") \nSession started at " + dtf.format(LocalDateTime.now()));
+        clear();
+    }
+
+    public void appendLog(String title) {
+        label.setForeground(Color.BLACK);
+        this.title = title;
+        updateLog();
+    }
+
+    public void appendLog(String title, String text) {
+        appendLog(title, text, PLAIN_MSG);
+    }
+
+    public void appendLog(String title, String text, int msgType) {
+        this.title = title;
+        label.setForeground(Color.BLACK);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
+        String prefix = "";
+        if (msgType == INFO_MSG) prefix = "[" + dtf.format(LocalDateTime.now()) + "] " + title + "\n    ";
+        if (msgType == ERROR_MSG) {
+            label.setForeground(Color.RED);
+            this.title = "Error: " + title;
+            prefix = "[" + dtf.format(LocalDateTime.now()) + "] An error occurred: " + title + "\n      ";
+        }
+        this.texts.add(prefix + text);
         updateLog();
     }
 
@@ -69,12 +95,13 @@ public class StatusPanel extends JPanel {
         StringBuilder sb = new StringBuilder();
         for (String text : texts) {
             sb.append(text);
-            sb.append("\n\n");
+            sb.append("\n");
         }
         area.setText(sb.toString());
     }
 
     public void clear() {
+        label.setForeground(Color.BLACK);
         texts.clear();
         title = "Ready.";
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");

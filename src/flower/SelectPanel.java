@@ -71,35 +71,29 @@ public class SelectPanel extends JPanel {
         }
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(e -> {
-            if(!toggleInputProcessing) return;
+            if (!toggleInputProcessing) return;
             DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (selected != null && selected.isLeaf()) {
-                app.drawPanel.blockToAdd = (String) selected.getUserObject();
-                app.statusPanel.title = (String) selected.getUserObject() + " selected.";
-                app.statusPanel.updateLog();
+                String obj = (String) selected.getUserObject();
+                app.drawPanel.blockToAdd = obj;
+                app.statusPanel.appendLog(obj + " selected.");
             }
         });
         tree.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 // for deselection
-                if(!toggleInputProcessing) return;
+                if (!toggleInputProcessing) return;
                 int row = tree.getRowForLocation(e.getX(), e.getY());
                 if (row == -1) { // click on the "empty surface"
                     clearSelection();
+                    app.statusPanel.appendLog("Ready.");
                 }
             }
         });
     }
 
     public void clearSelection() {
-        tree.clearSelection();
-        app.drawPanel.blockToAdd = null;
-        app.statusPanel.title = "Ready.";
-        app.statusPanel.updateLog();
-    }
-
-    public void clearSelectionSilent() {
         tree.clearSelection();
         app.drawPanel.blockToAdd = null;
     }

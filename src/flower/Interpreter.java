@@ -1,12 +1,9 @@
 package flower;
 
 import flower.blocks.*;
-import jdk.internal.util.xml.impl.Input;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -20,9 +17,7 @@ public class Interpreter extends Thread {
         this.app = app;
         setUncaughtExceptionHandler((thread, exception) -> {
             String[] msg = exception.getMessage().split("/");
-            this.app.statusPanel.title = "Error: " + msg[0];
-            this.app.statusPanel.texts.add("An error occurred: " + msg[1]);
-            this.app.statusPanel.updateLog();
+            this.app.statusPanel.appendLog(msg[0], msg[1], StatusPanel.ERROR_MSG);
             this.app.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
         });
     }
@@ -31,10 +26,7 @@ public class Interpreter extends Thread {
     public void run() {
         // init environment
         isRunning = true;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
-        app.statusPanel.title = "Running...";
-        app.statusPanel.texts.add("Simulation started at " + dtf.format(LocalDateTime.now()));
-        app.statusPanel.updateLog();
+        app.statusPanel.appendLog("Running...", "Simulation started.", StatusPanel.INFO_MSG);
         long beginTime = System.currentTimeMillis();
 
         // check if there are any blocks
@@ -56,12 +48,6 @@ public class Interpreter extends Thread {
         // fetch and decode cycle
         while (isRunning) {
 
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
             // decode and get the output pin
             Point ptBegin = decode(currentBlock);
 
@@ -70,7 +56,6 @@ public class Interpreter extends Thread {
             currentBlock = null;
 
             // use DFS to find next block
-            boolean foundBlock = false;
             Stack<Point> ss = new Stack<>();
             ArrayList<Point> visited = new ArrayList<>();
             ss.push(ptBegin);
@@ -105,9 +90,7 @@ public class Interpreter extends Thread {
             if (currentBlock instanceof StopBlock) isRunning = false;
         }
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
-        app.statusPanel.title = "Finished in " + String.format("%.2f", diffTime) + " seconds.";
-        app.statusPanel.texts.add("Simulation finished. Took " + String.format("%.4f", diffTime) + " seconds to complete.");
-        app.statusPanel.updateLog();
+        app.statusPanel.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanel.INFO_MSG);
         app.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
     }
 
@@ -116,16 +99,13 @@ public class Interpreter extends Thread {
         else if (block instanceof CommandBlock) {
             //todo
             return block.getOutputPins()[0];
-        }
-        else if (block instanceof OutputBlock) {
+        } else if (block instanceof OutputBlock) {
             //todo
             return block.getOutputPins()[0];
-        }
-        else if (block instanceof InputBlock) {
+        } else if (block instanceof InputBlock) {
             //todo
             return block.getOutputPins()[0];
-        }
-        else if (block instanceof IfBlock) {
+        } else if (block instanceof IfBlock) {
             //todo
             return block.getOutputPins()[0];
         }
