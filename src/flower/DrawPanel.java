@@ -321,8 +321,16 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (toggleInputProcessing && mode == DRAG_BLOCK) {
                 createdLine.end = getCellCoords(mouse);
                 Point d = new Point(createdLine.end.x - createdLine.begin.x, createdLine.end.y - createdLine.begin.y);
-                for (AbstractBlock ab : app.project.blocks)
-                    if (ab.isSelected()) ab.moveTo(d);
+                for (AbstractBlock ab : app.project.blocks) {
+                    if (ab.isSelected()) {
+                        ab.moveTo(d);
+//                        for (AbstractBlock other : app.project.blocks) {
+//                            if (ab.getId() != other.getId() && ab.getOuterBounds().intersects(other.getOuterBounds())) {
+//                                ab.moveTo(new Point(-d.x, -d.y));
+//                            }
+//                        }
+                    }
+                }
                 createdLine.begin = createdLine.end;
                 setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }

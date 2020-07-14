@@ -84,11 +84,9 @@ public class Interpreter extends Thread {
                         if (currentBlock != null)
                             throw new RuntimeException("Parallel execution./Output of one block is connected to at least two other block input.");
                         currentBlock = block;
-                        foundBlock = true;
                     }
                 }
 
-                if (foundBlock) break;
 
                 // find which line contains this point
                 for (Line line : app.project.lines) {
