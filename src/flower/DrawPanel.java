@@ -78,7 +78,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
     private boolean dragging = false;
     private int click = MouseEvent.NOBUTTON;
     private int mode = NO_OPERATION;
-    private final Line createdLine = new Line(null, null);
+    private final Line createdLine = new Line();
     private AbstractBlock hoveringBlock = null;
 
     public DrawPanel(App app) {
@@ -245,7 +245,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
 
             } else {    // it is a block remove it
                 app.project.blocks.remove(b);
-                app.statusPanel.appendLog( "Block removed.","Block with id " + b.getId() + " deleted.", StatusPanel.INFO_MSG);
+                app.statusPanel.appendLog("Block removed.", "Block with id " + b.getId() + " deleted.", StatusPanel.INFO_MSG);
             }
         }
 
@@ -261,7 +261,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             Point tmp = getCellCoords(mouse);
             if (tmp.x == createdLine.begin.x || tmp.y == createdLine.begin.y) {
                 createdLine.end = tmp;
-                if (!createdLine.begin.equals(createdLine.end)) {
+                if (!createdLine.begin.equals(createdLine.end)) {   // lines should be at least 2 block long
                     for (Line line : app.project.lines) {
                         if (line.contains(createdLine.end)) line.hub.add(createdLine.end);
                         if (line.contains(createdLine.begin)) line.hub.add(createdLine.begin);

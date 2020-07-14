@@ -8,25 +8,31 @@ import static flower.DrawPanel.PADDING;
 
 public class Line {
 
-    public static final int NORTH = 0;
-    public static final int EAST = 1;
-    public static final int SOUTH = 2;
-    public static final int WEST = 3;
     public Point begin;
     public Point end;
-    public ArrayList<Point> hub = null;
+    public ArrayList<Point> hub = new ArrayList<>();
     private boolean ghost = false;
+
+    public Line() {}
 
     public Line(Point b, Point e) {
         begin = b;
         end = e;
-        hub = new ArrayList<>();
+        if ((begin.x == end.x && begin.y > end.y) || (begin.y == end.y && begin.x > end.x)) {
+            Point tmp = end;
+            end = begin;
+            begin = tmp;
+        }
     }
 
     public Line(Point b, Point e, ArrayList<Point> h) {
         begin = b;
         end = e;
-        hub = new ArrayList<>();
+        if ((begin.x == end.x && begin.y > end.y) || (begin.y == end.y && begin.x > end.x)) {
+            Point tmp = end;
+            end = begin;
+            begin = tmp;
+        }
         hub.addAll(h);
     }
 
@@ -38,35 +44,17 @@ public class Line {
         boolean sameX = false;
         boolean sameY = false;
 
-        if (begin.x <= end.x) {
-            for (int x = begin.x; x <= end.x; x++) {
-                if (x == p.x) {
-                    sameX = true;
-                    break;
-                }
-            }
-        } else {
-            for (int x = begin.x; x >= end.x; x--) {
-                if (x == p.x) {
-                    sameX = true;
-                    break;
-                }
+        for (int x = begin.x; x <= end.x; x++) {
+            if (x == p.x) {
+                sameX = true;
+                break;
             }
         }
 
-        if (begin.y <= end.y) {
-            for (int y = begin.y; y <= end.y; y++) {
-                if (y == p.y) {
-                    sameY = true;
-                    break;
-                }
-            }
-        } else {
-            for (int y = begin.y; y >= end.y; y--) {
-                if (y == p.y) {
-                    sameY = true;
-                    break;
-                }
+        for (int y = begin.y; y <= end.y; y++) {
+            if (y == p.y) {
+                sameY = true;
+                break;
             }
         }
 
@@ -81,14 +69,8 @@ public class Line {
         graphics2D.drawLine(begin.x * TILESIZE + PADDING, begin.y * TILESIZE + PADDING, end.x * TILESIZE + PADDING, end.y * TILESIZE + PADDING);
     }
 
-    public int getDirection() {
-        if (begin.x == end.x) {
-            if (begin.y <= end.y) return SOUTH;
-            return NORTH;
-        } else { //begin.y == end.y
-            if (begin.x <= end.x) return WEST;
-            return EAST;
-        }
-    }
+    public boolean isVertical() { return (begin.y == end.y); }
+
+    public boolean isHorizontal() { return (begin.x == end.x); }
 
 }
