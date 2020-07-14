@@ -9,6 +9,7 @@ abstract public class AbstractBlock {
     protected boolean selected;
     protected boolean hovered;
     protected boolean breakpoint;
+    protected boolean processing;
 
     private final int id;
 
@@ -48,6 +49,8 @@ abstract public class AbstractBlock {
 
     public void setBreakpoint(boolean val) {breakpoint = val;}
 
+    public void setProcessing(boolean val) {processing = val;}
+
     /* test functions */
     public boolean isSelected() {return selected;}
 
@@ -55,5 +58,5 @@ abstract public class AbstractBlock {
 
     public boolean isBreakpoint() {return breakpoint;}
 
-
+    public boolean isProcessing() {return processing;}
 }

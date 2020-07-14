@@ -1,5 +1,7 @@
 package flower;
 
+import flower.blocks.AbstractBlock;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -28,24 +30,20 @@ public class ToolbarPanel extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("Run")) {
-            if (!app.interpreter.isRunning) runBtn.setEnabled(false);
+            runBtn.setEnabled(false);
             stopBtn.setEnabled(true);
             app.drawPanel.toggleInputProcessing = false;
             app.selectPanel.toggleInputProcessing = false;
             app.interpreter.start();
         }
         if (e.getActionCommand().equals("Stop")) {
-            app.interpreter.interrupt();
-            try {
-                app.interpreter.join();
-            } catch (InterruptedException interruptedException) {
-                interruptedException.printStackTrace();
-            }
+            app.interpreter.isRunning = false;
             app.interpreter = new Interpreter(app);
             app.drawPanel.toggleInputProcessing = true;
             app.selectPanel.toggleInputProcessing = true;
             runBtn.setEnabled(true);
             stopBtn.setEnabled(false);
+            for(AbstractBlock block : app.project.blocks) block.setProcessing(false);
         }
     }
 

@@ -21,7 +21,8 @@ public class IfBlock extends AbstractBlock {
     public void draw(Graphics2D graphics2D) {
         graphics2D.setFont(CODE_FONT);
         FontMetrics fm = graphics2D.getFontMetrics();
-        graphics2D.setColor(Color.PINK);
+        if (processing) graphics2D.setColor(Color.ORANGE);
+        else graphics2D.setColor(Color.PINK);
 
         // create polygon
         GeneralPath shape = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
@@ -32,9 +33,9 @@ public class IfBlock extends AbstractBlock {
         shape.closePath();
 
         graphics2D.fill(shape);
-        if (isSelected()) graphics2D.setColor(Color.BLUE);
-        else if (isHovered()) graphics2D.setColor(Color.YELLOW);
-        else if (isBreakpoint()) graphics2D.setColor(Color.RED);
+        if (selected) graphics2D.setColor(Color.BLUE);
+        else if (hovered) graphics2D.setColor(Color.YELLOW);
+        else if (breakpoint) graphics2D.setColor(Color.RED);
         else graphics2D.setColor(Color.BLACK);
         graphics2D.setStroke(NORMAL_STROKE);
         graphics2D.draw(shape);
