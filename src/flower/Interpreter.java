@@ -65,7 +65,8 @@ public class Interpreter extends Thread {
 
                 // check if we found a block input pin
                 for (AbstractBlock block : app.project.blocks) {
-                    if ((!(block instanceof StartBlock || block instanceof LabelBlock)) && block.getInputPins()[0].equals(p)) {
+                    Point[] inputPins = block.getInputPins();
+                    if (inputPins != null && inputPins[0].equals(p)) {
                         if (currentBlock != null)
                             throw new RuntimeException("Parallel execution./Output of one block is connected to at least two other block input.");
                         currentBlock = block;
@@ -73,16 +74,15 @@ public class Interpreter extends Thread {
                 }
 
 
-                /*// find which line contains this point
+                // find which line(s) contains this point
                 for (Line line : app.project.lines) {
-                    if (line.begin.equals(p)) {
-                        if (!visited.contains(line.end)) ss.push(line.end);
-                        for (Point ptHub : line.hub) if (!visited.contains(ptHub)) ss.push(ptHub);
-                    } else if (line.end.equals(p)) {
-                        if (!visited.contains(line.begin)) ss.push(line.begin);
-                        for (Point ptHub : line.hub) if (!visited.contains(ptHub)) ss.push(ptHub);
+                    if (line.begin.equals(p) || line.end.equals(p)) {
+                        for(Line l : app.project.hubs.get(p)) {
+                            if(!visited.contains(l.begin)) ss.push(l.begin);
+                            if(!visited.contains(l.end)) ss.push(l.end);
+                        }
                     }
-                }*/
+                }
 
             }
             if (currentBlock == null) throw new RuntimeException("Dangling block./Not connected to STOP block.");

@@ -8,6 +8,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
 public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, MouseListener, MouseWheelListener {
@@ -163,7 +164,7 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         for (Line line : app.project.lines) line.draw(graphics2D);
         graphics2D.setColor(Color.BLACK);
         for (Point hub : app.project.hubs.keySet())
-            if (app.project.hubs.get(hub) != 1)
+            if (app.project.hubs.get(hub).size() != 1)
                 graphics2D.fillOval(hub.x * TILESIZE + PADDING / 2, hub.y * TILESIZE + PADDING / 2, TILESIZE - PADDING, TILESIZE - PADDING);
         for (AbstractBlock ab : app.project.blocks) ab.draw(graphics2D);
         graphics2D.dispose();
@@ -235,12 +236,12 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (b == null) {    // it is a line remove it
                 for (Line line : app.project.lines) {
                     if (line.containsInclusive(getCellCoords(mouse))) {      // found the line
-                        int degree = app.project.hubs.get(line.begin) - 1;  // remove hubs
+                        int degree = app.project.hubs.get(line.begin).size() - 1;  // remove hubs
                         if (degree == 0) app.project.hubs.remove(line.begin);
-                        else app.project.hubs.put(line.begin, degree);
-                        degree = app.project.hubs.get(line.end) - 1;
+                        else app.project.hubs.get(line.begin).remove(line);
+                        degree = app.project.hubs.get(line.end).size() - 1;
                         if (degree == 0) app.project.hubs.remove(line.end);
-                        else app.project.hubs.put(line.end, degree);
+                        else app.project.hubs.get(line.end).remove(line);
                         app.project.lines.remove(line);     // removed the line
                         app.statusPanel.appendLog("Line removed.", String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y), StatusPanel.INFO_MSG);
                         break;
@@ -280,31 +281,44 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
                         for (Line line : app.project.lines) {    // check whether createdLine divides the others
                             boolean done = false;
                             if (line.containsExclusive(createdLine.begin)) { // divide intersected line into two
-                                app.project.lines.add(new Line(line.begin, createdLine.begin));
+                                Line l = new Line(line.begin, createdLine.begin);
                                 line.begin = createdLine.begin;
-                                app.project.hubs.put(createdLine.begin, 2);
+                                app.project.lines.add(l);
+                                ArrayList<Line> edges = new ArrayList<>();
+                                edges.add(line);
+                                edges.add(l);
+                                app.project.hubs.put(createdLine.begin, edges);
                                 done = true;
                             }
                             if (line.containsExclusive(createdLine.end)) { // divide intersected line into two
-                                System.out.println("yes");
-
-                                app.project.lines.add(new Line(line.end, createdLine.end));
+                                Line l = new Line(line.end, createdLine.end);
                                 line.end = createdLine.end;
-                                app.project.hubs.put(createdLine.end, 2);
+                                app.project.lines.add(l);
+                                ArrayList<Line> edges = new ArrayList<>();
+                                edges.add(line);
+                                edges.add(l);
+                                app.project.hubs.put(createdLine.end, edges);
                                 done = true;
                             }
                             if (done) break;
                         }
 
                         // simple line - no division
-                        if (app.project.hubs.containsKey(createdLine.begin))
-                            app.project.hubs.put(createdLine.begin, app.project.hubs.get(createdLine.begin) + 1);
-                        else app.project.hubs.put(createdLine.begin, 1);
-                        if (app.project.hubs.containsKey(createdLine.end))
-                            app.project.hubs.put(createdLine.end, app.project.hubs.get(createdLine.end) + 1);
-                        else app.project.hubs.put(createdLine.end, 1);
+                        Line l = new Line(createdLine.begin, createdLine.end);
+                        app.project.lines.add(l);
+                        ArrayList<Line> edge = new ArrayList<>();
+                        edge.add(l);
+                        if (app.project.hubs.containsKey(createdLine.begin)) {
+                            ArrayList<Line> edges = app.project.hubs.get(createdLine.begin);
+                            edges.add(l);
+                            app.project.hubs.put(createdLine.begin, edges);
+                        } else app.project.hubs.put(createdLine.begin, edge);
+                        if (app.project.hubs.containsKey(createdLine.end)) {
+                            ArrayList<Line> edges = app.project.hubs.get(createdLine.end);
+                            edges.add(l);
+                            app.project.hubs.put(createdLine.end, edges);
+                        } else app.project.hubs.put(createdLine.end, edge);
 
-                        app.project.lines.add(new Line(createdLine.begin, createdLine.end));
                         app.statusPanel.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y), StatusPanel.INFO_MSG);
                     }
                 }

@@ -23,7 +23,7 @@ public class Project {
 
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
-    public final HashMap<Point, Integer> hubs;
+    public final HashMap<Point, ArrayList<Line>> hubs;
     public final String name;
     public final String inputParams;
     public final ArrayList<Project> libs;
