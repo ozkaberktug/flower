@@ -12,6 +12,8 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Stack;
 
 import static flower.DrawPanel.*;
 
@@ -21,6 +23,7 @@ public class Project {
 
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
+    public final HashMap<Point, Integer> hubs;
     public final String name;
     public final String inputParams;
     public final ArrayList<Project> libs;
@@ -28,6 +31,7 @@ public class Project {
     public Project(App app) {
         this.app = app;
         lines = new ArrayList<>();
+        hubs = new HashMap<>();
         blocks = new ArrayList<>();
         name = "Untitled";
         inputParams = "";
@@ -41,10 +45,10 @@ public class Project {
         if (chooser.showSaveDialog(app) == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
                 if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    app.project.export(chooser.getSelectedFile());
+                    export(chooser.getSelectedFile());
                 }
             } else {
-                app.project.export(chooser.getSelectedFile());
+                export(chooser.getSelectedFile());
             }
         }
     }

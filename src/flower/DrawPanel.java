@@ -103,7 +103,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         click = MouseEvent.NOBUTTON;
         createdLine.begin = null;
         createdLine.end = null;
-        createdLine.hub.clear();
         mode = NO_OPERATION;
         hoveringBlock = null;
     }
@@ -162,8 +161,11 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         graphics2D.setStroke(BOLD_STROKE);
         if (mouse != null && mode == DRAW_LINE) createdLine.draw(graphics2D);
         for (Line line : app.project.lines) line.draw(graphics2D);
+        graphics2D.setColor(Color.BLACK);
+        for (Point hub : app.project.hubs.keySet())
+            if (app.project.hubs.get(hub) != 1)
+                graphics2D.fillOval(hub.x * TILESIZE + PADDING / 2, hub.y * TILESIZE + PADDING / 2, TILESIZE - PADDING, TILESIZE - PADDING);
         for (AbstractBlock ab : app.project.blocks) ab.draw(graphics2D);
-
         graphics2D.dispose();
         Toolkit.getDefaultToolkit().sync();
     }
@@ -232,12 +234,14 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             AbstractBlock b = getBlockType();   // get the block under the mouse
             if (b == null) {    // it is a line remove it
                 for (Line line : app.project.lines) {
-                    if (line.contains(getCellCoords(mouse))) {      // found the line
+                    if (line.containsInclusive(getCellCoords(mouse))) {      // found the line
+                        int degree = app.project.hubs.get(line.begin) - 1;  // remove hubs
+                        if (degree == 0) app.project.hubs.remove(line.begin);
+                        else app.project.hubs.put(line.begin, degree);
+                        degree = app.project.hubs.get(line.end) - 1;
+                        if (degree == 0) app.project.hubs.remove(line.end);
+                        else app.project.hubs.put(line.end, degree);
                         app.project.lines.remove(line);     // removed the line
-                        for (Line l : app.project.lines) {   // clear nodes of other hubs
-                            l.hub.remove(line.begin);
-                            l.hub.remove(line.end);
-                        }
                         app.statusPanel.appendLog("Line removed.", String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y), StatusPanel.INFO_MSG);
                         break;
                     }
@@ -262,23 +266,55 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (tmp.x == createdLine.begin.x || tmp.y == createdLine.begin.y) {
                 createdLine.end = tmp;
                 if (!createdLine.begin.equals(createdLine.end)) {   // lines should be at least 2 block long
+                    // if createdLine is a sub-line of others, return
+                    boolean process = true;
                     for (Line line : app.project.lines) {
-                        if (line.contains(createdLine.end)) line.hub.add(createdLine.end);
-                        if (line.contains(createdLine.begin)) line.hub.add(createdLine.begin);
+                        if (line.contains(createdLine)) {
+                            process = false;
+                            break;
+                        }
                     }
-                    app.project.lines.add(new Line(createdLine.begin, createdLine.end, createdLine.hub));
-                    app.statusPanel.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y), StatusPanel.INFO_MSG);
+
+                    if (process) {
+                        // line branch - division occurred
+                        for (Line line : app.project.lines) {    // check whether createdLine divides the others
+                            boolean done = false;
+                            if (line.containsExclusive(createdLine.begin)) { // divide intersected line into two
+                                app.project.lines.add(new Line(line.begin, createdLine.begin));
+                                line.begin = createdLine.begin;
+                                app.project.hubs.put(createdLine.begin, 2);
+                                done = true;
+                            }
+                            if (line.containsExclusive(createdLine.end)) { // divide intersected line into two
+                                System.out.println("yes");
+
+                                app.project.lines.add(new Line(line.end, createdLine.end));
+                                line.end = createdLine.end;
+                                app.project.hubs.put(createdLine.end, 2);
+                                done = true;
+                            }
+                            if (done) break;
+                        }
+
+                        // simple line - no division
+                        if (app.project.hubs.containsKey(createdLine.begin))
+                            app.project.hubs.put(createdLine.begin, app.project.hubs.get(createdLine.begin) + 1);
+                        else app.project.hubs.put(createdLine.begin, 1);
+                        if (app.project.hubs.containsKey(createdLine.end))
+                            app.project.hubs.put(createdLine.end, app.project.hubs.get(createdLine.end) + 1);
+                        else app.project.hubs.put(createdLine.end, 1);
+
+                        app.project.lines.add(new Line(createdLine.begin, createdLine.end));
+                        app.statusPanel.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y), StatusPanel.INFO_MSG);
+                    }
                 }
             }
         }
 
-        if (getBlockType() != null) {
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        } else {
-            setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-        }
+        // reset
+        if (getBlockType() != null) setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        else setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
         createdLine.begin = createdLine.end = null;
-        createdLine.hub.clear();
         mode = NO_OPERATION;
     }
 

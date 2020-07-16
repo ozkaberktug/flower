@@ -73,7 +73,7 @@ public class Interpreter extends Thread {
                 }
 
 
-                // find which line contains this point
+                /*// find which line contains this point
                 for (Line line : app.project.lines) {
                     if (line.begin.equals(p)) {
                         if (!visited.contains(line.end)) ss.push(line.end);
@@ -82,7 +82,7 @@ public class Interpreter extends Thread {
                         if (!visited.contains(line.begin)) ss.push(line.begin);
                         for (Point ptHub : line.hub) if (!visited.contains(ptHub)) ss.push(ptHub);
                     }
-                }
+                }*/
 
             }
             if (currentBlock == null) throw new RuntimeException("Dangling block./Not connected to STOP block.");
