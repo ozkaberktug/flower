@@ -45,12 +45,6 @@ public class Interpreter extends Thread {
 
         currentBlock.setProcessing(true);
 
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         // fetch and decode cycle
         while (isRunning) {
 
@@ -99,12 +93,6 @@ public class Interpreter extends Thread {
             if (currentBlock == null) throw new RuntimeException("Dangling block./Not connected to STOP block.");
             currentBlock.setProcessing(true);
             if (currentBlock instanceof StopBlock) isRunning = false;
-
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
         app.statusPanel.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanel.INFO_MSG);
