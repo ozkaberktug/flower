@@ -45,8 +45,15 @@ public class Interpreter extends Thread {
 
         currentBlock.setProcessing(true);
 
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         // fetch and decode cycle
         while (isRunning) {
+
 
             // decode and get the output pin
             Point ptBegin = decode(currentBlock);
@@ -68,7 +75,7 @@ public class Interpreter extends Thread {
                     Point[] inputPins = block.getInputPins();
                     if (inputPins != null && inputPins[0].equals(p)) {
                         if (currentBlock != null)
-                            throw new RuntimeException("Parallel execution./Output of one block is connected to at least two other block input.");
+                            throw new RuntimeException("Parallel execution./Output of one block is connected to at least two other [ID1:" + currentBlock.getId() + " ID2:" + block.getId() + "] block input.");
                         currentBlock = block;
                     }
                 }
@@ -77,9 +84,13 @@ public class Interpreter extends Thread {
                 // find which line(s) contains this point
                 for (Line line : app.project.lines) {
                     if (line.begin.equals(p) || line.end.equals(p)) {
-                        for(Line l : app.project.lines) {
-                            if(!visited.contains(l.begin)) ss.push(l.begin);
-                            if(!visited.contains(l.end)) ss.push(l.end);
+                        if (!visited.contains(line.begin)) {
+                            ss.push(line.begin);
+                            visited.add(line.begin);
+                        }
+                        if (!visited.contains(line.end)) {
+                            ss.push(line.end);
+                            visited.add(line.end);
                         }
                     }
                 }
@@ -88,6 +99,12 @@ public class Interpreter extends Thread {
             if (currentBlock == null) throw new RuntimeException("Dangling block./Not connected to STOP block.");
             currentBlock.setProcessing(true);
             if (currentBlock instanceof StopBlock) isRunning = false;
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
         app.statusPanel.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanel.INFO_MSG);
