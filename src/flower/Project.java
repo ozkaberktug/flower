@@ -10,12 +10,10 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Stack;
 
-import static flower.DrawPanel.*;
+import static flower.DrawPanel.BOLD_STROKE;
+import static flower.DrawPanel.TILESIZE;
 
 public class Project {
 
@@ -23,7 +21,6 @@ public class Project {
 
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
-    public final HashMap<Point, ArrayList<Line>> hubs;
     public final String name;
     public final String inputParams;
     public final ArrayList<Project> libs;
@@ -31,7 +28,6 @@ public class Project {
     public Project(App app) {
         this.app = app;
         lines = new ArrayList<>();
-        hubs = new HashMap<>();
         blocks = new ArrayList<>();
         name = "Untitled";
         inputParams = "";

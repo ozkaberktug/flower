@@ -2,8 +2,8 @@ package flower.blocks;
 
 import java.awt.*;
 
-import static flower.DrawPanel.TILESIZE;
 import static flower.DrawPanel.PADDING;
+import static flower.DrawPanel.TILESIZE;
 
 public class Line {
 
@@ -73,6 +73,8 @@ public class Line {
     public void draw(Graphics2D graphics2D) {
         if (ghost) graphics2D.setColor(Color.GRAY);
         else graphics2D.setColor(Color.BLACK);
+        graphics2D.fillOval(begin.x * TILESIZE + PADDING / 2, begin.y * TILESIZE + PADDING / 2, TILESIZE - PADDING, TILESIZE - PADDING);
+        graphics2D.fillOval(end.x * TILESIZE + PADDING / 2, end.y * TILESIZE + PADDING / 2, TILESIZE - PADDING, TILESIZE - PADDING);
         graphics2D.drawLine(begin.x * TILESIZE + PADDING, begin.y * TILESIZE + PADDING, end.x * TILESIZE + PADDING, end.y * TILESIZE + PADDING);
     }
 
