@@ -74,15 +74,15 @@ public class Interpreter extends Thread {
                 }
 
 
-//                // find which line(s) contains this point
-//                for (Line line : app.project.lines) {
-//                    if (line.begin.equals(p) || line.end.equals(p)) {
-//                        for(Line l : app.project.hubs.get(p)) {
-//                            if(!visited.contains(l.begin)) ss.push(l.begin);
-//                            if(!visited.contains(l.end)) ss.push(l.end);
-//                        }
-//                    }
-//                }
+                // find which line(s) contains this point
+                for (Line line : app.project.lines) {
+                    if (line.begin.equals(p) || line.end.equals(p)) {
+                        for(Line l : app.project.lines) {
+                            if(!visited.contains(l.begin)) ss.push(l.begin);
+                            if(!visited.contains(l.end)) ss.push(l.end);
+                        }
+                    }
+                }
 
             }
             if (currentBlock == null) throw new RuntimeException("Dangling block./Not connected to STOP block.");
