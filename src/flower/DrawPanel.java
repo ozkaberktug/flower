@@ -230,7 +230,13 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         if (toggleInputProcessing && click == MouseEvent.BUTTON3) {  // right mouse click - delete item
             AbstractBlock b = getBlockType();   // get the block under the mouse
             if (b == null) {    // it is a line remove it
-                // todo
+                for (Line line : app.project.lines) {
+                    if (line.containsInclusive(getCellCoords(mouse))) {
+                        app.project.lines.remove(line);
+                        app.statusPanel.appendLog("Line removed.", String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y), StatusPanel.INFO_MSG);
+                        break;
+                    }
+                }
             } else {    // it is a block remove it
                 app.project.blocks.remove(b);
                 app.statusPanel.appendLog("Block removed.", "Block with id " + b.getId() + " deleted.", StatusPanel.INFO_MSG);
@@ -250,7 +256,39 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             if (tmp.x == createdLine.begin.x || tmp.y == createdLine.begin.y) {
                 createdLine.end = tmp;
                 if (!createdLine.begin.equals(createdLine.end)) {   // lines should be at least 2 block long
-                    // todo
+
+                    Line created = new Line(createdLine.begin, createdLine.end);
+
+                    // check if pt begin/end fall on other lines
+                    // and divide the line into two
+                    boolean division = true;
+                    while (division) {
+                        division = false;
+                        for (Line line : app.project.lines) {
+                            // use exclusive method bc division not required on end points.
+                            if (line.containsExclusive(created.begin)) {
+                                Line d1 = new Line(line.begin, created.begin);
+                                Line d2 = new Line(created.begin, line.end);
+                                app.project.lines.add(d1);
+                                app.project.lines.add(d2);
+                                app.project.lines.remove(line);
+                                division = true;
+                                break;
+                            }
+                            if (line.containsExclusive(created.end)) {
+                                Line d1 = new Line(line.begin, created.end);
+                                Line d2 = new Line(created.end, line.end);
+                                app.project.lines.add(d1);
+                                app.project.lines.add(d2);
+                                app.project.lines.remove(line);
+                                division = true;
+                                break;
+                            }
+                        }
+                    }
+
+                    app.project.lines.add(created);
+
                     app.statusPanel.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", createdLine.begin.x, createdLine.begin.y, createdLine.end.x, createdLine.end.y), StatusPanel.INFO_MSG);
                 }
             }
