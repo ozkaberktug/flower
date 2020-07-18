@@ -28,9 +28,9 @@ public class Line {
     public void setGhost(boolean sel) {ghost = sel;}
 
     public boolean contains(Line line) {
-        if (isHorizontal() && line.isHorizontal() && begin.y == line.begin.y)
+        if (end.y == line.end.y && begin.y == line.begin.y)
             return (begin.x <= line.begin.x && end.x >= line.end.x);
-        else if (isVertical() && line.isVertical() && begin.x == line.begin.x)
+        else if (end.x == line.end.x && begin.x == line.begin.x)
             return (begin.y <= line.begin.y && end.y >= line.end.y);
         // perpendicular case which is always false
         return false;
