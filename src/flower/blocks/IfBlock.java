@@ -1,11 +1,22 @@
 package flower.blocks;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.GeneralPath;
 
-import static flower.DrawPanel.*;
+import static flower.DrawPanel.CODE_FONT;
+import static flower.DrawPanel.NORMAL_STROKE;
+import static flower.DrawPanel.PADDING;
+import static flower.DrawPanel.TILESIZE;
 
 public class IfBlock extends AbstractBlock {
     private final Rectangle area;

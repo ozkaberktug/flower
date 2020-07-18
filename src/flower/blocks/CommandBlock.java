@@ -1,10 +1,23 @@
 package flower.blocks;
 
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 
-import static flower.DrawPanel.*;
+import static flower.DrawPanel.CODE_FONT;
+import static flower.DrawPanel.NORMAL_STROKE;
+import static flower.DrawPanel.PADDING;
+import static flower.DrawPanel.TILESIZE;
 
 public class CommandBlock extends AbstractBlock {
 

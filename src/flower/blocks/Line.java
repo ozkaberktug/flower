@@ -1,6 +1,8 @@
 package flower.blocks;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 
 import static flower.DrawPanel.PADDING;
 import static flower.DrawPanel.TILESIZE;

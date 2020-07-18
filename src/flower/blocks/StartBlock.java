@@ -1,8 +1,15 @@
 package flower.blocks;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 
-import static flower.DrawPanel.*;
+import static flower.DrawPanel.HEAD_FONT;
+import static flower.DrawPanel.NORMAL_STROKE;
+import static flower.DrawPanel.PADDING;
+import static flower.DrawPanel.TILESIZE;
 
 public class StartBlock extends AbstractBlock {
 

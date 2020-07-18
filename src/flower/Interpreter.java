@@ -1,8 +1,15 @@
 package flower;
 
-import flower.blocks.*;
+import flower.blocks.AbstractBlock;
+import flower.blocks.CommandBlock;
+import flower.blocks.IfBlock;
+import flower.blocks.InputBlock;
+import flower.blocks.Line;
+import flower.blocks.OutputBlock;
+import flower.blocks.StartBlock;
+import flower.blocks.StopBlock;
 
-import java.awt.*;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Stack;

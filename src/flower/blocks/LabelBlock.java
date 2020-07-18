@@ -1,10 +1,20 @@
 package flower.blocks;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
 
-import static flower.DrawPanel.*;
+import static flower.DrawPanel.COMMENT_FONT;
+import static flower.DrawPanel.DASHED_STROKE;
+import static flower.DrawPanel.TILESIZE;
 
 public class LabelBlock extends AbstractBlock {
 
