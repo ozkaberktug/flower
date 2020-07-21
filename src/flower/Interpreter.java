@@ -13,12 +13,14 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Stack;
 
 public class Interpreter extends Thread {
 
     private final App app;
     public boolean isRunning = false;
+    private final HashMap<String, Double> symbolTable;
 
 
     public Interpreter(App app) {
@@ -28,6 +30,7 @@ public class Interpreter extends Thread {
             this.app.statusPanel.appendLog(msg[0], msg[1], StatusPanel.ERROR_MSG);
             this.app.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
         });
+        symbolTable = new HashMap<>();
     }
 
     @Override
@@ -124,11 +127,46 @@ public class Interpreter extends Thread {
         return null;
     }
 
-    private double evalExpr(String[] tokens) {
-        Stack<String> operand = new Stack<>();
+
+    private double evalExpr(Token[] tokens) {
+        Stack<Double> operand = new Stack<>();
         Stack<String> operator = new Stack<>();
 
-        return 0.f;
+        for (Token token : tokens) {
+            if (token.type == Token.VARIABLE) {
+                if (symbolTable.containsKey(token.data)) operand.push(symbolTable.get(token.data));
+                else throw new RuntimeException("Variable did not initialized!/Could not parse!");
+            } else if (token.type == Token.NUMBER) {
+                operand.push(Double.parseDouble(token.data));
+            } else if (token.type == Token.OPERATOR && operator.isEmpty()) {
+                operator.push(token.data);
+            } else if (token.type == Token.OPERATOR && !operator.isEmpty() && Token.hasGreaterPred(token.data, operator.peek())) {
+                operator.push(token.data);
+            } else if (token.type == Token.LEFT_PARENTHESIS) {
+                operator.push(token.data);
+            } else if (token.type == Token.RIGHT_PARENTHESIS) {
+                do {
+                    double val1 = operand.pop();
+                    double val2 = operand.pop();
+                    String op = operator.pop();
+                    operand.push(Token.compute(op, val1, val2));
+                } while (!operator.pop().equals('('));
+            } else {
+                double val1 = operand.pop();
+                double val2 = operand.pop();
+                String op = operator.pop();
+                operand.push(Token.compute(op, val1, val2));
+            }
+        }
+
+        while (!operator.isEmpty()) {
+            double val1 = operand.pop();
+            double val2 = operand.pop();
+            String op = operator.pop();
+            operand.push(Token.compute(op, val1, val2));
+        }
+
+        return operand.peek();
     }
 
     private Token[] getTokens(char[] text) {
@@ -142,10 +180,22 @@ public class Interpreter extends Thread {
 
             if (Character.isWhitespace(text[i])) {
                 i++;
-            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' || text[i] == '=' || text[i] == '(' || text[i] == ')') {
+            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' || text[i] == '=') {
                 strToken.append(text[i]);
                 token.data = strToken.toString();
                 token.type = Token.OPERATOR;
+                tokens.add(token);
+                i++;
+            } else if (text[i] == '(') {
+                strToken.append(text[i]);
+                token.data = strToken.toString();
+                token.type = Token.LEFT_PARENTHESIS;
+                tokens.add(token);
+                i++;
+            } else if (text[i] == ')') {
+                strToken.append(text[i]);
+                token.data = strToken.toString();
+                token.type = Token.RIGHT_PARENTHESIS;
                 tokens.add(token);
                 i++;
             } else if (Character.isDigit(text[i])) {
@@ -175,13 +225,4 @@ public class Interpreter extends Thread {
         return tokens.toArray(new Token[0]);
     }
 
-}
-
-class Token {
-    public static final int NUMBER = 1;
-    public static final int VARIABLE = 2;
-    public static final int OPERATOR = 3;
-
-    public String data;
-    public int type;
 }
