@@ -12,6 +12,7 @@ import flower.blocks.StopBlock;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class Interpreter extends Thread {
@@ -57,7 +58,7 @@ public class Interpreter extends Thread {
 
 
             // decode and get the output pin
-            Point ptBegin = decode(currentBlock);
+            Point ptBegin = decodeBlock(currentBlock);
 
             // null out the currentBlock for the next stage
             currentBlock.setProcessing(false);
@@ -106,10 +107,9 @@ public class Interpreter extends Thread {
         app.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
     }
 
-    private Point decode(AbstractBlock block) {
+    private Point decodeBlock(AbstractBlock block) {
         if (block instanceof StartBlock) return block.getOutputPins()[0];
         else if (block instanceof CommandBlock) {
-            //todo
             return block.getOutputPins()[0];
         } else if (block instanceof OutputBlock) {
             //todo
@@ -124,4 +124,64 @@ public class Interpreter extends Thread {
         return null;
     }
 
+    private double evalExpr(String[] tokens) {
+        Stack<String> operand = new Stack<>();
+        Stack<String> operator = new Stack<>();
+
+        return 0.f;
+    }
+
+    private Token[] getTokens(char[] text) {
+        ArrayList<Token> tokens = new ArrayList<>();
+        int i = 0;
+
+        while (i < text.length) {
+
+            StringBuilder strToken = new StringBuilder();
+            Token token = new Token();
+
+            if (Character.isWhitespace(text[i])) {
+                i++;
+            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' || text[i] == '=' || text[i] == '(' || text[i] == ')') {
+                strToken.append(text[i]);
+                token.data = strToken.toString();
+                token.type = Token.OPERATOR;
+                tokens.add(token);
+                i++;
+            } else if (Character.isDigit(text[i])) {
+                while (i < text.length) {
+                    if (!(Character.isDigit(text[i]) || text[i] == '.')) break;
+                    strToken.append(text[i]);
+                    i++;
+                }
+                token.data = strToken.toString();
+                token.type = Token.NUMBER;
+                tokens.add(token);
+            } else if (Character.isAlphabetic(text[i])) {
+                while (i < text.length) {
+                    if (!(Character.isDigit(text[i]) || Character.isAlphabetic(text[i]))) break;
+                    strToken.append(text[i]);
+                    i++;
+                }
+                token.data = strToken.toString();
+                token.type = Token.VARIABLE;
+                tokens.add(token);
+            } else {
+                throw new RuntimeException("Unidentified character./Could not parse: " + Arrays.toString(text));
+            }
+
+        }
+
+        return tokens.toArray(new Token[0]);
+    }
+
+}
+
+class Token {
+    public static final int NUMBER = 1;
+    public static final int VARIABLE = 2;
+    public static final int OPERATOR = 3;
+
+    public String data;
+    public int type;
 }
