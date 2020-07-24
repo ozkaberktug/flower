@@ -19,6 +19,10 @@ import static flower.DrawPanel.PADDING;
 import static flower.DrawPanel.TILESIZE;
 
 public class IfBlock extends AbstractBlock {
+
+    public static final int TRUE_OUTPUT = 0;
+    public static final int FALSE_OUTPUT = 1;
+
     private final Rectangle area;
     private String code;  // code will be one line expression
 
@@ -52,6 +56,9 @@ public class IfBlock extends AbstractBlock {
         graphics2D.draw(shape);
         graphics2D.setColor(Color.BLACK);
         graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
+        // WARNING HARDCODED VALUES BELOW
+        graphics2D.drawString("T", area.x * TILESIZE, (area.y + area.width / 2) * TILESIZE);
+        graphics2D.drawString("F", (area.x + area.width) * TILESIZE, (area.y + area.width / 2) * TILESIZE);
         graphics2D.setColor(Color.ORANGE);
         graphics2D.fillOval((area.x + area.width / 2) * TILESIZE + PADDING / 2, (area.y - 1) * TILESIZE + PADDING / 2, PADDING, PADDING);
         graphics2D.fillOval((area.x - 1) * TILESIZE + PADDING / 2, (area.y + area.height / 2) * TILESIZE + PADDING / 2, PADDING, PADDING);

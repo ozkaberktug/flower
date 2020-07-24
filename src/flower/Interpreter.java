@@ -193,7 +193,7 @@ public class Interpreter extends Thread {
             }
 
             // move to next block
-            return (b) ? block.getOutputPins()[0] : block.getOutputPins()[1];
+            return (b) ? block.getOutputPins()[IfBlock.TRUE_OUTPUT] : block.getOutputPins()[IfBlock.FALSE_OUTPUT];
 
         }
         return null;
