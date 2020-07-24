@@ -7,6 +7,7 @@ public class Token {
     public static final int OPERATOR = 3;
     public static final int LEFT_PARENTHESIS = 4;
     public static final int RIGHT_PARENTHESIS = 5;
+    public static final int COMPARE = 6;
     public static final String[] op_table = {"+", "-", "*", "/"};
     public static final String[] comp_table = {">", "<", "==", "!=", "<=", ">="};
     public static final int[] pred_table = {0, 0, 1, 1};

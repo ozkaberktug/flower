@@ -179,9 +179,21 @@ public class Interpreter extends Thread {
 
         } else if (block instanceof IfBlock) {
 
+            // the syntax for if block is: <expr> <comp_op> <expr>
+            // therefore first find <comp_op> position
+            Token[] tokens = getTokens(block.getCode().toCharArray());
+            boolean b = false;
+            for (int i = 0; i < tokens.length; i++) {
+                if (tokens[i].type == Token.COMPARE) {
+                    double left = evalExpr(tokens, 0, i);
+                    double right = evalExpr(tokens, i + 1);
+                    b = Token.compare(tokens[i].data, left, right);
+                    break;
+                }
+            }
 
             // move to next block
-            return block.getOutputPins()[0];
+            return (b) ? block.getOutputPins()[0] : block.getOutputPins()[1];
 
         }
         return null;
@@ -261,17 +273,23 @@ public class Interpreter extends Thread {
 
             if (Character.isWhitespace(text[i])) {
                 i++;
-            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' || (text[i] == '<' && text[i + 1] != '=') || (text[i] == '>' && text[i + 1] != '=')) {
+            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/') {
                 strToken.append(text[i]);
                 token.data = strToken.toString();
                 token.type = Token.OPERATOR;
+                tokens.add(token);
+                i++;
+            } else if ((text[i] == '<' && text[i + 1] != '=') || (text[i] == '>' && text[i + 1] != '=')) {
+                strToken.append(text[i]);
+                token.data = strToken.toString();
+                token.type = Token.COMPARE;
                 tokens.add(token);
                 i++;
             } else if ((text[i] == '=' && text[i + 1] == '=') || (text[i] == '!' && text[i + 1] == '=') || (text[i] == '<' && text[i + 1] == '=') || (text[i] == '>' && text[i + 1] == '=')) {
                 strToken.append(text[i]);
                 strToken.append(text[i + 1]);
                 token.data = strToken.toString();
-                token.type = Token.OPERATOR;
+                token.type = Token.COMPARE;
                 tokens.add(token);
                 i += 2;
             } else if ((text[i] == '=' && text[i + 1] != '=') || text[i] == ',') {
