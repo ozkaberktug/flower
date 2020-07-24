@@ -58,6 +58,10 @@ public class Project {
         AffineTransform af = new AffineTransform(1, 0, 0, 1, 0, 0);
         Point ULC = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         Point LRC = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        final int scalingFactor = 2;
+
+        // scale up to get better quality
+        af.scale(scalingFactor, scalingFactor);
 
         // check if there is anything
         if (lines.isEmpty() && blocks.isEmpty()) {
@@ -91,16 +95,21 @@ public class Project {
         final int height = Math.abs(LRC.y - ULC.y) * TILESIZE;
         af.translate(-(ULC.x - 1) * TILESIZE, -(ULC.y - 1) * TILESIZE);
 
-        // draw the image
-        BufferedImage bufferedImage = new BufferedImage(width + 2 * TILESIZE, height + 2 * TILESIZE, BufferedImage.TYPE_INT_RGB);
+        final int canvasWidth = (width + 2 * TILESIZE) * scalingFactor;
+        final int canvasHeight = (height + 2 * TILESIZE) * scalingFactor;
+
+        // create and set image object
+        BufferedImage bufferedImage = new BufferedImage(canvasWidth, canvasHeight , BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
         graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // create a background
         graphics2D.setColor(Color.WHITE);
-        graphics2D.fillRect(0, 0, width + 2 * TILESIZE, height + 2 * TILESIZE);
+        graphics2D.fillRect(0, 0, canvasWidth, canvasHeight);
+
+        // draw each element
         graphics2D.setTransform(af);
-        graphics2D.setStroke(BOLD_STROKE);
-        graphics2D.setColor(Color.BLACK);
         for (Line line : lines) line.draw(graphics2D);
         for (AbstractBlock ab : blocks) ab.draw(graphics2D);
         graphics2D.dispose();
@@ -113,6 +122,7 @@ public class Project {
             app.statusPanel.appendLog("Export failed.", e.getMessage(), StatusPanel.ERROR_MSG);
             return;
         }
+        // notify the UI
         app.statusPanel.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanel.PLAIN_MSG);
     }
 
