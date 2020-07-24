@@ -113,10 +113,24 @@ public class Interpreter extends Thread {
     private Point decodeBlock(AbstractBlock block) {
         if (block instanceof StartBlock) return block.getOutputPins()[0];
         else if (block instanceof CommandBlock) {
-            Token[] tokens = getTokens(block.getCode().toCharArray());
-            // Format in Command Block is: <id> = <expr>
-            // therefore, first token is a variable and second token must be an equal sign!
 
+            // line by line
+            for (String code : block.getCode().split("\\n")) {
+
+                Token[] tokens = getTokens(code.toCharArray());
+                // Format in Command Block is: <id> = <expr>
+                // therefore, first token is a variable and second token must be an equal sign!
+
+                // error checks
+                if (tokens.length < 3) throw new RuntimeException("syntax error / syntax error");
+                if (tokens[0].type != Token.VARIABLE) throw new RuntimeException("var name invalid/var name invalid");
+                if (!tokens[1].data.equals("=")) throw new RuntimeException("assignment error/equal sign not present");
+
+                // do calc and put it assign
+                symbolTable.put(tokens[0].data, evalExpr(tokens, 2));
+            }
+
+            // move to next block
             return block.getOutputPins()[0];
         } else if (block instanceof OutputBlock) {
             //todo
@@ -132,11 +146,12 @@ public class Interpreter extends Thread {
     }
 
 
-    private double evalExpr(Token[] tokens) {
+    private double evalExpr(Token[] tokens, int start) {
         Stack<Double> operand = new Stack<>();
         Stack<Token> operator = new Stack<>();
 
-        for (Token token : tokens) {
+        for (int i = start; i < tokens.length; i++) {
+            Token token = tokens[i];
 
             // token is operand
             if (token.type == Token.VARIABLE || token.type == Token.NUMBER) {
