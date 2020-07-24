@@ -21,7 +21,7 @@ public class Token {
         return (pred_table[pred1] - pred_table[pred2] > 0);
     }
 
-    public static double compute(String op, double left_operand, double right_operand) {
+    public static double compute(String op, double right_operand, double left_operand) {
         double retVal;
         switch (op) {
             case "+":

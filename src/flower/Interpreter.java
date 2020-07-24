@@ -113,6 +113,7 @@ public class Interpreter extends Thread {
     private Point decodeBlock(AbstractBlock block) {
         if (block instanceof StartBlock) return block.getOutputPins()[0];
         else if (block instanceof CommandBlock) {
+            System.out.println(evalExpr(getTokens(block.getCode().toCharArray())));
             return block.getOutputPins()[0];
         } else if (block instanceof OutputBlock) {
             //todo
@@ -145,12 +146,13 @@ public class Interpreter extends Thread {
             } else if (token.type == Token.LEFT_PARENTHESIS) {
                 operator.push(token.data);
             } else if (token.type == Token.RIGHT_PARENTHESIS) {
-                do {
+                while (!operator.peek().equals('(')) {
                     double val1 = operand.pop();
                     double val2 = operand.pop();
                     String op = operator.pop();
                     operand.push(Token.compute(op, val1, val2));
-                } while (!operator.pop().equals('('));
+                }
+                operator.pop();
             } else {
                 double val1 = operand.pop();
                 double val2 = operand.pop();
