@@ -164,14 +164,14 @@ public class Interpreter extends Thread {
                     if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
                     String msg = "Please enter a value for " + expr;
                     String value = JOptionPane.showInputDialog(app, msg);
-                    symbolTable.put(expr, Double.parseDouble(value));
+                    symbolTable.put(t[0].data, Double.parseDouble(value));
                 }
             } else {
                 Token[] t = getTokens(block.getCode().toCharArray());
                 if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
                 String msg = "Please enter a value for " + block.getCode();
                 String value = JOptionPane.showInputDialog(app, msg);
-                symbolTable.put(block.getCode(), Double.parseDouble(value));
+                symbolTable.put(t[0].data, Double.parseDouble(value));
             }
 
             // move to next block
