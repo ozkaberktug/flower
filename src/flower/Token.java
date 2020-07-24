@@ -61,10 +61,10 @@ public class Token {
                 bRetVal = right_operand >= left_operand;
                 break;
             case "==":
-                bRetVal = right_operand == left_operand;
+                bRetVal = Math.abs(right_operand - left_operand) <= EPSILON;
                 break;
             case "!=":
-                bRetVal = right_operand != left_operand;
+                bRetVal = Math.abs(right_operand - left_operand) > EPSILON;
                 break;
             default:
                 throw new RuntimeException("Unknown error./Something bad happened!");
