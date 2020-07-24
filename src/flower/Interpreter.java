@@ -141,7 +141,6 @@ public class Interpreter extends Thread {
 
         } else if (block instanceof OutputBlock) {
 
-
             // get comma separated values (if any)
             if (block.getCode().contains(",")) {
                 for (String expr : block.getCode().split(",")) {
@@ -153,13 +152,31 @@ public class Interpreter extends Thread {
                 JOptionPane.showMessageDialog(app, msg);
             }
 
-
             // move to next block
             return block.getOutputPins()[0];
 
         } else if (block instanceof InputBlock) {
-            //todo
+
+            // get comma separated values (if any)
+            if (block.getCode().contains(",")) {
+                for (String expr : block.getCode().split(",")) {
+                    Token[] t = getTokens(expr.toCharArray());
+                    if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
+                    String msg = "Please enter a value for " + expr;
+                    String value = JOptionPane.showInputDialog(app, msg);
+                    symbolTable.put(expr, Double.parseDouble(value));
+                }
+            } else {
+                Token[] t = getTokens(block.getCode().toCharArray());
+                if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
+                String msg = "Please enter a value for " + block.getCode();
+                String value = JOptionPane.showInputDialog(app, msg);
+                symbolTable.put(block.getCode(), Double.parseDouble(value));
+            }
+
+            // move to next block
             return block.getOutputPins()[0];
+
         } else if (block instanceof IfBlock) {
             //todo
             return block.getOutputPins()[0];
