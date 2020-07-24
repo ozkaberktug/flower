@@ -178,18 +178,24 @@ public class Interpreter extends Thread {
             return block.getOutputPins()[0];
 
         } else if (block instanceof IfBlock) {
-            //todo
+
+
+            // move to next block
             return block.getOutputPins()[0];
+
         }
         return null;
     }
 
-
     private double evalExpr(Token[] tokens, int start) {
+        return evalExpr(tokens, start, tokens.length);
+    }
+
+    private double evalExpr(Token[] tokens, int start, int stop) {
         Stack<Double> operand = new Stack<>();
         Stack<Token> operator = new Stack<>();
 
-        for (int i = start; i < tokens.length; i++) {
+        for (int i = start; i < stop; i++) {
             Token token = tokens[i];
 
             // token is operand
