@@ -1,6 +1,7 @@
 package flower;
 
 public class Token {
+    public static final int OTHER = 0;
     public static final int NUMBER = 1;
     public static final int VARIABLE = 2;
     public static final int OPERATOR = 3;

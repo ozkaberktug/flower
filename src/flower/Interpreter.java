@@ -113,7 +113,10 @@ public class Interpreter extends Thread {
     private Point decodeBlock(AbstractBlock block) {
         if (block instanceof StartBlock) return block.getOutputPins()[0];
         else if (block instanceof CommandBlock) {
-            System.out.println(evalExpr(getTokens(block.getCode().toCharArray())));
+            Token[] tokens = getTokens(block.getCode().toCharArray());
+            // Format in Command Block is: <id> = <expr>
+            // therefore, first token is a variable and second token must be an equal sign!
+
             return block.getOutputPins()[0];
         } else if (block instanceof OutputBlock) {
             //todo
@@ -198,10 +201,23 @@ public class Interpreter extends Thread {
 
             if (Character.isWhitespace(text[i])) {
                 i++;
-            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' || text[i] == '=') {
+            } else if (text[i] == '+' || text[i] == '-' || text[i] == '*' || text[i] == '/' || (text[i] == '<' && text[i + 1] != '=') || (text[i] == '>' && text[i + 1] != '=')) {
                 strToken.append(text[i]);
                 token.data = strToken.toString();
                 token.type = Token.OPERATOR;
+                tokens.add(token);
+                i++;
+            } else if ((text[i] == '=' && text[i + 1] == '=') || (text[i] == '!' && text[i + 1] == '=') || (text[i] == '<' && text[i + 1] == '=') || (text[i] == '>' && text[i + 1] == '=')) {
+                strToken.append(text[i]);
+                strToken.append(text[i + 1]);
+                token.data = strToken.toString();
+                token.type = Token.OPERATOR;
+                tokens.add(token);
+                i += 2;
+            } else if (text[i] == '=' && text[i + 1] != '=') {
+                strToken.append(text[i]);
+                token.data = strToken.toString();
+                token.type = Token.OTHER;
                 tokens.add(token);
                 i++;
             } else if (text[i] == '(') {
