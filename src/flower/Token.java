@@ -14,30 +14,30 @@ public class Token {
     public String data;
     public int type;
 
-    public static boolean hasGreaterPred(String t1, String t2) {
+    public static boolean hasGreaterPred(Token token1, Token token2) {
         int pred1 = 0, pred2 = 0;
         for (int i = 0; i < op_table.length; i++) {
-            if (t1.equals(op_table[i])) pred1 = i;
-            if (t2.equals(op_table[i])) pred2 = i;
+            if (token1.data.equals(op_table[i])) pred1 = i;
+            if (token2.data.equals(op_table[i])) pred2 = i;
         }
         // will return false for compare operations
         return (pred_table[pred1] - pred_table[pred2] > 0);
     }
 
-    public static double compute(String op, double left_operand, double right_operand) {
+    public static double compute(Token op, double left_operand, double right_operand) {
         double fRetVal;
-        switch (op) {
+        switch (op.data) {
             case "+":
-                fRetVal = right_operand + left_operand;
+                fRetVal = left_operand + right_operand;
                 break;
             case "-":
-                fRetVal = right_operand - left_operand;
+                fRetVal = left_operand - right_operand;
                 break;
             case "*":
-                fRetVal = right_operand * left_operand;
+                fRetVal = left_operand * right_operand;
                 break;
             case "/":
-                fRetVal = right_operand / left_operand;
+                fRetVal = left_operand / right_operand;
                 break;
             default:
                 throw new RuntimeException("Unknown error./Something bad happened!");
@@ -49,22 +49,22 @@ public class Token {
         boolean bRetVal;
         switch (op) {
             case "<":
-                bRetVal = right_operand < left_operand;
+                bRetVal = left_operand < right_operand;
                 break;
             case "<=":
-                bRetVal = right_operand <= left_operand;
+                bRetVal = left_operand <= right_operand;
                 break;
             case ">":
-                bRetVal = right_operand > left_operand;
+                bRetVal = left_operand > right_operand;
                 break;
             case ">=":
-                bRetVal = right_operand >= left_operand;
+                bRetVal = left_operand >= right_operand;
                 break;
             case "==":
-                bRetVal = Math.abs(right_operand - left_operand) <= EPSILON;
+                bRetVal = Math.abs(left_operand - right_operand) <= EPSILON;
                 break;
             case "!=":
-                bRetVal = Math.abs(right_operand - left_operand) > EPSILON;
+                bRetVal = Math.abs(left_operand - right_operand) > EPSILON;
                 break;
             default:
                 throw new RuntimeException("Unknown error./Something bad happened!");

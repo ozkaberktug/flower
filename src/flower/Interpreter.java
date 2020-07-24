@@ -131,41 +131,57 @@ public class Interpreter extends Thread {
 
     private double evalExpr(Token[] tokens) {
         Stack<Double> operand = new Stack<>();
-        Stack<String> operator = new Stack<>();
+        Stack<Token> operator = new Stack<>();
 
         for (Token token : tokens) {
-            if (token.type == Token.VARIABLE) {
-                if (symbolTable.containsKey(token.data)) operand.push(symbolTable.get(token.data));
-                else throw new RuntimeException("Variable did not initialized!/Could not parse!");
-            } else if (token.type == Token.NUMBER) {
-                operand.push(Double.parseDouble(token.data));
-            } else if (token.type == Token.OPERATOR && operator.isEmpty()) {
-                operator.push(token.data);
-            } else if (token.type == Token.OPERATOR && !operator.isEmpty() && Token.hasGreaterPred(token.data, operator.peek())) {
-                operator.push(token.data);
-            } else if (token.type == Token.LEFT_PARENTHESIS) {
-                operator.push(token.data);
-            } else if (token.type == Token.RIGHT_PARENTHESIS) {
-                while (!operator.peek().equals('(')) {
-                    double val1 = operand.pop();
-                    double val2 = operand.pop();
-                    String op = operator.pop();
-                    operand.push(Token.compute(op, val1, val2));
+
+            // token is operand
+            if (token.type == Token.VARIABLE || token.type == Token.NUMBER) {
+                if (token.type == Token.VARIABLE) {
+                    if (!symbolTable.containsKey(token.data)) throw new RuntimeException("Variable/not known!");
+                    operand.push(symbolTable.get(token.data));
                 }
-                operator.pop();
-            } else {
-                double val1 = operand.pop();
-                double val2 = operand.pop();
-                String op = operator.pop();
-                operand.push(Token.compute(op, val1, val2));
+                if (token.type == Token.NUMBER) {
+                    operand.push(Double.parseDouble(token.data));
+                }
             }
+
+            // if left parenthesis push into stack
+            else if (token.type == Token.LEFT_PARENTHESIS) {
+                operator.push(token);
+            }
+
+            // if token is operator
+            else if (token.type == Token.OPERATOR) {
+                // while the top of the operator stack is not of smaller precedence than this character
+                while (!operator.isEmpty() && Token.hasGreaterPred(operator.peek(), token)) {
+                    Token op = operator.pop();
+                    double right_val = operand.pop();
+                    double left_val = operand.pop();
+                    operand.push(Token.compute(op, left_val, right_val));
+                }
+                operator.push(token);
+            }
+
+            // if token is right parenthesis
+            else if (token.type == Token.RIGHT_PARENTHESIS) {
+                while (operator.peek().type != Token.LEFT_PARENTHESIS) {
+                    Token op = operator.pop();
+                    double right_val = operand.pop();
+                    double left_val = operand.pop();
+                    operand.push(Token.compute(op, left_val, right_val));
+                }
+                operator.pop(); // pop left parenthesis
+            }
+
         }
 
+        // no more token to read
         while (!operator.isEmpty()) {
-            double val1 = operand.pop();
-            double val2 = operand.pop();
-            String op = operator.pop();
-            operand.push(Token.compute(op, val1, val2));
+            Token op = operator.pop();
+            double right_val = operand.pop();
+            double left_val = operand.pop();
+            operand.push(Token.compute(op, left_val, right_val));
         }
 
         return operand.peek();
