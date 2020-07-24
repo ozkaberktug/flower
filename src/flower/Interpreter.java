@@ -9,6 +9,7 @@ import flower.blocks.OutputBlock;
 import flower.blocks.StartBlock;
 import flower.blocks.StopBlock;
 
+import javax.swing.JOptionPane;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
@@ -111,8 +112,13 @@ public class Interpreter extends Thread {
     }
 
     private Point decodeBlock(AbstractBlock block) {
-        if (block instanceof StartBlock) return block.getOutputPins()[0];
-        else if (block instanceof CommandBlock) {
+
+        if (block instanceof StartBlock) {
+
+            // no-processing return the output pin directly
+            return block.getOutputPins()[0];
+
+        } else if (block instanceof CommandBlock) {
 
             // line by line
             for (String code : block.getCode().split("\\n")) {
@@ -132,9 +138,25 @@ public class Interpreter extends Thread {
 
             // move to next block
             return block.getOutputPins()[0];
+
         } else if (block instanceof OutputBlock) {
-            //todo
+
+
+            // get comma separated values (if any)
+            if (block.getCode().contains(",")) {
+                for (String expr : block.getCode().split(",")) {
+                    String msg = expr + " is " + evalExpr(getTokens(expr.toCharArray()), 0);
+                    JOptionPane.showMessageDialog(app, msg);
+                }
+            } else {
+                String msg = block.getCode() + " is " + evalExpr(getTokens(block.getCode().toCharArray()), 0);
+                JOptionPane.showMessageDialog(app, msg);
+            }
+
+
+            // move to next block
             return block.getOutputPins()[0];
+
         } else if (block instanceof InputBlock) {
             //todo
             return block.getOutputPins()[0];
@@ -229,7 +251,7 @@ public class Interpreter extends Thread {
                 token.type = Token.OPERATOR;
                 tokens.add(token);
                 i += 2;
-            } else if (text[i] == '=' && text[i + 1] != '=') {
+            } else if ((text[i] == '=' && text[i + 1] != '=') || text[i] == ',') {
                 strToken.append(text[i]);
                 token.data = strToken.toString();
                 token.type = Token.OTHER;
