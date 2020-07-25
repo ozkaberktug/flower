@@ -152,7 +152,13 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
             graphics2D.drawString(cellTxt, getWidth() - fm.stringWidth(cellTxt), getHeight() - fm.getDescent());
         }
         graphics2D.setColor(Color.BLACK);
-        graphics2D.setTransform(toScreen);
+
+        // below fixes the transformation issues
+        // Note to myself.. NEVER apply setTransformation directly!
+        AffineTransform transform = graphics2D.getTransform();
+        transform.translate(toScreen.getTranslateX(), toScreen.getTranslateY());
+        transform.scale(toScreen.getScaleX(),toScreen.getScaleY());
+        graphics2D.setTransform(transform);
 
 
         // draw points
