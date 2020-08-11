@@ -22,7 +22,7 @@ import java.awt.event.WindowListener;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
-    public static final String version_string = "ALPHA_2";
+    public static final String version_string = "0.1.0";
 
     public Project project = null;
     public DrawPanel drawPanel = null;
