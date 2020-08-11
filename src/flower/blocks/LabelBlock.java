@@ -1,16 +1,15 @@
 package flower.blocks;
 
-import javax.swing.JFrame;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
-import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
 
 import static flower.DrawPanel.COMMENT_FONT;
 import static flower.DrawPanel.DASHED_STROKE;
@@ -18,12 +17,10 @@ import static flower.DrawPanel.TILESIZE;
 
 public class LabelBlock extends AbstractBlock {
 
-    private final Rectangle area;
-    private String comment = "Type your comment";  // code will be one line expression
-
     public LabelBlock(Point offset) {
         super();
-        area = new Rectangle(offset.x, offset.y, comment.length()/2, 1);
+        code = "Type your comment";
+        area = new Rectangle(offset.x, offset.y, code.length() / 2, 1);
     }
 
     @Override
@@ -35,44 +32,30 @@ public class LabelBlock extends AbstractBlock {
             graphics2D.setStroke(DASHED_STROKE);
             graphics2D.drawRect(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE);
         }
-        graphics2D.drawString(comment, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(comment)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
+        graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
     }
 
     @Override
     public void showDialog(Point location) {
-        JFrame frame = new JFrame("#" + getId() + " - Label Block");
-        frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setResizable(false);
-        frame.setAlwaysOnTop(true);
-        frame.setLocation(location);
+        String title = "Block #" + getId();
 
-        JPanel contents = new JPanel(new BorderLayout(10, 10));
-        contents.setBorder(new EmptyBorder(10, 10, 10, 10));
-        JLabel inputTxt = new JLabel("Enter your comment:");
-        contents.add(inputTxt, BorderLayout.PAGE_START);
-        JTextField inputField = new JTextField(comment, 30);
-        inputField.setFont(COMMENT_FONT);
-        inputField.addActionListener(e -> {
-            if (!inputField.getText().isEmpty() && !inputField.getText().matches("\\s+")) comment = inputField.getText();
-            area.width = comment.length()/2;
-            frame.dispose();
-        });
-        contents.add(inputField, BorderLayout.CENTER);
+        JTextField codeField = new JTextField(code, 20);
+        codeField.setFont(COMMENT_FONT);
 
-        frame.setContentPane(contents);
-        frame.pack();
-        frame.setVisible(true);
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter your comment:"), codeField};
+        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) code = codeField.getText();
+            area.width = code.length() / 2;
+            if (area.width % 2 == 0) area.width++;
+        }
     }
 
     @Override
-    public void moveTo(Point delta) {
-        area.x += delta.x;
-        area.y += delta.y;
-    }
+    public Shape getShape() {
+        return new Rectangle(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE);
 
-    @Override
-    public Rectangle getInnerBounds() {
-        return area;
     }
 
     @Override
@@ -82,11 +65,6 @@ public class LabelBlock extends AbstractBlock {
 
     @Override
     public Point[] getOutputPins() {
-        return null;
-    }
-
-    @Override
-    public String getCode() {
         return null;
     }
 

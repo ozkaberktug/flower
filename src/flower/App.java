@@ -70,7 +70,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
-        project.lines.clear();
         project = new Project(this);
         interpreter = new Interpreter(this);
     }
