@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
+import static flower.DrawPanel.BOLD_STROKE;
 import static flower.DrawPanel.PADDING;
 import static flower.DrawPanel.TILESIZE;
 
@@ -73,6 +74,7 @@ public class Line {
     }
 
     public void draw(Graphics2D graphics2D) {
+        graphics2D.setStroke(BOLD_STROKE);
         if (ghost) graphics2D.setColor(Color.GRAY);
         else graphics2D.setColor(Color.BLACK);
         graphics2D.fillOval(begin.x * TILESIZE + PADDING / 2, begin.y * TILESIZE + PADDING / 2, TILESIZE - PADDING, TILESIZE - PADDING);

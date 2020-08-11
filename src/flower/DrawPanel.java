@@ -188,7 +188,6 @@ public class DrawPanel extends JPanel implements Runnable, MouseMotionListener, 
         }
 
         // draw lines and blocks
-        graphics2D.setStroke(BOLD_STROKE);
         if (mouse != null && mode == DRAW_LINE) createdLine.draw(graphics2D);
         for (Line line : app.project.lines) line.draw(graphics2D);
         graphics2D.setColor(Color.BLACK);

@@ -38,7 +38,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -46,7 +45,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
-
         project = new Project(this);
         interpreter = new Interpreter(this);
     }
@@ -65,6 +63,20 @@ public class App extends JFrame implements WindowListener, ActionListener {
         newMenuItem.addActionListener(this);
         newMenuItem.setToolTipText("Create a blank project.");
         fileMenu.add(newMenuItem);
+        //**//
+        JMenuItem openMenuItem = new JMenuItem("Open");
+        openMenuItem.setAccelerator(KeyStroke.getKeyStroke("control O"));
+        openMenuItem.setMnemonic(KeyEvent.VK_O);
+        openMenuItem.addActionListener(this);
+        openMenuItem.setToolTipText("Open a project.");
+        fileMenu.add(openMenuItem);
+        //**//
+        JMenuItem saveMenuItem = new JMenuItem("Save");
+        saveMenuItem.setAccelerator(KeyStroke.getKeyStroke("control S"));
+        saveMenuItem.setMnemonic(KeyEvent.VK_S);
+        saveMenuItem.addActionListener(this);
+        saveMenuItem.setToolTipText("Save a project.");
+        fileMenu.add(saveMenuItem);
         //**//
         fileMenu.addSeparator();
         JMenuItem exportMenuItem = new JMenuItem("Export");
@@ -125,6 +137,12 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 selectPanel.clearSelection();
                 drawPanel.clear();
                 statusPanel.clear();
+                break;
+            case "Open":
+                project.showOpenDialog(this);
+                break;
+            case "Save":
+                project.showSaveDialog(this);
                 break;
             case "Export":
                 project.showExportDialog(this);

@@ -17,7 +17,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-import static flower.DrawPanel.BOLD_STROKE;
 import static flower.DrawPanel.TILESIZE;
 
 public class Project {
@@ -54,7 +53,44 @@ public class Project {
         }
     }
 
+    public void showOpenDialog(App app) {
+        JFileChooser chooser = new JFileChooser(new File("."));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
+        if (chooser.showOpenDialog(app) == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFile().exists()) {
+                open(chooser.getSelectedFile());
+            }
+        }
+    }
+
+    public void showSaveDialog(App app) {
+        JFileChooser chooser = new JFileChooser(new File("."));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
+        if (chooser.showSaveDialog(app) == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFile().exists()) {
+                if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    save(chooser.getSelectedFile());
+                }
+            } else {
+                save(chooser.getSelectedFile());
+            }
+        }
+    }
+
+    private void save(File ff) {
+        if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
+        System.out.println("ff = " + ff);
+    }
+
+    private void open(File ff) {
+        System.out.println("ff = " + ff);
+    }
+
     private void export(File ff) {
+        if (!ff.getName().toUpperCase().endsWith(".PNG")) ff = new File(ff.getAbsolutePath() + ".png");
+
         AffineTransform af = new AffineTransform(1, 0, 0, 1, 0, 0);
         Point ULC = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         Point LRC = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
@@ -99,7 +135,7 @@ public class Project {
         final int canvasHeight = (height + 2 * TILESIZE) * scalingFactor;
 
         // create and set image object
-        BufferedImage bufferedImage = new BufferedImage(canvasWidth, canvasHeight , BufferedImage.TYPE_INT_RGB);
+        BufferedImage bufferedImage = new BufferedImage(canvasWidth, canvasHeight, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics2D = (Graphics2D) bufferedImage.getGraphics();
         graphics2D.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -116,7 +152,6 @@ public class Project {
 
         // save and return
         try {
-            if (!ff.getName().toUpperCase().endsWith("PNG")) ff = new File(ff.getAbsolutePath() + ".png");
             ImageIO.write(bufferedImage, "PNG", ff);
         } catch (Exception e) {
             app.statusPanel.appendLog("Export failed.", e.getMessage(), StatusPanel.ERROR_MSG);
