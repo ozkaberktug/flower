@@ -26,7 +26,7 @@ import java.util.Date;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
-    public static final String version_string = "0.1.1";
+    public static final String version_string = "0.2.0";
 
     public Project project = null;
     public DrawPanel drawPanel = null;
@@ -36,7 +36,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public Interpreter interpreter = null;
 
     public App() {
-        super("Flower - The Flowchart Designer");
+        super("flower - Untitled");
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {

@@ -60,6 +60,8 @@ public class Project {
         if (chooser.showOpenDialog(app) == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
                 open(chooser.getSelectedFile());
+            } else {
+                JOptionPane.showMessageDialog(app, "No such file!");
             }
         }
     }
@@ -80,12 +82,15 @@ public class Project {
     }
 
     private void save(File ff) {
+        // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
-        System.out.println("ff = " + ff);
+
+        // change title
+        app.setTitle("flower - " + ff.getName().substring(0, ff.getName().length() - 3));
     }
 
     private void open(File ff) {
-        System.out.println("ff = " + ff);
+        app.setTitle("flower - " + ff.getName().substring(0, ff.getName().length() - 3));
     }
 
     private void export(File ff) {
