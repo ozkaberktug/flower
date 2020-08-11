@@ -19,6 +19,10 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.util.Date;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
@@ -38,6 +42,27 @@ public class App extends JFrame implements WindowListener, ActionListener {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        Thread.setDefaultUncaughtExceptionHandler((th, ex) -> {
+            Date date = new Date();
+            String home_dir = System.getProperty("user.home");
+            String timestamp = String.valueOf(date.getTime());
+            String logFilePath = home_dir + File.separator + "err_log-" + timestamp + ".txt";
+            File logFile = new File(logFilePath);
+
+            try {
+                PrintStream ps = new PrintStream(logFile);
+                ps.println(statusPanel.getLog());
+                ex.printStackTrace(ps);
+                ps.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String message = "<html>" + ex.toString() + " occurred! <br/><br/> This should not be happened. An error log has been saved to <br/> <u>" + logFilePath + "</u><br/><br/>If you send me an email (bkozkan@outlook.com), please attach this file also!";
+
+            JOptionPane.showMessageDialog(null, message, "Exception occurred on " + th.getName(), JOptionPane.ERROR_MESSAGE);
+            System.exit(1);
+        });
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
@@ -45,6 +70,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
+        project.lines.clear();
         project = new Project(this);
         interpreter = new Interpreter(this);
     }

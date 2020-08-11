@@ -113,4 +113,8 @@ public class StatusPanel extends JPanel {
         updateLog();
     }
 
+    public String getLog() {
+        return area.getText();
+    }
+
 }
