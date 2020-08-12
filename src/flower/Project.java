@@ -2,11 +2,16 @@ package flower;
 
 import flower.blocks.AbstractBlock;
 import flower.blocks.Line;
+import org.w3c.dom.Attr;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -84,6 +89,47 @@ public class Project {
     private void save(File ff) {
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
+
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.newDocument();
+
+            // version tag
+            Element versionTag = doc.createElement(App.version_string);
+            doc.appendChild(versionTag);
+
+            // project tag and its attr
+            Element projectTag = doc.createElement("project");
+            projectTag.setAttribute("name", name);
+            projectTag.setAttribute("inputParams", inputParams);
+            doc.appendChild(projectTag);
+
+            // lines tag
+            Element linesTag = doc.createElement("lines");
+            projectTag.appendChild(linesTag);
+
+            // iterate lines
+            for (Line line : lines) {
+                Element lineTag = doc.createElement("line");
+                lineTag.setAttribute("begin", line.begin.x + "," + line.begin.y);
+                lineTag.setAttribute("end", line.end.x + "," + line.end.y);
+                linesTag.appendChild(lineTag);
+            }
+
+            // blocks tag
+            Element blocksTag = doc.createElement("blocks");
+            projectTag.appendChild(blocksTag);
+
+            // iterate blocks
+            for (AbstractBlock block : blocks) {
+                Element blockTag = doc.createElement("block");
+                blocksTag.setAttribute()
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         // change title
         app.setTitle("flower - " + ff.getName().substring(0, ff.getName().length() - 3));

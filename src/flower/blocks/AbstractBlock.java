@@ -17,6 +17,14 @@ import static flower.DrawPanel.TILESIZE;
 
 abstract public class AbstractBlock {
 
+    public static final int START_BLOCK = 1;
+    public static final int STOP_BLOCK = 2;
+    public static final int COMMAND_BLOCK = 3;
+    public static final int IF_BLOCK = 4;
+    public static final int INPUT_BLOCK = 5;
+    public static final int OUTPUT_BLOCK = 6;
+    public static final int LABEL_BLOCK = 7;
+
     private static int id_counter = 0;
 
     protected boolean selected;
@@ -24,6 +32,7 @@ abstract public class AbstractBlock {
     protected boolean breakpoint;
     protected boolean processing;
 
+    protected int type;
     protected Rectangle area;
     protected String code;
 

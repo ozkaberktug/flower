@@ -14,6 +14,7 @@ public class StartBlock extends AbstractBlock {
 
     public StartBlock(Point offset) {
         super();
+        type = START_BLOCK;
         area = new Rectangle(offset.x, offset.y, 5, 2);
         code = "START";
     }

@@ -19,6 +19,7 @@ public class LabelBlock extends AbstractBlock {
 
     public LabelBlock(Point offset) {
         super();
+        type = LABEL_BLOCK;
         code = "Type your comment";
         area = new Rectangle(offset.x, offset.y, code.length() / 2, 1);
     }

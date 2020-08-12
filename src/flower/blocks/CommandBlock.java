@@ -20,6 +20,7 @@ public class CommandBlock extends AbstractBlock {
 
     public CommandBlock(Point offset) {
         super();
+        type = COMMAND_BLOCK;
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }

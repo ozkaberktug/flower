@@ -13,6 +13,7 @@ public class InputBlock extends AbstractBlock {
 
     public InputBlock(Point offset) {
         super();
+        type = INPUT_BLOCK;
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }

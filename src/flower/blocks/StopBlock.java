@@ -14,6 +14,7 @@ public class StopBlock extends AbstractBlock {
 
     public StopBlock(Point offset) {
         super();
+        type = STOP_BLOCK;
         area = new Rectangle(offset.x, offset.y, 5, 2);
         code = "STOP";
     }

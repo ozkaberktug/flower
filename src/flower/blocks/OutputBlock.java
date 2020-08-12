@@ -13,6 +13,7 @@ public class OutputBlock extends AbstractBlock {
 
     public OutputBlock(Point offset) {
         super();
+        type = OUTPUT_BLOCK;
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }
