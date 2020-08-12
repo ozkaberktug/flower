@@ -162,6 +162,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 selectPanel.clearSelection();
                 drawPanel.clear();
                 statusPanel.clear();
+                setTitle("flower - Untitled");
                 break;
             case "Open":
                 project.showOpenDialog(this);

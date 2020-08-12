@@ -55,17 +55,22 @@ public class CommandBlock extends AbstractBlock {
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) code = codeArea.getText();
-            codeLenMaxH = 0;
-            int codeLenMaxW = 0;
-            for (String line : code.split("\\n")) {
-                if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
-                codeLenMaxH++;
-            }
-            area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
-            if (area.width % 2 == 0) area.width++;
-            area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
-            if (area.height % 2 == 0) area.height++;
+            normalizeSize();
         }
+    }
+
+    @Override
+    public void normalizeSize() {
+        codeLenMaxH = 0;
+        int codeLenMaxW = 0;
+        for (String line : code.split("\\n")) {
+            if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
+            codeLenMaxH++;
+        }
+        area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
+        if (area.width % 2 == 0) area.width++;
+        area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
+        if (area.height % 2 == 0) area.height++;
     }
 
     @Override

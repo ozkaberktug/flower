@@ -9,7 +9,6 @@ import flower.blocks.Line;
 import flower.blocks.OutputBlock;
 import flower.blocks.StartBlock;
 import flower.blocks.StopBlock;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -102,6 +101,8 @@ public class Project {
 
     private void save(File ff) {
 
+        app.statusPanel.appendLog("Writing data...", "", StatusPanel.INFO_MSG);
+
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
 
@@ -165,11 +166,11 @@ public class Project {
             // change title
             app.setTitle("flower - " + name);
 
-            // TODO: inform user
+            // inform user
+            app.statusPanel.appendLog("Project saved!", "Project saved to " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
 
         } catch (Exception e) {
-            // todo handle error
-            e.printStackTrace();
+            app.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
         }
 
     }
@@ -179,6 +180,8 @@ public class Project {
         // clear project
         clear();
 
+        app.statusPanel.appendLog("Reading data...", "", StatusPanel.INFO_MSG);
+
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -187,9 +190,14 @@ public class Project {
 
             // get root node
             Element rootNode = doc.getDocumentElement();
-            // todo handle version collisions in a better way!
-            if (!rootNode.getTagName().equals("flower") || !rootNode.getAttribute("version").equals(App.version_string))
-                System.out.println("versions not matched");
+
+            // check integrity
+            if (!rootNode.getTagName().equals("flower")) {
+                throw new RuntimeException("Not a valid FP file");
+            }
+            if (!rootNode.getAttribute("version").equals(App.version_string)) {
+                throw new RuntimeException("File version (" + rootNode.getAttribute("version") + ") not supported!");
+            }
 
             // get project node
             Element projectNode = (Element) rootNode.getElementsByTagName("project").item(0);
@@ -245,18 +253,17 @@ public class Project {
                 block.setId(id);
                 block.setInnerBounds(new Rectangle(Integer.parseInt(area[0]), Integer.parseInt(area[1]), Integer.parseInt(area[2]), Integer.parseInt(area[3])));
                 block.setCode(code);
+                block.normalizeSize();
                 blocks.add(block);
             }
 
             // todo: in the future libs tag will be added
 
-
-            // TODO: inform user
-
+            // inform user
+            app.statusPanel.appendLog("Project loaded!", "Project loaded from " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
 
         } catch (Exception e) {
-            // todo handle error
-            e.printStackTrace();
+            app.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
         }
 
     }

@@ -35,13 +35,14 @@ public class StopBlock extends AbstractBlock {
     }
 
     @Override
-    public void showDialog(Point location) {
-    }
+    public void showDialog(Point location) { }
 
+    @Override
+    public void normalizeSize() { }
 
     @Override
     public Shape getShape() {
-        return new RoundRectangle2D.Float(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE, TILESIZE*2, TILESIZE*2);
+        return new RoundRectangle2D.Float(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE, TILESIZE * 2, TILESIZE * 2);
     }
 
     @Override

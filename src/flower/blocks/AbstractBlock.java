@@ -78,14 +78,18 @@ abstract public class AbstractBlock {
 
         if (result == JOptionPane.OK_OPTION) {
             if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) code = codeField.getText();
-            area.width = Math.max((int) (code.length() * 0.8f), 9);
-            if (area.width % 2 == 0) area.width++;
+            normalizeSize();
         }
     }
 
     public void moveTo(Point delta) {
         area.x += delta.x;
         area.y += delta.y;
+    }
+
+    public void normalizeSize() {
+        area.width = Math.max((int) (code.length() * 0.8f), 9);
+        if (area.width % 2 == 0) area.width++;
     }
 
     /* getter functions */
