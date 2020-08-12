@@ -28,12 +28,12 @@ public class App extends JFrame implements WindowListener, ActionListener {
 
     public static final String version_string = "0.2.0";
 
-    public Project project = null;
+    public Project project;
     public DrawPanel drawPanel = null;
     public SelectPanel selectPanel = null;
     public StatusPanel statusPanel = null;
     public ToolbarPanel toolbarPanel = null;
-    public Interpreter interpreter = null;
+    public Interpreter interpreter;
 
     public App() {
         super("flower - Untitled");

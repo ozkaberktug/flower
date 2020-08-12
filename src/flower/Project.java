@@ -9,9 +9,10 @@ import flower.blocks.Line;
 import flower.blocks.OutputBlock;
 import flower.blocks.StartBlock;
 import flower.blocks.StopBlock;
-import javafx.scene.paint.Stop;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
@@ -198,6 +199,7 @@ public class Project {
             // get lines
             NodeList linesNodeList = projectNode.getElementsByTagName("lines").item(0).getChildNodes();
             for (int i = 0; i < linesNodeList.getLength(); i++) {
+                if (linesNodeList.item(i).getNodeType() != Node.ELEMENT_NODE) continue;
                 Element lineNode = (Element) linesNodeList.item(i);
                 String[] points = lineNode.getAttribute("pos").split(",");
                 lines.add(new Line(Integer.parseInt(points[0]), Integer.parseInt(points[1]), Integer.parseInt(points[2]), Integer.parseInt(points[3])));
@@ -206,13 +208,14 @@ public class Project {
             // get blocks
             NodeList blocksNodeList = projectNode.getElementsByTagName("blocks").item(0).getChildNodes();
             for (int i = 0; i < blocksNodeList.getLength(); i++) {
+                if (blocksNodeList.item(i).getNodeType() != Node.ELEMENT_NODE) continue;
                 Element blockNode = (Element) blocksNodeList.item(i);
                 String[] area = blockNode.getAttribute("area").split(",");
                 boolean breakpoint = Boolean.parseBoolean(blockNode.getAttribute("breakpoint"));
                 int id = Integer.parseInt(blockNode.getAttribute("id"));
                 int type = Integer.parseInt(blockNode.getAttribute("type"));
                 String code = blockNode.getAttribute("code");
-                AbstractBlock block = null;
+                AbstractBlock block;
                 switch (type) {
                     case AbstractBlock.COMMAND_BLOCK:
                         block = new CommandBlock();
@@ -247,7 +250,7 @@ public class Project {
 
             // todo: in the future libs tag will be added
 
-            
+
             // TODO: inform user
 
 
