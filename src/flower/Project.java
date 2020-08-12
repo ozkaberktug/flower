@@ -274,7 +274,7 @@ public class Project {
         AffineTransform af = new AffineTransform(1, 0, 0, 1, 0, 0);
         Point ULC = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
         Point LRC = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
-        final int scalingFactor = 2;
+        final int scalingFactor = 4;
 
         // scale up to get better quality
         af.scale(scalingFactor, scalingFactor);
