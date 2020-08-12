@@ -16,9 +16,19 @@ public class Line {
 
     public Line() {}
 
+    public Line(int bx, int by, int ex, int ey) {
+        begin = new Point(bx, by);
+        end = new Point(ex, ey);
+        normalize();
+    }
+
     public Line(Point b, Point e) {
         begin = b;
         end = e;
+        normalize();
+    }
+
+    public void normalize(){
         if ((begin.x == end.x && begin.y > end.y) || (begin.y == end.y && begin.x > end.x)) {
             Point tmp = end;
             end = begin;

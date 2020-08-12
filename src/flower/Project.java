@@ -1,10 +1,18 @@
 package flower;
 
 import flower.blocks.AbstractBlock;
+import flower.blocks.CommandBlock;
+import flower.blocks.IfBlock;
+import flower.blocks.InputBlock;
+import flower.blocks.LabelBlock;
 import flower.blocks.Line;
-import org.w3c.dom.Attr;
+import flower.blocks.OutputBlock;
+import flower.blocks.StartBlock;
+import flower.blocks.StopBlock;
+import javafx.scene.paint.Stop;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFileChooser;
@@ -12,6 +20,11 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -30,8 +43,8 @@ public class Project {
 
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
-    public final String name;
-    public final String inputParams;
+    public String name;
+    public String inputParams;
     public final ArrayList<Project> libs;
 
     public Project(App app) {
@@ -87,23 +100,27 @@ public class Project {
     }
 
     private void save(File ff) {
+
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
+
+        name = ff.getName().substring(0, ff.getName().length() - 3);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
             Document doc = dBuilder.newDocument();
 
-            // version tag
-            Element versionTag = doc.createElement(App.version_string);
-            doc.appendChild(versionTag);
+            // app tag
+            Element appTag = doc.createElement("flower");
+            appTag.setAttribute("version", App.version_string);
+            doc.appendChild(appTag);
 
             // project tag and its attr
             Element projectTag = doc.createElement("project");
             projectTag.setAttribute("name", name);
             projectTag.setAttribute("inputParams", inputParams);
-            doc.appendChild(projectTag);
+            appTag.appendChild(projectTag);
 
             // lines tag
             Element linesTag = doc.createElement("lines");
@@ -112,8 +129,7 @@ public class Project {
             // iterate lines
             for (Line line : lines) {
                 Element lineTag = doc.createElement("line");
-                lineTag.setAttribute("begin", line.begin.x + "," + line.begin.y);
-                lineTag.setAttribute("end", line.end.x + "," + line.end.y);
+                lineTag.setAttribute("pos", String.format("%d,%d,%d,%d", line.begin.x, line.begin.y, line.end.x, line.end.y));
                 linesTag.appendChild(lineTag);
             }
 
@@ -124,19 +140,122 @@ public class Project {
             // iterate blocks
             for (AbstractBlock block : blocks) {
                 Element blockTag = doc.createElement("block");
-                blocksTag.setAttribute()
+                Rectangle area = block.getInnerBounds();
+                blockTag.setAttribute("id", String.valueOf(block.getId()));
+                blockTag.setAttribute("type", String.valueOf(block.getType()));
+                blockTag.setAttribute("breakpoint", String.valueOf(block.isBreakpoint()));
+                blockTag.setAttribute("area", String.format("%d,%d,%d,%d", area.x, area.y, area.width, area.height));
+                blockTag.setAttribute("code", block.getCode());
+                blocksTag.appendChild(blockTag);
             }
 
+            // todo: in the future libs tag will be added
+
+            // write the content
+            TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            Transformer transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+            DOMSource source = new DOMSource(doc);
+            StreamResult result = new StreamResult(ff);
+            transformer.transform(source, result);
+
+            // change title
+            app.setTitle("flower - " + name);
+
+            // TODO: inform user
+
         } catch (Exception e) {
+            // todo handle error
             e.printStackTrace();
         }
 
-        // change title
-        app.setTitle("flower - " + ff.getName().substring(0, ff.getName().length() - 3));
     }
 
     private void open(File ff) {
-        app.setTitle("flower - " + ff.getName().substring(0, ff.getName().length() - 3));
+
+        // clear project
+        clear();
+
+        try {
+            DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+            DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+            Document doc = dBuilder.parse(ff);
+            doc.getDocumentElement().normalize();
+
+            // get root node
+            Element rootNode = doc.getDocumentElement();
+            // todo handle version collisions in a better way!
+            if (!rootNode.getTagName().equals("flower") || !rootNode.getAttribute("version").equals(App.version_string))
+                System.out.println("versions not matched");
+
+            // get project node
+            Element projectNode = (Element) rootNode.getElementsByTagName("project").item(0);
+            name = projectNode.getAttribute("name");
+            inputParams = projectNode.getAttribute("inputParams");
+
+            // get lines
+            NodeList linesNodeList = projectNode.getElementsByTagName("lines").item(0).getChildNodes();
+            for (int i = 0; i < linesNodeList.getLength(); i++) {
+                Element lineNode = (Element) linesNodeList.item(i);
+                String[] points = lineNode.getAttribute("pos").split(",");
+                lines.add(new Line(Integer.parseInt(points[0]), Integer.parseInt(points[1]), Integer.parseInt(points[2]), Integer.parseInt(points[3])));
+            }
+
+            // get blocks
+            NodeList blocksNodeList = projectNode.getElementsByTagName("blocks").item(0).getChildNodes();
+            for (int i = 0; i < blocksNodeList.getLength(); i++) {
+                Element blockNode = (Element) blocksNodeList.item(i);
+                String[] area = blockNode.getAttribute("area").split(",");
+                boolean breakpoint = Boolean.parseBoolean(blockNode.getAttribute("breakpoint"));
+                int id = Integer.parseInt(blockNode.getAttribute("id"));
+                int type = Integer.parseInt(blockNode.getAttribute("type"));
+                String code = blockNode.getAttribute("code");
+                AbstractBlock block = null;
+                switch (type) {
+                    case AbstractBlock.COMMAND_BLOCK:
+                        block = new CommandBlock();
+                        break;
+                    case AbstractBlock.IF_BLOCK:
+                        block = new IfBlock();
+                        break;
+                    case AbstractBlock.INPUT_BLOCK:
+                        block = new InputBlock();
+                        break;
+                    case AbstractBlock.LABEL_BLOCK:
+                        block = new LabelBlock();
+                        break;
+                    case AbstractBlock.OUTPUT_BLOCK:
+                        block = new OutputBlock();
+                        break;
+                    case AbstractBlock.START_BLOCK:
+                        block = new StartBlock();
+                        break;
+                    case AbstractBlock.STOP_BLOCK:
+                        block = new StopBlock();
+                        break;
+                    default:
+                        throw new RuntimeException();
+                }
+                block.setBreakpoint(breakpoint);
+                block.setId(id);
+                block.setInnerBounds(new Rectangle(Integer.parseInt(area[0]), Integer.parseInt(area[1]), Integer.parseInt(area[2]), Integer.parseInt(area[3])));
+                block.setCode(code);
+                blocks.add(block);
+            }
+
+            // todo: in the future libs tag will be added
+
+            
+            // TODO: inform user
+
+
+        } catch (Exception e) {
+            // todo handle error
+            e.printStackTrace();
+        }
+
     }
 
     private void export(File ff) {
@@ -210,6 +329,14 @@ public class Project {
         }
         // notify the UI
         app.statusPanel.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanel.PLAIN_MSG);
+    }
+
+    public void clear() {
+        lines.clear();
+        blocks.clear();
+        name = "Untitled";
+        inputParams = "";
+        libs.clear();
     }
 
 }

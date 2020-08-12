@@ -25,6 +25,13 @@ public class CommandBlock extends AbstractBlock {
         code = "";
     }
 
+    public CommandBlock() {
+        super();
+        type = COMMAND_BLOCK;
+        area = new Rectangle();
+        code = "";
+    }
+
     @Override
     public void draw(Graphics2D graphics2D) {
         super.draw(graphics2D);

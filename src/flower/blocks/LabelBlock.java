@@ -24,6 +24,13 @@ public class LabelBlock extends AbstractBlock {
         area = new Rectangle(offset.x, offset.y, code.length() / 2, 1);
     }
 
+    public LabelBlock() {
+        super();
+        type = LABEL_BLOCK;
+        code = "";
+        area = new Rectangle();
+    }
+
     @Override
     public void draw(Graphics2D graphics2D) {
         graphics2D.setFont(COMMENT_FONT);

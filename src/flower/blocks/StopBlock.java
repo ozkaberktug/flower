@@ -19,6 +19,13 @@ public class StopBlock extends AbstractBlock {
         code = "STOP";
     }
 
+    public StopBlock() {
+        super();
+        type = STOP_BLOCK;
+        area = new Rectangle();
+        code = "";
+    }
+
     @Override
     public void draw(Graphics2D graphics2D) {
         super.draw(graphics2D);

@@ -158,7 +158,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
             case "New":
                 if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
-                project = new Project(this);
+                project.clear();
                 selectPanel.clearSelection();
                 drawPanel.clear();
                 statusPanel.clear();

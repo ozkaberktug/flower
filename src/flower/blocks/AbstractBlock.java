@@ -36,7 +36,7 @@ abstract public class AbstractBlock {
     protected Rectangle area;
     protected String code;
 
-    private final int id;
+    private int id;
 
     public AbstractBlock() {
         id = ++id_counter;
@@ -106,6 +106,8 @@ abstract public class AbstractBlock {
 
     public String getCode() {return code;}
 
+    public int getType() {return type;}
+
     public int getId() {
         return id;
     }
@@ -118,6 +120,15 @@ abstract public class AbstractBlock {
     public void setBreakpoint(boolean val) {breakpoint = val;}
 
     public void setProcessing(boolean val) {processing = val;}
+
+    // only called from open method
+    public void setId(int id) {this.id = id;}
+
+    // only called from open method
+    public void setInnerBounds(Rectangle r) {area = r;}
+
+    // only called from open method
+    public void setCode(String code) {this.code = code;}
 
     /* test functions */
     public boolean isSelected() {return selected;}
