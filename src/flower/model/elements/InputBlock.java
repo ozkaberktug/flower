@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.TILESIZE;
 
 public class InputBlock extends AbstractBlock {
 

@@ -69,7 +69,7 @@ public class DrawPanel extends JPanel implements Runnable {
         // Note to myself.. NEVER apply setTransformation directly!
         AffineTransform transform = graphics2D.getTransform();
         transform.translate(controller.getTransform().getTranslateX(), controller.getTransform().getTranslateY());
-        transform.scale(controller.getTransform().getScaleX(),controller.getTransform().getScaleY());
+        transform.scale(controller.getTransform().getScaleX(), controller.getTransform().getScaleY());
         graphics2D.setTransform(transform);
 
         // draw points

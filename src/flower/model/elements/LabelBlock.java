@@ -11,9 +11,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import static flower.view.DrawPanel.COMMENT_FONT;
-import static flower.view.DrawPanel.DASHED_STROKE;
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.COMMENT_FONT;
+import static flower.view.ViewConstants.DASHED_STROKE;
+import static flower.view.ViewConstants.TILESIZE;
 
 public class LabelBlock extends AbstractBlock {
 

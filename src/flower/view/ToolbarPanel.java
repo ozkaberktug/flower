@@ -10,8 +10,10 @@ public class ToolbarPanel extends JPanel {
 
     public final ToolbarPanelController controller = new ToolbarPanelController();
 
-    private final JButton runBtn = new JButton("Run");;
-    private final JButton stopBtn = new JButton("Stop");;
+    private final JButton runBtn = new JButton("Run");
+    ;
+    private final JButton stopBtn = new JButton("Stop");
+    ;
 
     public ToolbarPanel() {
         super(new FlowLayout(FlowLayout.LEFT));

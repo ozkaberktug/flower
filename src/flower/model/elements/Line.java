@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import static flower.view.DrawPanel.BOLD_STROKE;
-import static flower.view.DrawPanel.PADDING;
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.BOLD_STROKE;
+import static flower.view.ViewConstants.PADDING;
+import static flower.view.ViewConstants.TILESIZE;
 
 public class Line {
 
@@ -28,7 +28,7 @@ public class Line {
         normalize();
     }
 
-    public void normalize(){
+    public void normalize() {
         if ((begin.x == end.x && begin.y > end.y) || (begin.y == end.y && begin.x > end.x)) {
             Point tmp = end;
             end = begin;

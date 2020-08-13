@@ -10,10 +10,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import static flower.view.DrawPanel.CODE_FONT;
-import static flower.view.DrawPanel.NORMAL_STROKE;
-import static flower.view.DrawPanel.PADDING;
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.CODE_FONT;
+import static flower.view.ViewConstants.NORMAL_STROKE;
+import static flower.view.ViewConstants.PADDING;
+import static flower.view.ViewConstants.TILESIZE;
 
 abstract public class AbstractBlock {
 
@@ -142,4 +142,5 @@ abstract public class AbstractBlock {
     public boolean isBreakpoint() {return breakpoint;}
 
     public boolean isProcessing() {return processing;}
+
 }

@@ -23,7 +23,7 @@ public class ToolbarPanelController implements ActionListener {
             App.enableInputProcessing();
             App.toolbarPanel.getRunBtn().setEnabled(true);
             App.toolbarPanel.getStopBtn().setEnabled(false);
-            for(AbstractBlock block : App.project.blocks) block.setProcessing(false);
+            for (AbstractBlock block : App.project.blocks) block.setProcessing(false);
         }
     }
 

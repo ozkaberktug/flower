@@ -11,8 +11,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import static flower.view.DrawPanel.CODE_FONT;
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.CODE_FONT;
+import static flower.view.ViewConstants.TILESIZE;
 
 public class CommandBlock extends AbstractBlock {
 

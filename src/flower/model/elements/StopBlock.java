@@ -7,8 +7,8 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
-import static flower.view.DrawPanel.HEAD_FONT;
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.HEAD_FONT;
+import static flower.view.ViewConstants.TILESIZE;
 
 public class StopBlock extends AbstractBlock {
 

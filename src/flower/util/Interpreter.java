@@ -29,7 +29,7 @@ public class Interpreter extends Thread {
         setUncaughtExceptionHandler((thread, exception) -> {
             String[] msg = exception.getMessage().split("/");
             App.statusPanel.appendLog(msg[0], msg[1], StatusPanel.ERROR_MSG);
-            App.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
+            App.toolbarPanel.controller.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
         });
         symbolTable = new HashMap<>();
     }
@@ -108,7 +108,7 @@ public class Interpreter extends Thread {
         }
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
         App.statusPanel.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanel.INFO_MSG);
-        App.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
+        App.toolbarPanel.controller.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
     }
 
     private Point decodeBlock(AbstractBlock block) {
