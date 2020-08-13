@@ -81,6 +81,7 @@ public class FileHandler {
                 }
             } else {
                 save(chooser.getSelectedFile());
+                app.setTitle("flower - " + App.project.name);
             }
         }
     }
