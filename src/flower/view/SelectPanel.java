@@ -1,6 +1,7 @@
 package flower.view;
 
 import flower.App;
+import flower.controller.SelectPanelController;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -17,35 +18,25 @@ import java.awt.event.MouseEvent;
 
 public class SelectPanel extends JPanel {
 
-    public final App app;
-    public boolean toggleInputProcessing = true;
+    public static final SelectPanelController controller = new SelectPanelController();
     private JTree tree;
 
-    public SelectPanel(App app) {
+    public SelectPanel() {
         super(new BorderLayout(10, 10));
-        this.app = app;
         setMinimumSize(new Dimension(150, 100));
         setPreferredSize(new Dimension(150, 100));
         setBorder(BorderFactory.createTitledBorder("Add to Flow"));
         constructTree();
         add(tree, BorderLayout.CENTER);
         JPanel optPanel = new JPanel();
-        JToggleButton gridToggleBtn = new JToggleButton(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                app.drawPanel.toggleGrids = !app.drawPanel.toggleGrids;
-            }
-        });
+        JToggleButton gridToggleBtn = new JToggleButton();
+        gridToggleBtn.addActionListener(controller);
         gridToggleBtn.setSelected(true);
         gridToggleBtn.setText("G");
         optPanel.add(gridToggleBtn);
-        JToggleButton qualityToggleBtn = new JToggleButton(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                app.drawPanel.toggleQuality = !app.drawPanel.toggleQuality;
-            }
-        });
+        JToggleButton qualityToggleBtn = new JToggleButton();
         qualityToggleBtn.setText("Q");
+        qualityToggleBtn.addActionListener(controller);
         optPanel.add(qualityToggleBtn);
         add(optPanel, BorderLayout.PAGE_END);
 
@@ -78,13 +69,7 @@ public class SelectPanel extends JPanel {
         }
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         tree.addTreeSelectionListener(e -> {
-            if (!toggleInputProcessing) return;
-            DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            if (selected != null && selected.isLeaf()) {
-                String obj = (String) selected.getUserObject();
-                app.drawPanel.blockToAdd = obj;
-                app.statusPanel.appendLog(obj + " selected.");
-            }
+
         });
         tree.addMouseListener(new MouseAdapter() {
             @Override
@@ -102,7 +87,7 @@ public class SelectPanel extends JPanel {
 
     public void clearSelection() {
         tree.clearSelection();
-        app.drawPanel.blockToAdd = null;
+        DrawPanel.controller.blockToAdd = null;
     }
 
 }

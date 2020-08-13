@@ -28,11 +28,10 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-import static flower.view.DrawPanel.TILESIZE;
+import static flower.view.ViewConstants.TILESIZE;
+
 
 public class Project {
-
-    private final App app;
 
     public final ArrayList<AbstractBlock> blocks;
     public final ArrayList<Line> lines;
@@ -40,8 +39,7 @@ public class Project {
     public String inputParams;
     public final ArrayList<Project> libs;
 
-    public Project(App app) {
-        this.app = app;
+    public Project() {
         lines = new ArrayList<>();
         blocks = new ArrayList<>();
         name = "Untitled";
@@ -71,6 +69,7 @@ public class Project {
         if (chooser.showOpenDialog(app) == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
                 open(chooser.getSelectedFile());
+                app.setTitle("flower - " + name);
             } else {
                 JOptionPane.showMessageDialog(app, "No such file!");
             }
@@ -85,6 +84,7 @@ public class Project {
             if (chooser.getSelectedFile().exists()) {
                 if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     save(chooser.getSelectedFile());
+                    app.setTitle("flower - " + name);
                 }
             } else {
                 save(chooser.getSelectedFile());
@@ -94,7 +94,7 @@ public class Project {
 
     private void save(File ff) {
 
-        app.statusPanel.appendLog("Writing data...", "", StatusPanel.INFO_MSG);
+        App.statusPanel.appendLog("Writing data...", "", StatusPanel.INFO_MSG);
 
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
@@ -156,14 +156,11 @@ public class Project {
             StreamResult result = new StreamResult(ff);
             transformer.transform(source, result);
 
-            // change title
-            app.setTitle("flower - " + name);
-
             // inform user
-            app.statusPanel.appendLog("Project saved!", "Project saved to " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
+            App.statusPanel.appendLog("Project saved!", "Project saved to " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
 
         } catch (Exception e) {
-            app.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
+            App.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
         }
 
     }
@@ -173,7 +170,7 @@ public class Project {
         // clear project
         clear();
 
-        app.statusPanel.appendLog("Reading data...", "", StatusPanel.INFO_MSG);
+        App.statusPanel.appendLog("Reading data...", "", StatusPanel.INFO_MSG);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -253,10 +250,10 @@ public class Project {
             // todo: in the future libs tag will be added
 
             // inform user
-            app.statusPanel.appendLog("Project loaded!", "Project loaded from " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
+            App.statusPanel.appendLog("Project loaded!", "Project loaded from " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
 
         } catch (Exception e) {
-            app.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
+            App.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
         }
 
     }
@@ -274,7 +271,7 @@ public class Project {
 
         // check if there is anything
         if (lines.isEmpty() && blocks.isEmpty()) {
-            app.statusPanel.appendLog("Export failed.", "Nothing on the chart.", StatusPanel.ERROR_MSG);
+            App.statusPanel.appendLog("Export failed.", "Nothing on the chart.", StatusPanel.ERROR_MSG);
             return;
         }
 
@@ -327,11 +324,11 @@ public class Project {
         try {
             ImageIO.write(bufferedImage, "PNG", ff);
         } catch (Exception e) {
-            app.statusPanel.appendLog("Export failed.", e.getMessage(), StatusPanel.ERROR_MSG);
+            App.statusPanel.appendLog("Export failed.", e.getMessage(), StatusPanel.ERROR_MSG);
             return;
         }
         // notify the UI
-        app.statusPanel.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanel.PLAIN_MSG);
+        App.statusPanel.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanel.PLAIN_MSG);
     }
 
     public void clear() {

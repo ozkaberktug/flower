@@ -18,6 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
+import javax.tools.Tool;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -35,12 +36,12 @@ public class App extends JFrame implements WindowListener, ActionListener {
 
     public static final String version_string = "0.2.0";
 
-    public Project project;
-    public DrawPanel drawPanel = null;
-    public SelectPanel selectPanel = null;
-    public StatusPanel statusPanel = null;
-    public ToolbarPanel toolbarPanel = null;
-    public Interpreter interpreter;
+    public static final Project project = new Project();
+    public static final DrawPanel drawPanel = new DrawPanel();
+    public static final SelectPanel selectPanel = new SelectPanel();
+    public static final StatusPanel statusPanel = new StatusPanel(this);
+    public static final ToolbarPanel toolbarPanel = new ToolbarPanel(this);
+    public static final Interpreter interpreter = new Interpreter();
 
     public App() {
         super("flower - Untitled");
@@ -77,8 +78,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
-        project = new Project(this);
-        interpreter = new Interpreter(this);
     }
 
     // create and add components to UI
@@ -137,12 +136,9 @@ public class App extends JFrame implements WindowListener, ActionListener {
         JPanel contentPanel = new JPanel(new GridBagLayout());
         /**/
         GridBagConstraints gbcToolbarPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-        toolbarPanel = new ToolbarPanel(this);
         contentPanel.add(toolbarPanel, gbcToolbarPanel);
         /**/
         GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 8, 0, 8), 0, 0);
-        drawPanel = new DrawPanel(this);
-        selectPanel = new SelectPanel(this);
         JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
         selectPanelScrollPane.setBorder(null);
         selectPanelScrollPane.setMinimumSize(selectPanel.getMinimumSize());
@@ -152,7 +148,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         contentPanel.add(editorPanel, gbcEditorPanel);
         /**/
         GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-        statusPanel = new StatusPanel(this);
         contentPanel.add(statusPanel, gbcStatusPanel);
 
         setContentPane(contentPanel);
@@ -167,7 +162,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                     return;
                 project.clear();
                 selectPanel.clearSelection();
-                drawPanel.clear();
+                DrawPanel.controller.clear();
                 statusPanel.clear();
                 setTitle("flower - Untitled");
                 break;

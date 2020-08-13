@@ -22,17 +22,15 @@ import java.util.Stack;
 
 public class Interpreter extends Thread {
 
-    private final App app;
     public boolean isRunning = false;
     private final HashMap<String, Double> symbolTable;
 
 
-    public Interpreter(App app) {
-        this.app = app;
+    public Interpreter() {
         setUncaughtExceptionHandler((thread, exception) -> {
             String[] msg = exception.getMessage().split("/");
-            this.app.statusPanel.appendLog(msg[0], msg[1], StatusPanel.ERROR_MSG);
-            this.app.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
+            App.statusPanel.appendLog(msg[0], msg[1], StatusPanel.ERROR_MSG);
+            App.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
         });
         symbolTable = new HashMap<>();
     }
@@ -41,15 +39,15 @@ public class Interpreter extends Thread {
     public void run() {
         // init environment
         isRunning = true;
-        app.statusPanel.appendLog("Running...", "Simulation started.", StatusPanel.INFO_MSG);
+        App.statusPanel.appendLog("Running...", "Simulation started.", StatusPanel.INFO_MSG);
         long beginTime = System.currentTimeMillis();
 
         // check if there are any blocks
-        if (app.project.blocks.isEmpty()) throw new RuntimeException("No blocks./No block to process.");
+        if (App.project.blocks.isEmpty()) throw new RuntimeException("No blocks./No block to process.");
 
         // first search for START block
         AbstractBlock currentBlock = null;
-        for (AbstractBlock block : app.project.blocks) {
+        for (AbstractBlock block : App.project.blocks) {
             if (block instanceof StartBlock) {
                 if (currentBlock == null) currentBlock = block;
                 else throw new RuntimeException("Multiple START blocks./Multiple start blocks found!");
@@ -80,7 +78,7 @@ public class Interpreter extends Thread {
                 visited.add(p);
 
                 // check if we found a block input pin
-                for (AbstractBlock block : app.project.blocks) {
+                for (AbstractBlock block : App.project.blocks) {
                     Point[] inputPins = block.getInputPins();
                     if (inputPins != null && inputPins[0].equals(p)) {
                         if (currentBlock != null)
@@ -91,7 +89,7 @@ public class Interpreter extends Thread {
 
 
                 // find which line(s) contains this point
-                for (Line line : app.project.lines) {
+                for (Line line : App.project.lines) {
                     if (line.begin.equals(p) || line.end.equals(p)) {
                         if (!visited.contains(line.begin)) {
                             ss.push(line.begin);
@@ -110,8 +108,8 @@ public class Interpreter extends Thread {
             if (currentBlock instanceof StopBlock) isRunning = false;
         }
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
-        app.statusPanel.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanel.INFO_MSG);
-        app.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
+        App.statusPanel.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanel.INFO_MSG);
+        App.toolbarPanel.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
     }
 
     private Point decodeBlock(AbstractBlock block) {
@@ -148,11 +146,11 @@ public class Interpreter extends Thread {
             if (block.getCode().contains(",")) {
                 for (String expr : block.getCode().split(",")) {
                     String msg = expr + " is " + evalExpr(getTokens(expr.toCharArray()), 0);
-                    JOptionPane.showMessageDialog(app, msg);
+                    JOptionPane.showMessageDialog(null, msg);
                 }
             } else {
                 String msg = block.getCode() + " is " + evalExpr(getTokens(block.getCode().toCharArray()), 0);
-                JOptionPane.showMessageDialog(app, msg);
+                JOptionPane.showMessageDialog(null, msg);
             }
 
             // move to next block
@@ -166,14 +164,14 @@ public class Interpreter extends Thread {
                     Token[] t = getTokens(expr.toCharArray());
                     if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
                     String msg = "Please enter a value for " + expr;
-                    String value = JOptionPane.showInputDialog(app, msg);
+                    String value = JOptionPane.showInputDialog(null, msg);
                     symbolTable.put(t[0].data, Double.parseDouble(value));
                 }
             } else {
                 Token[] t = getTokens(block.getCode().toCharArray());
                 if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
                 String msg = "Please enter a value for " + block.getCode();
-                String value = JOptionPane.showInputDialog(app, msg);
+                String value = JOptionPane.showInputDialog(null, msg);
                 symbolTable.put(t[0].data, Double.parseDouble(value));
             }
 
