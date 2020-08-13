@@ -1,7 +1,8 @@
 package flower;
 
-import flower.controller.Interpreter;
 import flower.model.Project;
+import flower.util.FileHandler;
+import flower.util.Interpreter;
 import flower.view.DrawPanel;
 import flower.view.SelectPanel;
 import flower.view.StatusPanel;
@@ -171,13 +172,13 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 setTitle("flower - Untitled");
                 break;
             case "Open":
-                project.showOpenDialog(this);
+                FileHandler.showOpenDialog(this);
                 break;
             case "Save":
-                project.showSaveDialog(this);
+                FileHandler.showSaveDialog(this);
                 break;
             case "Export":
-                project.showExportDialog(this);
+                FileHandler.showExportDialog();
                 break;
             case "Exit":
                 windowClosing(null);

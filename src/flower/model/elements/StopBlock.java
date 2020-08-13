@@ -1,4 +1,4 @@
-package flower.model;
+package flower.model.elements;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;

@@ -1,4 +1,4 @@
-package flower.model;
+package flower.model.elements;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;

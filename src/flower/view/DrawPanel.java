@@ -2,8 +2,8 @@ package flower.view;
 
 import flower.App;
 import flower.controller.DrawPanelController;
-import flower.model.AbstractBlock;
-import flower.model.Line;
+import flower.model.elements.AbstractBlock;
+import flower.model.elements.Line;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;

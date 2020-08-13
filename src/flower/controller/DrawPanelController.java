@@ -1,15 +1,15 @@
 package flower.controller;
 
 import flower.App;
-import flower.model.AbstractBlock;
-import flower.model.CommandBlock;
-import flower.model.IfBlock;
-import flower.model.InputBlock;
-import flower.model.LabelBlock;
-import flower.model.Line;
-import flower.model.OutputBlock;
-import flower.model.StartBlock;
-import flower.model.StopBlock;
+import flower.model.elements.AbstractBlock;
+import flower.model.elements.CommandBlock;
+import flower.model.elements.IfBlock;
+import flower.model.elements.InputBlock;
+import flower.model.elements.LabelBlock;
+import flower.model.elements.Line;
+import flower.model.elements.OutputBlock;
+import flower.model.elements.StartBlock;
+import flower.model.elements.StopBlock;
 import flower.view.StatusPanel;
 
 import java.awt.Cursor;
