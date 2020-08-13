@@ -1,7 +1,5 @@
 package flower;
 
-import flower.App;
-
 import javax.swing.SwingUtilities;
 
 public class Main {

@@ -1,4 +1,4 @@
-package flower.controller;
+package flower.util;
 
 public class Token {
     public static final int OTHER = 0;

@@ -9,6 +9,7 @@ import flower.model.Line;
 import flower.model.OutputBlock;
 import flower.model.StartBlock;
 import flower.model.StopBlock;
+import flower.util.Token;
 import flower.view.StatusPanel;
 
 import javax.swing.JOptionPane;
