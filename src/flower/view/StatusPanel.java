@@ -55,7 +55,12 @@ public class StatusPanel extends JPanel {
         add(label, gbcLabel);
         add(areaScrollPane, gbcArea);
 
-//        controller.clear();
+    }
+
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        controller.clear();
     }
 
 

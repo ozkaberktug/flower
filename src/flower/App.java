@@ -83,7 +83,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
-        statusPanel.controller.clear();
     }
 
     // create and add components to UI
