@@ -1,12 +1,12 @@
-package flower.blocks;
+package flower.model;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 
-import static flower.DrawPanel.BOLD_STROKE;
-import static flower.DrawPanel.PADDING;
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.BOLD_STROKE;
+import static flower.view.DrawPanel.PADDING;
+import static flower.view.DrawPanel.TILESIZE;
 
 public class Line {
 

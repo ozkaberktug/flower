@@ -1,4 +1,4 @@
-package flower.blocks;
+package flower.model;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -11,9 +11,9 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import static flower.DrawPanel.COMMENT_FONT;
-import static flower.DrawPanel.DASHED_STROKE;
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.COMMENT_FONT;
+import static flower.view.DrawPanel.DASHED_STROKE;
+import static flower.view.DrawPanel.TILESIZE;
 
 public class LabelBlock extends AbstractBlock {
 

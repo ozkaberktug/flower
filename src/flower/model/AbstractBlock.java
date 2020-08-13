@@ -1,4 +1,4 @@
-package flower.blocks;
+package flower.model;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -10,10 +10,10 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 
-import static flower.DrawPanel.CODE_FONT;
-import static flower.DrawPanel.NORMAL_STROKE;
-import static flower.DrawPanel.PADDING;
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.CODE_FONT;
+import static flower.view.DrawPanel.NORMAL_STROKE;
+import static flower.view.DrawPanel.PADDING;
+import static flower.view.DrawPanel.TILESIZE;
 
 abstract public class AbstractBlock {
 

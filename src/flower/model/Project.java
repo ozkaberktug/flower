@@ -1,14 +1,7 @@
-package flower;
+package flower.model;
 
-import flower.blocks.AbstractBlock;
-import flower.blocks.CommandBlock;
-import flower.blocks.IfBlock;
-import flower.blocks.InputBlock;
-import flower.blocks.LabelBlock;
-import flower.blocks.Line;
-import flower.blocks.OutputBlock;
-import flower.blocks.StartBlock;
-import flower.blocks.StopBlock;
+import flower.App;
+import flower.view.StatusPanel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -35,7 +28,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.TILESIZE;
 
 public class Project {
 

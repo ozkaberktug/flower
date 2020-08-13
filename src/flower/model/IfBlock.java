@@ -1,4 +1,4 @@
-package flower.blocks;
+package flower.model;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -7,7 +7,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.TILESIZE;
 
 public class IfBlock extends AbstractBlock {
 

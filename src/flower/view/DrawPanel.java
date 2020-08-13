@@ -1,14 +1,15 @@
-package flower;
+package flower.view;
 
-import flower.blocks.AbstractBlock;
-import flower.blocks.CommandBlock;
-import flower.blocks.IfBlock;
-import flower.blocks.InputBlock;
-import flower.blocks.LabelBlock;
-import flower.blocks.Line;
-import flower.blocks.OutputBlock;
-import flower.blocks.StartBlock;
-import flower.blocks.StopBlock;
+import flower.App;
+import flower.model.AbstractBlock;
+import flower.model.CommandBlock;
+import flower.model.IfBlock;
+import flower.model.InputBlock;
+import flower.model.LabelBlock;
+import flower.model.Line;
+import flower.model.OutputBlock;
+import flower.model.StartBlock;
+import flower.model.StopBlock;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;

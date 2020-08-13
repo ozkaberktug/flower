@@ -1,5 +1,12 @@
 package flower;
 
+import flower.controller.Interpreter;
+import flower.model.Project;
+import flower.view.DrawPanel;
+import flower.view.SelectPanel;
+import flower.view.StatusPanel;
+import flower.view.ToolbarPanel;
+
 import javax.swing.Box;
 import javax.swing.JFrame;
 import javax.swing.JMenu;

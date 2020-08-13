@@ -1,6 +1,8 @@
-package flower;
+package flower.view;
 
-import flower.blocks.AbstractBlock;
+import flower.App;
+import flower.controller.Interpreter;
+import flower.model.AbstractBlock;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;

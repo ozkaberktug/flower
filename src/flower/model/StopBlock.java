@@ -1,4 +1,4 @@
-package flower.blocks;
+package flower.model;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -7,21 +7,21 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.RoundRectangle2D;
 
-import static flower.DrawPanel.HEAD_FONT;
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.HEAD_FONT;
+import static flower.view.DrawPanel.TILESIZE;
 
-public class StartBlock extends AbstractBlock {
+public class StopBlock extends AbstractBlock {
 
-    public StartBlock(Point offset) {
+    public StopBlock(Point offset) {
         super();
-        type = START_BLOCK;
+        type = STOP_BLOCK;
         area = new Rectangle(offset.x, offset.y, 5, 2);
-        code = "START";
+        code = "STOP";
     }
 
-    public StartBlock() {
+    public StopBlock() {
         super();
-        type = START_BLOCK;
+        type = STOP_BLOCK;
         area = new Rectangle();
         code = "";
     }
@@ -47,14 +47,14 @@ public class StartBlock extends AbstractBlock {
 
     @Override
     public Point[] getInputPins() {
-        return null;
+        Point[] ret = new Point[1];
+        ret[0] = new Point(area.x + 2, area.y - 1);
+        return ret;
     }
 
     @Override
     public Point[] getOutputPins() {
-        Point[] ret = new Point[1];
-        ret[0] = new Point(area.x + 2, area.y + 2);
-        return ret;
+        return null;
     }
 
 }

@@ -1,4 +1,6 @@
-package flower;
+package flower.view;
+
+import flower.App;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;

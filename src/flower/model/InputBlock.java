@@ -1,4 +1,4 @@
-package flower.blocks;
+package flower.model;
 
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -7,20 +7,20 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 
-import static flower.DrawPanel.TILESIZE;
+import static flower.view.DrawPanel.TILESIZE;
 
-public class OutputBlock extends AbstractBlock {
+public class InputBlock extends AbstractBlock {
 
-    public OutputBlock(Point offset) {
+    public InputBlock(Point offset) {
         super();
-        type = OUTPUT_BLOCK;
+        type = INPUT_BLOCK;
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }
 
-    public OutputBlock() {
+    public InputBlock() {
         super();
-        type = OUTPUT_BLOCK;
+        type = INPUT_BLOCK;
         area = new Rectangle();
         code = "";
     }
@@ -29,15 +29,15 @@ public class OutputBlock extends AbstractBlock {
     public void draw(Graphics2D graphics2D) {
         super.draw(graphics2D);
         FontMetrics fm = graphics2D.getFontMetrics();
-        graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, ((area.y-1) * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
+        graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, ((area.y + 1) * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
     }
 
     @Override
     public Shape getShape() {
         GeneralPath shape = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-        shape.moveTo(area.x * TILESIZE, area.y * TILESIZE);
+        shape.moveTo(area.x * TILESIZE, (area.y + area.height * 0.5f) * TILESIZE);
         shape.lineTo(area.x * TILESIZE, (area.y + area.height) * TILESIZE);
-        shape.curveTo((area.x + area.width * 0.6f) * TILESIZE, (area.y + area.height*1.2f) * TILESIZE, (area.x + area.width * 0.3f) * TILESIZE, (area.y + area.height * 0.5f) * TILESIZE, (area.x + area.width) * TILESIZE, (area.y + area.height * 0.7f) * TILESIZE);
+        shape.lineTo((area.x + area.width) * TILESIZE, (area.y + area.height) * TILESIZE);
         shape.lineTo((area.x + area.width) * TILESIZE, area.y * TILESIZE);
         shape.closePath();
         return shape;
