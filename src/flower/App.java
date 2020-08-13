@@ -39,7 +39,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final Project project = new Project();
     public static final DrawPanel drawPanel = new DrawPanel();
     public static final SelectPanel selectPanel = new SelectPanel();
-    public static final StatusPanel statusPanel = new StatusPanel(this);
+    public static final StatusPanel statusPanel = new StatusPanel();
     public static final ToolbarPanel toolbarPanel = new ToolbarPanel();
     public static Interpreter interpreter = new Interpreter();
     private static boolean inputProcessing = true;
@@ -64,7 +64,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
 
             try {
                 PrintStream ps = new PrintStream(logFile);
-                ps.println(statusPanel.getLog());
+                ps.println(statusPanel.controller.getLog());
                 ex.printStackTrace(ps);
                 ps.close();
             } catch (IOException e) {
@@ -168,7 +168,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 project.clear();
                 selectPanel.controller.clear();
                 drawPanel.controller.clear();
-                statusPanel.clear();
+                statusPanel.controller.clear();
                 setTitle("flower - Untitled");
                 break;
             case "Open":

@@ -10,7 +10,6 @@ import flower.model.elements.Line;
 import flower.model.elements.OutputBlock;
 import flower.model.elements.StartBlock;
 import flower.model.elements.StopBlock;
-import flower.view.StatusPanel;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -122,7 +121,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     throw new UnsupportedOperationException();
             }
             App.project.blocks.add(block);
-            App.statusPanel.appendLog(blockToAdd + " added", "Created " + blockToAdd + " [id: " + block.getId() + "] at " + cellCoords.x + ", " + cellCoords.y, StatusPanel.INFO_MSG);
+            App.statusPanel.controller.appendLog(blockToAdd + " added", "Created " + blockToAdd + " [id: " + block.getId() + "] at " + cellCoords.x + ", " + cellCoords.y, StatusPanelController.INFO_MSG);
             App.selectPanel.controller.clear();
         }
     }
@@ -152,13 +151,13 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 for (Line line : App.project.lines) {
                     if (line.containsInclusive(getCellCoords(mouse))) {
                         App.project.lines.remove(line);
-                        App.statusPanel.appendLog("Line removed.", String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y), StatusPanel.INFO_MSG);
+                        App.statusPanel.controller.appendLog("Line removed.", String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y), StatusPanelController.INFO_MSG);
                         break;
                     }
                 }
             } else {    // it is a block remove it
                 App.project.blocks.remove(b);
-                App.statusPanel.appendLog("Block removed.", "Block with id " + b.getId() + " deleted.", StatusPanel.INFO_MSG);
+                App.statusPanel.controller.appendLog("Block removed.", "Block with id " + b.getId() + " deleted.", StatusPanelController.INFO_MSG);
             }
         }
 
@@ -208,7 +207,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
                     App.project.lines.add(created);
 
-                    App.statusPanel.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", pen.begin.x, pen.begin.y, pen.end.x, pen.end.y), StatusPanel.INFO_MSG);
+                    App.statusPanel.controller.appendLog("Line added.", String.format("Line added: from (%d, %d) to (%d, %d)", pen.begin.x, pen.begin.y, pen.end.x, pen.end.y), StatusPanelController.INFO_MSG);
                 }
             }
         }

@@ -1,6 +1,7 @@
 package flower.util;
 
 import flower.App;
+import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
@@ -10,7 +11,6 @@ import flower.model.elements.Line;
 import flower.model.elements.OutputBlock;
 import flower.model.elements.StartBlock;
 import flower.model.elements.StopBlock;
-import flower.view.StatusPanel;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -87,7 +87,7 @@ public class FileHandler {
 
     private static void save(File ff) {
 
-        App.statusPanel.appendLog("Writing data...", "", StatusPanel.INFO_MSG);
+        App.statusPanel.controller.appendLog("Writing data...", "", StatusPanelController.INFO_MSG);
 
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
@@ -150,10 +150,10 @@ public class FileHandler {
             transformer.transform(source, result);
 
             // inform user
-            App.statusPanel.appendLog("Project saved!", "Project saved to " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
+            App.statusPanel.controller.appendLog("Project saved!", "Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO_MSG);
 
         } catch (Exception e) {
-            App.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
+            App.statusPanel.controller.appendLog("File could not read!", e.getMessage(), StatusPanelController.ERROR_MSG);
         }
 
     }
@@ -163,7 +163,7 @@ public class FileHandler {
         // clear project
         App.project.clear();
 
-        App.statusPanel.appendLog("Reading data...", "", StatusPanel.INFO_MSG);
+        App.statusPanel.controller.appendLog("Reading data...", "", StatusPanelController.INFO_MSG);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -243,10 +243,10 @@ public class FileHandler {
             // todo: in the future libs tag will be added
 
             // inform user
-            App.statusPanel.appendLog("Project loaded!", "Project loaded from " + ff.getAbsolutePath(), StatusPanel.INFO_MSG);
+            App.statusPanel.controller.appendLog("Project loaded!", "Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO_MSG);
 
         } catch (Exception e) {
-            App.statusPanel.appendLog("File could not read!", e.getMessage(), StatusPanel.ERROR_MSG);
+            App.statusPanel.controller.appendLog("File could not read!", e.getMessage(), StatusPanelController.ERROR_MSG);
         }
 
     }
@@ -264,7 +264,7 @@ public class FileHandler {
 
         // check if there is anything
         if (App.project.lines.isEmpty() && App.project.blocks.isEmpty()) {
-            App.statusPanel.appendLog("Export failed.", "Nothing on the chart.", StatusPanel.ERROR_MSG);
+            App.statusPanel.controller.appendLog("Export failed.", "Nothing on the chart.", StatusPanelController.ERROR_MSG);
             return;
         }
 
@@ -317,11 +317,11 @@ public class FileHandler {
         try {
             ImageIO.write(bufferedImage, "PNG", ff);
         } catch (Exception e) {
-            App.statusPanel.appendLog("Export failed.", e.getMessage(), StatusPanel.ERROR_MSG);
+            App.statusPanel.controller.appendLog("Export failed.", e.getMessage(), StatusPanelController.ERROR_MSG);
             return;
         }
         // notify the UI
-        App.statusPanel.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanel.PLAIN_MSG);
+        App.statusPanel.controller.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanelController.PLAIN_MSG);
     }
 
 }
