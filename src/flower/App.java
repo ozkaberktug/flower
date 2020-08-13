@@ -39,8 +39,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final DrawPanel drawPanel = new DrawPanel();
     public static final SelectPanel selectPanel = new SelectPanel();
     public static final StatusPanel statusPanel = new StatusPanel(this);
-    public static final ToolbarPanel toolbarPanel = new ToolbarPanel(this);
-    public static final Interpreter interpreter = new Interpreter();
+    public static final ToolbarPanel toolbarPanel = new ToolbarPanel();
+    public static Interpreter interpreter = new Interpreter();
     private static boolean inputProcessing = true;
 
     public static void blockInputProcessing() { inputProcessing = false; }
@@ -165,7 +165,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
                 project.clear();
-                selectPanel.controller.clearSelection();
+                selectPanel.controller.clear();
                 drawPanel.controller.clear();
                 statusPanel.clear();
                 setTitle("flower - Untitled");

@@ -123,7 +123,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
             App.project.blocks.add(block);
             App.statusPanel.appendLog(blockToAdd + " added", "Created " + blockToAdd + " [id: " + block.getId() + "] at " + cellCoords.x + ", " + cellCoords.y, StatusPanel.INFO_MSG);
-            App.selectPanel.controller.clearSelection();
+            App.selectPanel.controller.clear();
         }
     }
 

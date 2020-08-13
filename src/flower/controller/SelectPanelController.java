@@ -39,12 +39,12 @@ public class SelectPanelController extends MouseAdapter implements ActionListene
         if (!App.isInputProcessing()) return;
         int row = App.selectPanel.getTree().getRowForLocation(e.getX(), e.getY());
         if (row == -1) { // click on the "empty surface"
-            clearSelection();
+            clear();
             App.statusPanel.appendLog("Ready.");
         }
     }
 
-    public void clearSelection() {
+    public void clear() {
         App.selectPanel.getTree().clearSelection();
         App.drawPanel.controller.setBlockToAdd(null);
     }

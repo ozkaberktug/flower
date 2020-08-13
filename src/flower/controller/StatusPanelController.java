@@ -1,3 +1,7 @@
 package flower.controller;
 
-public class StatusPanelController {}
+import java.awt.event.MouseAdapter;
+
+public class StatusPanelController extends MouseAdapter {
+
+}
