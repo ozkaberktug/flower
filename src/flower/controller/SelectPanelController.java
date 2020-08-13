@@ -1,35 +1,52 @@
 package flower.controller;
 
-import flower.view.DrawPanel;
-import flower.view.StatusPanel;
+import flower.App;
 
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
-public class SelectPanelController implements ActionListener, TreeSelectionListener {
+public class SelectPanelController extends MouseAdapter implements ActionListener, TreeSelectionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getActionCommand().equals("G")) {
-            DrawPanel.controller.setToggleGrids(!DrawPanel.controller.isToggleGrids());
+            App.drawPanel.controller.setToggleGrids(!App.drawPanel.controller.isToggleGrids());
         }
         if (e.getActionCommand().equals("Q")) {
-            DrawPanel.controller.setToggleQuality(!DrawPanel.controller.isToggleQuality());
+            App.drawPanel.controller.setToggleQuality(!App.drawPanel.controller.isToggleQuality());
         }
     }
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {
-        if (!toggleInputProcessing) return;
-        DefaultMutableTreeNode selected = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+        if (!App.isInputProcessing()) return;
+        DefaultMutableTreeNode selected = (DefaultMutableTreeNode) App.selectPanel.getTree().getLastSelectedPathComponent();
         if (selected != null && selected.isLeaf()) {
             String obj = (String) selected.getUserObject();
-            DrawPanel.blockToAdd = obj;
-            StatusPanel.appendLog(obj + " selected.");
+            App.drawPanel.controller.setBlockToAdd(obj);
+            App.statusPanel.appendLog(obj + " selected.");
         }
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        // for deselection
+        if (!App.isInputProcessing()) return;
+        int row = App.selectPanel.getTree().getRowForLocation(e.getX(), e.getY());
+        if (row == -1) { // click on the "empty surface"
+            clearSelection();
+            App.statusPanel.appendLog("Ready.");
+        }
+    }
+
+    public void clearSelection() {
+        App.selectPanel.getTree().clearSelection();
+        App.drawPanel.controller.setBlockToAdd(null);
     }
 
 }

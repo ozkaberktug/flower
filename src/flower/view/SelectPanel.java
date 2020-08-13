@@ -1,9 +1,7 @@
 package flower.view;
 
-import flower.App;
 import flower.controller.SelectPanelController;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
@@ -12,13 +10,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 public class SelectPanel extends JPanel {
 
-    public static final SelectPanelController controller = new SelectPanelController();
+    public final SelectPanelController controller = new SelectPanelController();
     private JTree tree;
 
     public SelectPanel() {
@@ -39,7 +34,6 @@ public class SelectPanel extends JPanel {
         qualityToggleBtn.addActionListener(controller);
         optPanel.add(qualityToggleBtn);
         add(optPanel, BorderLayout.PAGE_END);
-
     }
 
     private void constructTree() {
@@ -64,30 +58,12 @@ public class SelectPanel extends JPanel {
         root.add(misc);
         tree = new JTree(root);
         tree.setRootVisible(false);
-        for (int i = 0; i < tree.getRowCount(); i++) {
-            tree.expandRow(i);
-        }
+        for (int i = 0; i < tree.getRowCount(); i++) tree.expandRow(i);
         tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
-        tree.addTreeSelectionListener(e -> {
-
-        });
-        tree.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                // for deselection
-                if (!toggleInputProcessing) return;
-                int row = tree.getRowForLocation(e.getX(), e.getY());
-                if (row == -1) { // click on the "empty surface"
-                    clearSelection();
-                    app.statusPanel.appendLog("Ready.");
-                }
-            }
-        });
+        tree.addTreeSelectionListener(controller);
+        tree.addMouseListener(controller);
     }
 
-    public void clearSelection() {
-        tree.clearSelection();
-        DrawPanel.controller.blockToAdd = null;
-    }
+    public JTree getTree() {return tree;}
 
 }

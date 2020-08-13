@@ -41,7 +41,6 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     private String blockToAdd = null;
     private boolean toggleGrids = true;
     private boolean toggleQuality = false;
-    private boolean toggleInputProcessing = true;
 
     public DrawPanelController() {
         pen.setGhost(true);
@@ -49,11 +48,10 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     public void setToggleGrids(boolean b) {toggleGrids = b;}
     public void setToggleQuality(boolean b) {toggleQuality = b;}
-    public void setToggleInputProcessing(boolean b) {toggleInputProcessing = b;}
+    public void setBlockToAdd(String block) {blockToAdd = block;}
 
     public boolean isToggleQuality() {return toggleQuality;}
     public boolean isToggleGrids() {return toggleGrids;}
-    public boolean isToggleInputProcessing() {return toggleInputProcessing;}
     public AffineTransform getTransform() {return toScreen;}
     public Point2D getMousePos() {return mouse;}
     public AbstractBlock getHoveringBlock() {return hoveringBlock;}
@@ -91,11 +89,11 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (dragging) return;
-        if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+        if (App.isInputProcessing() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
             AbstractBlock ab = getBlockType();
             if (ab != null) ab.showDialog(e.getLocationOnScreen());
         }
-        if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
+        if (App.isInputProcessing() && e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
             AbstractBlock block;
             Point cellCoords = getCellCoords(mouse);
             switch (blockToAdd) {
@@ -125,7 +123,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
             App.project.blocks.add(block);
             App.statusPanel.appendLog(blockToAdd + " added", "Created " + blockToAdd + " [id: " + block.getId() + "] at " + cellCoords.x + ", " + cellCoords.y, StatusPanel.INFO_MSG);
-            App.selectPanel.clearSelection();
+            App.selectPanel.controller.clearSelection();
         }
     }
 
@@ -134,7 +132,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         if (click != MouseEvent.NOBUTTON) return;
         click = e.getButton();
 
-        if (toggleInputProcessing && click == MouseEvent.BUTTON1) {  // left mouse click
+        if (App.isInputProcessing() && click == MouseEvent.BUTTON1) {  // left mouse click
             AbstractBlock b = getBlockType();   // get the block under the mouse
             for (AbstractBlock ab : App.project.blocks) // clear all the selections
                 ab.setSelected(false);
@@ -148,7 +146,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
         }
 
-        if (toggleInputProcessing && click == MouseEvent.BUTTON3) {  // right mouse click - delete item
+        if (App.isInputProcessing() && click == MouseEvent.BUTTON3) {  // right mouse click - delete item
             AbstractBlock b = getBlockType();   // get the block under the mouse
             if (b == null) {    // it is a line remove it
                 for (Line line : App.project.lines) {
@@ -172,7 +170,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         click = MouseEvent.NOBUTTON;
         dragging = false;
 
-        if (toggleInputProcessing && e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
+        if (App.isInputProcessing() && e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
             Point tmp = getCellCoords(mouse);
             if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) {
                 pen.end = tmp;
@@ -247,11 +245,11 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
-            if (toggleInputProcessing && mode == DRAW_LINE) {
+            if (App.isInputProcessing() && mode == DRAW_LINE) {
                 Point tmp = getCellCoords(mouse);
                 if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) pen.end = tmp;
             }
-            if (toggleInputProcessing && mode == DRAG_BLOCK) {
+            if (App.isInputProcessing() && mode == DRAG_BLOCK) {
                 pen.end = getCellCoords(mouse);
                 Point d = new Point(pen.end.x - pen.begin.x, pen.end.y - pen.begin.y);
                 for (AbstractBlock ab : App.project.blocks) {

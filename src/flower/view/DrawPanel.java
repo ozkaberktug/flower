@@ -30,7 +30,7 @@ import static flower.view.ViewConstants.TILESIZE;
 public class DrawPanel extends JPanel implements Runnable {
 
     public static final Dimension PREFERRED_SIZE = new Dimension(TILESIZE * 40, TILESIZE * 30);
-    public static final DrawPanelController controller = new DrawPanelController();
+    public final DrawPanelController controller = new DrawPanelController();
 
     public DrawPanel() {
         super(null, true);

@@ -30,7 +30,6 @@ import java.util.ArrayList;
 
 import static flower.view.ViewConstants.TILESIZE;
 
-
 public class Project {
 
     public final ArrayList<AbstractBlock> blocks;

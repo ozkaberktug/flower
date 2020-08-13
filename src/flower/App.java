@@ -18,7 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.KeyStroke;
 import javax.swing.UIManager;
-import javax.tools.Tool;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -42,6 +41,11 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final StatusPanel statusPanel = new StatusPanel(this);
     public static final ToolbarPanel toolbarPanel = new ToolbarPanel(this);
     public static final Interpreter interpreter = new Interpreter();
+    private static boolean inputProcessing = true;
+
+    public static void blockInputProcessing() { inputProcessing = false; }
+    public static void enableInputProcessing() {inputProcessing = true;}
+    public static boolean isInputProcessing() {return inputProcessing;}
 
     public App() {
         super("flower - Untitled");
@@ -161,8 +165,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
                 project.clear();
-                selectPanel.clearSelection();
-                DrawPanel.controller.clear();
+                selectPanel.controller.clearSelection();
+                drawPanel.controller.clear();
                 statusPanel.clear();
                 setTitle("flower - Untitled");
                 break;
