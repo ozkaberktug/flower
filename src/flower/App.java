@@ -84,7 +84,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         editorPanel.setOneTouchExpandable(true);
         contentPanel.add(editorPanel, gbcEditorPanel);
         /**/
-        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 3, 1, 3), 0, 0);
         contentPanel.add(statusPanel, gbcStatusPanel);
 
         setContentPane(contentPanel);

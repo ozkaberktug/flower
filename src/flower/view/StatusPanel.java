@@ -23,11 +23,13 @@ public class StatusPanel extends JPanel {
     public final StatusPanelController controller = new StatusPanelController();
 
     private JLabel label;
+    private JLabel button;
     private JTextArea area;
     private JScrollPane bottomPane;
 
     public JLabel getLabel() {return label;}
     public JTextArea getArea() {return area;}
+    public JLabel getButton() {return button;}
     public JScrollPane getBottomPane() {return bottomPane;}
 
     public StatusPanel() {
@@ -40,8 +42,8 @@ public class StatusPanel extends JPanel {
     private void initComponent() {
 
         // todo change this to display icon
-        JButton button = new JButton("X");
-        button.addActionListener(controller);
+        button = new JLabel("X");
+        button.addMouseListener(controller);
 
         label = new JLabel();
         label.setFont(new Font(Font.SERIF, Font.BOLD, 12));

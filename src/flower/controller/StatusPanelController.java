@@ -5,10 +5,12 @@ import flower.App;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class StatusPanelController implements ActionListener {
+public class StatusPanelController extends MouseAdapter {
 
     public static final int INFO = 0;
     public static final int WARNING = 1;
@@ -18,8 +20,9 @@ public class StatusPanelController implements ActionListener {
     private final StringBuilder log = new StringBuilder();
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    public void mouseClicked(MouseEvent e) {
         App.statusPanel.getBottomPane().setVisible(!App.statusPanel.getBottomPane().isVisible());
+        //todo change button icon
         update();
     }
 
