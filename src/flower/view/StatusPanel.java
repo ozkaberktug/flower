@@ -2,6 +2,7 @@ package flower.view;
 
 import flower.controller.StatusPanelController;
 
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,13 +56,8 @@ public class StatusPanel extends JPanel {
         add(label, gbcLabel);
         add(areaScrollPane, gbcArea);
 
-    }
+        setBorder(BorderFactory.createLoweredBevelBorder());
 
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        controller.clear();
     }
-
 
 }

@@ -1,5 +1,6 @@
 package flower;
 
+import flower.controller.StatusPanelController;
 import flower.model.Project;
 import flower.util.FileHandler;
 import flower.util.Interpreter;
@@ -83,6 +84,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
+        statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
+        statusPanel.controller.pushLog("flower v" + version_string, StatusPanelController.INFO);
     }
 
     // create and add components to UI
@@ -168,8 +171,9 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 project.clear();
                 selectPanel.controller.clear();
                 drawPanel.controller.clear();
-                statusPanel.controller.clear();
                 setTitle("flower - Untitled");
+                statusPanel.controller.pushLog("Created new project.", StatusPanelController.INFO);
+                statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
                 break;
             case "Open":
                 FileHandler.showOpenDialog(this);
@@ -196,6 +200,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public void windowClosing(WindowEvent e) {
         if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
             return;
+        statusPanel.controller.pushLog("Exiting application...", StatusPanelController.INFO);
         setVisible(false);
         dispose();
         System.exit(0);
