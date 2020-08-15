@@ -3,6 +3,7 @@ package flower.controller;
 import flower.App;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -24,6 +25,16 @@ public class StatusPanelController extends MouseAdapter {
         App.statusPanel.getBottomPane().setVisible(!App.statusPanel.getBottomPane().isVisible());
         //todo change button icon
         update();
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        App.statusPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        App.statusPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     private void update() {

@@ -5,7 +5,6 @@ import flower.controller.StatusPanelController;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -53,6 +52,7 @@ public class StatusPanel extends JPanel {
         topPane.add(label);
         topPane.add(Box.createHorizontalGlue());
         topPane.add(button);
+        topPane.add(Box.createRigidArea(new Dimension(10, 0)));
 
         area = new JTextArea();
         area.setBackground(Color.BLACK);
