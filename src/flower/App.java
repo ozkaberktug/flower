@@ -2,6 +2,7 @@ package flower;
 
 import flower.controller.StatusPanelController;
 import flower.model.Project;
+import flower.util.ExceptionHandler;
 import flower.util.FileHandler;
 import flower.util.Interpreter;
 import flower.view.DrawPanel;
@@ -28,10 +29,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.io.File;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.util.Date;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
@@ -43,40 +40,21 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final StatusPanel statusPanel = new StatusPanel();
     public static final ToolbarPanel toolbarPanel = new ToolbarPanel();
     public static Interpreter interpreter = new Interpreter();
-    private static boolean inputProcessing = true;
+    private static final ExceptionHandler exceptionHandler = new ExceptionHandler();
 
+    private static boolean inputProcessing = true;
     public static void blockInputProcessing() { inputProcessing = false; }
     public static void enableInputProcessing() {inputProcessing = true;}
     public static boolean isInputProcessing() {return inputProcessing;}
 
     public App() {
         super("flower - Untitled");
+        Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception e) {
-            e.printStackTrace();
+            exceptionHandler.handle(e, ExceptionHandler.NORMAL);
         }
-        Thread.setDefaultUncaughtExceptionHandler((th, ex) -> {
-            Date date = new Date();
-            String home_dir = System.getProperty("user.home");
-            String timestamp = String.valueOf(date.getTime());
-            String logFilePath = home_dir + File.separator + "err_log-" + timestamp + ".txt";
-            File logFile = new File(logFilePath);
-
-            try {
-                PrintStream ps = new PrintStream(logFile);
-                ps.println(statusPanel.controller.getLog());
-                ex.printStackTrace(ps);
-                ps.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            String message = "<html>" + ex.toString() + " occurred! <br/><br/> This should not be happened. An error log has been saved to <br/> <u>" + logFilePath + "</u><br/><br/>If you send me an email (bkozkan@outlook.com), please attach this file also!";
-
-            JOptionPane.showMessageDialog(null, message, "Exception occurred on " + th.getName(), JOptionPane.ERROR_MESSAGE);
-            System.exit(1);
-        });
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
