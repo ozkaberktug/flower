@@ -59,7 +59,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);
-        initUI();
+        initComponent();
+        initMenuBar();
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
@@ -68,7 +69,28 @@ public class App extends JFrame implements WindowListener, ActionListener {
     }
 
     // create and add components to UI
-    private void initUI() {
+    private void initComponent() {
+        JPanel contentPanel = new JPanel(new GridBagLayout());
+        /**/
+        GridBagConstraints gbcToolbarPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        contentPanel.add(toolbarPanel, gbcToolbarPanel);
+        /**/
+        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 8, 0, 8), 0, 0);
+        JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
+        selectPanelScrollPane.setBorder(null);
+        selectPanelScrollPane.setMinimumSize(selectPanel.getMinimumSize());
+        selectPanelScrollPane.setPreferredSize(selectPanel.getPreferredSize());
+        JSplitPane editorPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, selectPanelScrollPane, drawPanel);
+        editorPanel.setOneTouchExpandable(true);
+        contentPanel.add(editorPanel, gbcEditorPanel);
+        /**/
+        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        contentPanel.add(statusPanel, gbcStatusPanel);
+
+        setContentPane(contentPanel);
+    }
+
+    private void initMenuBar() {
         JMenuBar menuBar = new JMenuBar();
         //*********//
         JMenu fileMenu = new JMenu("File");
@@ -119,25 +141,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         aboutMenuItem.addActionListener(this);
         aboutMenuItem.setToolTipText("About Flowchart Designer");
         helpMenu.add(aboutMenuItem);
-
-        JPanel contentPanel = new JPanel(new GridBagLayout());
-        /**/
-        GridBagConstraints gbcToolbarPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-        contentPanel.add(toolbarPanel, gbcToolbarPanel);
-        /**/
-        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 8, 0, 8), 0, 0);
-        JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
-        selectPanelScrollPane.setBorder(null);
-        selectPanelScrollPane.setMinimumSize(selectPanel.getMinimumSize());
-        selectPanelScrollPane.setPreferredSize(selectPanel.getPreferredSize());
-        JSplitPane editorPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, selectPanelScrollPane, drawPanel);
-        editorPanel.setOneTouchExpandable(true);
-        contentPanel.add(editorPanel, gbcEditorPanel);
-        /**/
-        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
-        contentPanel.add(statusPanel, gbcStatusPanel);
-
-        setContentPane(contentPanel);
         setJMenuBar(menuBar);
     }
 

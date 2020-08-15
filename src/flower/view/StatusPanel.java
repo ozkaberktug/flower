@@ -3,12 +3,16 @@ package flower.view;
 import flower.controller.StatusPanelController;
 
 import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -18,25 +22,35 @@ public class StatusPanel extends JPanel {
 
     public final StatusPanelController controller = new StatusPanelController();
 
-    private final JLabel label;
-    private final JTextArea area;
-    private final JScrollPane areaScrollPane;
+    private JLabel label;
+    private JTextArea area;
+    private JScrollPane bottomPane;
 
     public JLabel getLabel() {return label;}
     public JTextArea getArea() {return area;}
-    public JScrollPane getPane() {return areaScrollPane;}
+    public JScrollPane getBottomPane() {return bottomPane;}
 
     public StatusPanel() {
         super(new GridBagLayout());
+        setBorder(BorderFactory.createLoweredBevelBorder());
 
-        GridBagConstraints gbcLabel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(10, 5, 5, 5), 0, 0);
-        GridBagConstraints gbcArea = new GridBagConstraints(0, 1, 2, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 5, 5, 5), 0, 150);
+        initComponent();
+    }
+
+    private void initComponent() {
+
+        // todo change this to display icon
+        JButton button = new JButton("X");
+        button.addActionListener(controller);
 
         label = new JLabel();
-        label.setForeground(Color.RED);
-        label.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 12));
-        label.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        label.addMouseListener(controller);
+        label.setFont(new Font(Font.SERIF, Font.BOLD, 12));
+
+        JPanel topPane = new JPanel();
+        topPane.setLayout(new BoxLayout(topPane, BoxLayout.X_AXIS));
+        topPane.add(label);
+        topPane.add(Box.createHorizontalGlue());
+        topPane.add(button);
 
         area = new JTextArea();
         area.setBackground(Color.BLACK);
@@ -48,16 +62,15 @@ public class StatusPanel extends JPanel {
         area.setCursor(Cursor.getPredefinedCursor(Cursor.TEXT_CURSOR));
         area.setFont(new Font(Font.MONOSPACED, Font.PLAIN, 12));
 
-        areaScrollPane = new JScrollPane(area);
-        areaScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        areaScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        areaScrollPane.setVisible(false);
+        bottomPane = new JScrollPane(area);
+        bottomPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        bottomPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        bottomPane.setVisible(false);
 
-        add(label, gbcLabel);
-        add(areaScrollPane, gbcArea);
-
-        setBorder(BorderFactory.createLoweredBevelBorder());
-
+        GridBagConstraints gbcTopPane = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        GridBagConstraints gbcBottomPane = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 150);
+        add(topPane, gbcTopPane);
+        add(bottomPane, gbcBottomPane);
     }
 
 }

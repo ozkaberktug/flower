@@ -3,23 +3,23 @@ package flower.controller;
 import flower.App;
 
 import java.awt.Color;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class StatusPanelController extends MouseAdapter {
+public class StatusPanelController implements ActionListener {
 
     public static final int INFO = 0;
     public static final int WARNING = 1;
     public static final int ERROR = 2;
 
-    private String status = "Ready";
+    private String status = "";
     private final StringBuilder log = new StringBuilder();
 
     @Override
-    public void mouseClicked(MouseEvent e) {
-        App.statusPanel.getPane().setVisible(!App.statusPanel.getPane().isVisible());
+    public void actionPerformed(ActionEvent e) {
+        App.statusPanel.getBottomPane().setVisible(!App.statusPanel.getBottomPane().isVisible());
         update();
     }
 
