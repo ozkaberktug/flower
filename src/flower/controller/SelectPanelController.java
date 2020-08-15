@@ -29,7 +29,7 @@ public class SelectPanelController extends MouseAdapter implements ActionListene
         if (selected != null && selected.isLeaf()) {
             String obj = (String) selected.getUserObject();
             App.drawPanel.controller.setBlockToAdd(obj);
-            App.statusPanel.controller.appendLog(obj + " selected.");
+
         }
     }
 
@@ -40,7 +40,7 @@ public class SelectPanelController extends MouseAdapter implements ActionListene
         int row = App.selectPanel.getTree().getRowForLocation(e.getX(), e.getY());
         if (row == -1) { // click on the "empty surface"
             clear();
-            App.statusPanel.controller.appendLog("Ready.");
+
         }
     }
 

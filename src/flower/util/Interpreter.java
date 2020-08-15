@@ -1,7 +1,6 @@
 package flower.util;
 
 import flower.App;
-import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
@@ -28,7 +27,7 @@ public class Interpreter extends Thread {
     public Interpreter() {
         setUncaughtExceptionHandler((thread, exception) -> {
             String[] msg = exception.getMessage().split("/");
-            App.statusPanel.controller.appendLog(msg[0], msg[1], StatusPanelController.ERROR_MSG);
+
             App.toolbarPanel.controller.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
         });
         symbolTable = new HashMap<>();
@@ -38,7 +37,7 @@ public class Interpreter extends Thread {
     public void run() {
         // init environment
         isRunning = true;
-        App.statusPanel.controller.appendLog("Running...", "Simulation started.", StatusPanelController.INFO_MSG);
+
         long beginTime = System.currentTimeMillis();
 
         // check if there are any blocks
@@ -107,7 +106,8 @@ public class Interpreter extends Thread {
             if (currentBlock instanceof StopBlock) isRunning = false;
         }
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
-        App.statusPanel.controller.appendLog("Simulation finished.", "Took " + String.format("%.4f", diffTime) + " seconds to complete.", StatusPanelController.INFO_MSG);
+        String.format("%.4f", diffTime);
+
         App.toolbarPanel.controller.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
     }
 

@@ -1,7 +1,6 @@
 package flower.util;
 
 import flower.App;
-import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
@@ -88,8 +87,6 @@ public class FileHandler {
 
     private static void save(File ff) {
 
-        App.statusPanel.controller.appendLog("Writing data...", "", StatusPanelController.INFO_MSG);
-
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
 
@@ -151,10 +148,11 @@ public class FileHandler {
             transformer.transform(source, result);
 
             // inform user
-            App.statusPanel.controller.appendLog("Project saved!", "Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO_MSG);
+            ff.getAbsolutePath();
 
         } catch (Exception e) {
-            App.statusPanel.controller.appendLog("File could not read!", e.getMessage(), StatusPanelController.ERROR_MSG);
+            e.getMessage();
+
         }
 
     }
@@ -163,8 +161,6 @@ public class FileHandler {
 
         // clear project
         App.project.clear();
-
-        App.statusPanel.controller.appendLog("Reading data...", "", StatusPanelController.INFO_MSG);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -244,10 +240,11 @@ public class FileHandler {
             // todo: in the future libs tag will be added
 
             // inform user
-            App.statusPanel.controller.appendLog("Project loaded!", "Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO_MSG);
+            ff.getAbsolutePath();
 
         } catch (Exception e) {
-            App.statusPanel.controller.appendLog("File could not read!", e.getMessage(), StatusPanelController.ERROR_MSG);
+            e.getMessage();
+
         }
 
     }
@@ -265,7 +262,7 @@ public class FileHandler {
 
         // check if there is anything
         if (App.project.lines.isEmpty() && App.project.blocks.isEmpty()) {
-            App.statusPanel.controller.appendLog("Export failed.", "Nothing on the chart.", StatusPanelController.ERROR_MSG);
+
             return;
         }
 
@@ -318,11 +315,13 @@ public class FileHandler {
         try {
             ImageIO.write(bufferedImage, "PNG", ff);
         } catch (Exception e) {
-            App.statusPanel.controller.appendLog("Export failed.", e.getMessage(), StatusPanelController.ERROR_MSG);
+            e.getMessage();
+
             return;
         }
         // notify the UI
-        App.statusPanel.controller.appendLog("Flowchart exported successfully.", "Exported file: " + ff.getAbsolutePath(), StatusPanelController.PLAIN_MSG);
+        ff.getAbsolutePath();
+
     }
 
 }
