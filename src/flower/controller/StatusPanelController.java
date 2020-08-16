@@ -1,11 +1,10 @@
 package flower.controller;
 
 import flower.App;
+import flower.resources.ResourceManager;
 
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.LocalDateTime;
@@ -22,8 +21,13 @@ public class StatusPanelController extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        App.statusPanel.getBottomPane().setVisible(!App.statusPanel.getBottomPane().isVisible());
-        //todo change button icon
+        if (App.statusPanel.getBottomPane().isVisible()) {
+            App.statusPanel.getBottomPane().setVisible(false);
+            App.statusPanel.getButton().setIcon(ResourceManager.getImageIcon(ResourceManager.ARROW_UP));
+        } else {
+            App.statusPanel.getBottomPane().setVisible(true);
+            App.statusPanel.getButton().setIcon(ResourceManager.getImageIcon(ResourceManager.ARROW_DOWN));
+        }
         update();
     }
 

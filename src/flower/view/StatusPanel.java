@@ -1,6 +1,7 @@
 package flower.view;
 
 import flower.controller.StatusPanelController;
+import flower.resources.ResourceManager;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -40,8 +41,7 @@ public class StatusPanel extends JPanel {
 
     private void initComponent() {
 
-        // todo change this to display icon
-        button = new JLabel("X");
+        button = new JLabel(ResourceManager.getImageIcon(ResourceManager.ARROW_UP));
         button.addMouseListener(controller);
 
         label = new JLabel();
@@ -52,7 +52,6 @@ public class StatusPanel extends JPanel {
         topPane.add(label);
         topPane.add(Box.createHorizontalGlue());
         topPane.add(button);
-        topPane.add(Box.createRigidArea(new Dimension(10, 0)));
 
         area = new JTextArea();
         area.setBackground(Color.BLACK);
