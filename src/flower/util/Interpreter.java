@@ -12,7 +12,6 @@ import flower.model.elements.StopBlock;
 
 import javax.swing.JOptionPane;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -28,7 +27,7 @@ public class Interpreter extends Thread {
         setUncaughtExceptionHandler((thread, exception) -> {
             String[] msg = exception.getMessage().split("/");
 
-            App.toolbarPanel.controller.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
+            App.toolbarPanel.controller.stopSimulation();
         });
         symbolTable = new HashMap<>();
     }
@@ -108,7 +107,7 @@ public class Interpreter extends Thread {
         double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
         String.format("%.4f", diffTime);
 
-        App.toolbarPanel.controller.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, "Stop"));
+        App.toolbarPanel.controller.stopSimulation();
     }
 
     private Point decodeBlock(AbstractBlock block) {
