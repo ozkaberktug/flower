@@ -13,10 +13,44 @@ public class ToolbarPanelController extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
+
+        // RUN BUTTON
         if (e.getComponent() == App.toolbarPanel.getRunBtn() && App.toolbarPanel.getRunBtn().isEnabled())
             runSimulation();
-        if (e.getComponent() == App.toolbarPanel.getStopBtn() && App.toolbarPanel.getStopBtn().isEnabled())
+
+            // STOP BUTTON
+        else if (e.getComponent() == App.toolbarPanel.getStopBtn() && App.toolbarPanel.getStopBtn().isEnabled())
             stopSimulation();
+
+            // GRID BUTTON - ON -> OFF
+        else if (e.getComponent() == App.toolbarPanel.getGridBtn() && App.toolbarPanel.getGridBtn().isEnabled()) {
+            App.drawPanel.controller.setToggleGrids(false);
+            App.toolbarPanel.getGridBtn().setEnabled(false);
+            App.toolbarPanel.getGridBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.GRIDS_OFF));
+
+            // GRID BUTTON - OFF -> ON
+        } else if (e.getComponent() == App.toolbarPanel.getGridBtn() && !App.toolbarPanel.getGridBtn().isEnabled()) {
+            App.drawPanel.controller.setToggleGrids(true);
+            App.toolbarPanel.getGridBtn().setEnabled(true);
+            App.toolbarPanel.getGridBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.GRIDS_ON));
+
+            // QUALITY BUTTON - ON -> OFF
+        } else if (e.getComponent() == App.toolbarPanel.getQualityBtn() && App.toolbarPanel.getQualityBtn().isEnabled()) {
+            App.drawPanel.controller.setToggleQuality(false);
+            App.toolbarPanel.getQualityBtn().setEnabled(false);
+            App.toolbarPanel.getQualityBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.QUALITY_OFF));
+
+            // QUALITY BUTTON - OFF -> ON
+        } else if (e.getComponent() == App.toolbarPanel.getQualityBtn() && !App.toolbarPanel.getQualityBtn().isEnabled()) {
+            App.drawPanel.controller.setToggleQuality(true);
+            App.toolbarPanel.getQualityBtn().setEnabled(true);
+            App.toolbarPanel.getQualityBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.QUALITY_ON));
+
+            // RELOCATE BUTTON
+        } else if (e.getComponent() == App.toolbarPanel.getRelocateBtn()) {
+            // todo
+        }
+
     }
 
     @Override
@@ -30,8 +64,8 @@ public class ToolbarPanelController extends MouseAdapter {
     }
 
     public void runSimulation() {
-        App.toolbarPanel.getRunBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.RUN_BUTTON_DISABLED));
-        App.toolbarPanel.getStopBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.STOP_BUTTON));
+        App.toolbarPanel.getRunBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.RUN));
+        App.toolbarPanel.getStopBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.STOP));
         App.toolbarPanel.getRunBtn().setEnabled(false);
         App.toolbarPanel.getStopBtn().setEnabled(true);
         App.blockInputProcessing();
@@ -39,8 +73,8 @@ public class ToolbarPanelController extends MouseAdapter {
     }
 
     public void stopSimulation() {
-        App.toolbarPanel.getRunBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.RUN_BUTTON));
-        App.toolbarPanel.getStopBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.STOP_BUTTON_DISABLED));
+        App.toolbarPanel.getRunBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.RUN));
+        App.toolbarPanel.getStopBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.STOP));
         App.interpreter.isRunning = false;
         App.interpreter = new Interpreter();
         App.enableInputProcessing();

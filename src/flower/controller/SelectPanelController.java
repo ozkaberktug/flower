@@ -10,17 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class SelectPanelController extends MouseAdapter implements ActionListener, TreeSelectionListener {
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getActionCommand().equals("G")) {
-            App.drawPanel.controller.setToggleGrids(!App.drawPanel.controller.isToggleGrids());
-        }
-        if (e.getActionCommand().equals("Q")) {
-            App.drawPanel.controller.setToggleQuality(!App.drawPanel.controller.isToggleQuality());
-        }
-    }
+public class SelectPanelController extends MouseAdapter implements TreeSelectionListener {
 
     @Override
     public void valueChanged(TreeSelectionEvent e) {

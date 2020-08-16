@@ -9,10 +9,13 @@ public class ResourceManager {
 
     public static final String ARROW_DOWN = "arrow-down.png";
     public static final String ARROW_UP = "arrow-up.png";
-    public static final String RUN_BUTTON = "run-button.png";
-    public static final String STOP_BUTTON = "stop-button.png";
-    public static final String RUN_BUTTON_DISABLED = "run-button-disabled.png";
-    public static final String STOP_BUTTON_DISABLED = "stop-button-disabled.png";
+    public static final String RUN = "run.png";
+    public static final String STOP = "stop.png";
+    public static final String RELOCATE = "relocate.png";
+    public static final String QUALITY_ON = "quality-on.png";
+    public static final String QUALITY_OFF = "quality-off.png";
+    public static final String GRIDS_ON = "grids-on.png";
+    public static final String GRIDS_OFF = "grids-off.png";
 
     public static ImageIcon getImageIcon(String path) {
         URL ref = App.class.getResource("resources/"+path);

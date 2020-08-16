@@ -23,17 +23,6 @@ public class SelectPanel extends JPanel {
         setBorder(BorderFactory.createTitledBorder("Add to Flow"));
         constructTree();
         add(tree, BorderLayout.CENTER);
-        JPanel optPanel = new JPanel();
-        JToggleButton gridToggleBtn = new JToggleButton();
-        gridToggleBtn.addActionListener(controller);
-        gridToggleBtn.setSelected(true);
-        gridToggleBtn.setText("G");
-        optPanel.add(gridToggleBtn);
-        JToggleButton qualityToggleBtn = new JToggleButton();
-        qualityToggleBtn.setText("Q");
-        qualityToggleBtn.addActionListener(controller);
-        optPanel.add(qualityToggleBtn);
-        add(optPanel, BorderLayout.PAGE_END);
     }
 
     private void constructTree() {
