@@ -72,10 +72,10 @@ public class App extends JFrame implements WindowListener, ActionListener {
     private void initComponent() {
         JPanel contentPanel = new JPanel(new GridBagLayout());
         /**/
-        GridBagConstraints gbcToolbarPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0);
+        GridBagConstraints gbcToolbarPanel = new GridBagConstraints(0, 0, 1, 1, 1.f, 0.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(1, 5, 1, 5), 0, 0);
         contentPanel.add(toolbarPanel, gbcToolbarPanel);
         /**/
-        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 8, 0, 8), 0, 0);
+        GridBagConstraints gbcEditorPanel = new GridBagConstraints(0, 1, 1, 1, 1.f, 1.f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 5, 1, 5), 0, 0);
         JScrollPane selectPanelScrollPane = new JScrollPane(selectPanel);
         selectPanelScrollPane.setBorder(null);
         selectPanelScrollPane.setMinimumSize(selectPanel.getMinimumSize());
@@ -84,7 +84,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         editorPanel.setOneTouchExpandable(true);
         contentPanel.add(editorPanel, gbcEditorPanel);
         /**/
-        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 3, 1, 3), 0, 0);
+        GridBagConstraints gbcStatusPanel = new GridBagConstraints(0, 2, 1, 1, 1.f, 0f, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 5, 1, 5), 0, 0);
         contentPanel.add(statusPanel, gbcStatusPanel);
 
         setContentPane(contentPanel);
