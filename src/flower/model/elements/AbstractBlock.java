@@ -1,5 +1,8 @@
 package flower.model.elements;
 
+import flower.App;
+import flower.util.Command;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -88,7 +91,7 @@ abstract public class AbstractBlock {
         graphics2D.setColor(Color.BLACK);
     }
 
-    public void showDialog(Point location) {
+    public void showDialog() {
         String title = "Block #" + getId();
 
         JTextField codeField = new JTextField(code, 40);
@@ -98,8 +101,29 @@ abstract public class AbstractBlock {
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) code = codeField.getText();
-            normalizeSize();
+            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) {
+
+                App.project.add(new Command() {
+
+                    final String backup = code;
+
+                    @Override
+                    public void execute() {
+                        code = codeField.getText();
+                        normalizeSize();
+                    }
+                    @Override
+                    public void undo() {
+                        code = backup;
+                        normalizeSize();
+                    }
+                    @Override
+                    public String info() {
+                        return "Edited block #" + getId();
+                    }
+                });
+            }
+
         }
     }
 

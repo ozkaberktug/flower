@@ -1,7 +1,7 @@
 package flower.model.elements;
 
 import flower.App;
-import flower.controller.StatusPanelController;
+import flower.util.Command;
 
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -49,7 +49,7 @@ public class CommandBlock extends AbstractBlock {
     }
 
     @Override
-    public void showDialog(Point location) {
+    public void showDialog() {
         String title = "Block #" + getId();
 
         JTextArea codeArea = new JTextArea(code, 5, 40);
@@ -59,9 +59,27 @@ public class CommandBlock extends AbstractBlock {
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter statement:"), codeScrollPane};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
-            if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) code = codeArea.getText();
-            normalizeSize();
+            if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) {
+                App.project.add(new Command() {
+                    final String backup = code;
+                    @Override
+                    public void execute() {
+                        code = codeArea.getText();
+                        normalizeSize();
+                    }
+                    @Override
+                    public void undo() {
+                        code = backup;
+                        normalizeSize();
+                    }
+                    @Override
+                    public String info() {
+                        return "Edited block #" + getId();
+                    }
+                });
+            }
         }
+
     }
 
     @Override

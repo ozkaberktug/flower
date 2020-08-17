@@ -90,7 +90,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     public void relocate() {
         toScreen.setToIdentity();
         if (!App.project.blocks.isEmpty()) {
-            Rectangle rect = App.project.blocks.get(0).getInnerBounds();
+            Rectangle rect = App.project.blocks.get(0).getOuterBounds();
             toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
         }
     }
@@ -100,7 +100,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         if (App.isInputProcessing() && !dragging) {
             if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
                 AbstractBlock ab = getBlockType();
-                if (ab != null) ab.showDialog(e.getLocationOnScreen());
+                if (ab != null) ab.showDialog();
             }
             if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
                 AbstractBlock block;

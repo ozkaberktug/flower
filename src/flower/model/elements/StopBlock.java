@@ -35,7 +35,7 @@ public class StopBlock extends AbstractBlock {
     }
 
     @Override
-    public void showDialog(Point location) { }
+    public void showDialog() { }
 
     @Override
     public void normalizeSize() { }

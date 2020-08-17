@@ -1,5 +1,8 @@
 package flower.model.elements;
 
+import flower.App;
+import flower.util.Command;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -44,7 +47,7 @@ public class LabelBlock extends AbstractBlock {
     }
 
     @Override
-    public void showDialog(Point location) {
+    public void showDialog() {
         String title = "Block #" + getId();
 
         JTextField codeField = new JTextField(code, 20);
@@ -54,10 +57,35 @@ public class LabelBlock extends AbstractBlock {
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) code = codeField.getText();
-            area.width = code.length() / 2;
-            if (area.width % 2 == 0) area.width++;
+            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) {
+                App.project.add(new Command() {
+
+                    final String backup = code;
+
+                    @Override
+                    public void execute() {
+                        code = codeField.getText();
+                        normalizeSize();
+                    }
+                    @Override
+                    public void undo() {
+                        code = backup;
+                        normalizeSize();
+                    }
+                    @Override
+                    public String info() {
+                        return "Edited block #" + getId();
+                    }
+                });
+            }
         }
+    }
+
+
+    @Override
+    public void normalizeSize() {
+        area.width = code.length() / 2;
+        if (area.width % 2 == 0) area.width++;
     }
 
     @Override
