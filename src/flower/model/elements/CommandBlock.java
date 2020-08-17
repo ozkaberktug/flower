@@ -1,5 +1,8 @@
 package flower.model.elements;
 
+import flower.App;
+import flower.controller.StatusPanelController;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,6 +26,8 @@ public class CommandBlock extends AbstractBlock {
         type = COMMAND_BLOCK;
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
+//        String msgTxt = String.format("Command Block with id %d has been created at %d, %d.", getId(), offset.x, offset.y);
+//        App.statusPanel.controller.pushLog(msgTxt, StatusPanelController.INFO);
     }
 
     public CommandBlock() {

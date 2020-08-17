@@ -1,5 +1,8 @@
 package flower.model.elements;
 
+import flower.App;
+import flower.controller.StatusPanelController;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -83,6 +86,9 @@ abstract public class AbstractBlock {
     }
 
     public void moveTo(Point delta) {
+//        if(delta.x == 0 && delta.y == 0) return;
+//        String msgTxt = String.format("Block with id %d has been moved from %d, %d to %d, %d", getId(), area.x, area.y, area.x + delta.x, area.y + delta.y);
+//        App.statusPanel.controller.pushLog(msgTxt, StatusPanelController.INFO);
         area.x += delta.x;
         area.y += delta.y;
     }
