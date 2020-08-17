@@ -104,9 +104,8 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
             if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
                 AbstractBlock block;
-                String blockType = blockToAdd;
                 Point cellCoords = getCellCoords(mouse);
-                switch (blockType) {
+                switch (blockToAdd) {
                     case "START":
                         block = new StartBlock(cellCoords);
                         break;
@@ -135,16 +134,16 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     @Override
                     public void execute() {
                         App.project.blocks.add(block);
-                        App.statusPanel.controller.setStatus(blockType + " added", StatusPanelController.INFO);
+                        App.statusPanel.controller.setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         App.project.blocks.remove(block);
-                        App.statusPanel.controller.setStatus(blockType + " removed", StatusPanelController.INFO);
+                        App.statusPanel.controller.setStatus(block.getTypeString() + " removed", StatusPanelController.INFO);
                     }
                     @Override
                     public String info() {
-                        return String.format("%s block created with id %d at %d, %d", blockType, block.getId(), cellCoords.x, cellCoords.y);
+                        return String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y);
                     }
                 });
                 App.selectPanel.controller.clear();
@@ -176,14 +175,45 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             if (b == null) {    // it is a line remove it
                 for (Line line : App.project.lines) {
                     if (line.containsInclusive(getCellCoords(mouse))) {
-                        App.project.lines.remove(line);
-                        String.format("Line deleted: from (%d, %d) to (%d, %d)", line.begin.x, line.begin.y, line.end.x, line.end.y);
+
+                        App.project.add(new Command() {
+                            @Override
+                            public void execute() {
+                                App.statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
+                                App.project.lines.remove(line);
+                            }
+                            @Override
+                            public void undo() {
+                                App.statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
+                                App.project.lines.add(line);
+                            }
+                            @Override
+                            public String info() {
+                                return "Deleted: " + line.toString();
+                            }
+                        });
 
                         break;
                     }
                 }
             } else {    // it is a block remove it
-                App.project.blocks.remove(b);
+
+                App.project.add(new Command() {
+                    @Override
+                    public void execute() {
+                        App.statusPanel.controller.setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
+                        App.project.blocks.remove(b);
+                    }
+                    @Override
+                    public void undo() {
+                        App.statusPanel.controller.setStatus(b.getTypeString() + " added", StatusPanelController.INFO);
+                        App.project.blocks.add(b);
+                    }
+                    @Override
+                    public String info() {
+                        return String.format("Block with id %d deleted", b.getId());
+                    }
+                });
 
             }
         }

@@ -101,4 +101,9 @@ public class Line {
         return b1 || b2;
     }
 
+    @Override
+    public String toString() {
+        return "Line{" + "begin=" + begin + ", end=" + end + ", ghost=" + ghost + '}';
+    }
+
 }

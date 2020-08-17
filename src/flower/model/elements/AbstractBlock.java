@@ -1,8 +1,5 @@
 package flower.model.elements;
 
-import flower.App;
-import flower.controller.StatusPanelController;
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -44,6 +41,27 @@ abstract public class AbstractBlock {
     public AbstractBlock() {
         id = ++id_counter;
     }
+
+    public String getTypeString() {
+        switch (type) {
+            case START_BLOCK:
+                return "START";
+            case STOP_BLOCK:
+                return "STOP";
+            case COMMAND_BLOCK:
+                return "COMMAND";
+            case IF_BLOCK:
+                return "IF";
+            case INPUT_BLOCK:
+                return "INPUT";
+            case OUTPUT_BLOCK:
+                return "OUTPUT";
+            case LABEL_BLOCK:
+                return "LABEL";
+        }
+        return null;
+    }
+
 
     /* do-able functions */
     public void draw(Graphics2D graphics2D) {
