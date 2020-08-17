@@ -244,25 +244,69 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                             if (line.containsExclusive(created.begin)) {
                                 Line d1 = new Line(line.begin, created.begin);
                                 Line d2 = new Line(created.begin, line.end);
-                                App.project.lines.add(d1);
-                                App.project.lines.add(d2);
-                                App.project.lines.remove(line);
+
+                                App.project.add(new Command() {
+                                    @Override
+                                    public void execute() {
+                                        App.project.lines.add(d1);
+                                        App.project.lines.add(d2);
+                                        App.project.lines.remove(line);
+                                    }
+                                    @Override
+                                    public void undo() {
+                                        App.project.lines.remove(d1);
+                                        App.project.lines.remove(d2);
+                                        App.project.lines.add(line);
+                                    }
+                                    @Override
+                                    public String info() {
+                                        return "line division";
+                                    }
+                                });
                                 division = true;
                                 break;
                             }
                             if (line.containsExclusive(created.end)) {
                                 Line d1 = new Line(line.begin, created.end);
                                 Line d2 = new Line(created.end, line.end);
-                                App.project.lines.add(d1);
-                                App.project.lines.add(d2);
-                                App.project.lines.remove(line);
+                                App.project.add(new Command() {
+                                    @Override
+                                    public void execute() {
+                                        App.project.lines.add(d1);
+                                        App.project.lines.add(d2);
+                                        App.project.lines.remove(line);
+                                    }
+                                    @Override
+                                    public void undo() {
+                                        App.project.lines.remove(d1);
+                                        App.project.lines.remove(d2);
+                                        App.project.lines.add(line);
+                                    }
+                                    @Override
+                                    public String info() {
+                                        return "line division";
+                                    }
+                                });
                                 division = true;
                                 break;
                             }
                         }
                     }
 
-                    App.project.lines.add(created);
+                    App.project.add(new Command() {
+                        @Override
+                        public void execute() {
+                            App.project.lines.add(created);
+                        }
+                        @Override
+                        public void undo() {
+                            App.project.lines.remove(created);
+                        }
+                        @Override
+                        public String info() {
+                            return "line add";
+                        }
+                    });
 
                     String.format("Line added: from (%d, %d) to (%d, %d)", pen.begin.x, pen.begin.y, pen.end.x, pen.end.y);
 
@@ -293,8 +337,8 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
-        dragging = true;
         try {
+            dragging = true;
             Point2D target = toScreen.inverseTransform(mouseEvent.getPoint(), null);
             Point2D dist = new Point2D.Double(target.getX() - mouse.getX(), target.getY() - mouse.getY());
             if (click == MouseEvent.BUTTON2) {
@@ -302,29 +346,33 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
-            if (App.isInputProcessing() && mode == DRAW_LINE) {
-                Point tmp = getCellCoords(mouse);
-                if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) pen.end = tmp;
-            }
-            if (App.isInputProcessing() && mode == DRAG_BLOCK) {
-                pen.end = getCellCoords(mouse);
-                Point d = new Point(pen.end.x - pen.begin.x, pen.end.y - pen.begin.y);
-                for (AbstractBlock ab : App.project.blocks) {
-                    if (ab.isSelected()) {
-                        ab.moveTo(d);
+
+            if (App.isInputProcessing()) {
+                if (mode == DRAW_LINE) {
+                    Point tmp = getCellCoords(mouse);
+                    if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) pen.end = tmp;
+                }
+                if (mode == DRAG_BLOCK) {
+                    pen.end = getCellCoords(mouse);
+                    Point d = new Point(pen.end.x - pen.begin.x, pen.end.y - pen.begin.y);
+                    for (AbstractBlock ab : App.project.blocks) {
+                        if (ab.isSelected()) {
+                            ab.moveTo(d);
 //                        for (AbstractBlock other : App.project.blocks) {
 //                            if (ab.getId() != other.getId() && ab.getOuterBounds().intersects(other.getOuterBounds())) {
 //                                ab.moveTo(new Point(-d.x, -d.y));
 //                            }
 //                        }
+                        }
                     }
+                    pen.begin = pen.end;
+                    App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 }
-                pen.begin = pen.end;
-                App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
         }
+
     }
 
     @Override

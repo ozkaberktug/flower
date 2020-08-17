@@ -64,7 +64,7 @@ public class StatusPanelController extends MouseAdapter {
         log.append(dtf.format(LocalDateTime.now()));
         log.append("] ");
         log.append(msgTxt);
-        log.append("\n\n");
+        log.append("\n");
         App.statusPanel.getArea().setText(log.toString());
         update();
     }
