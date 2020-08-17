@@ -1,6 +1,7 @@
 package flower.model.elements;
 
 import flower.App;
+import flower.controller.StatusPanelController;
 import flower.util.Command;
 
 import javax.swing.JComponent;
@@ -66,15 +67,13 @@ public class CommandBlock extends AbstractBlock {
                     public void execute() {
                         code = codeArea.getText();
                         normalizeSize();
+                        App.statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         code = backup;
                         normalizeSize();
-                    }
-                    @Override
-                    public String info() {
-                        return "Edited block #" + getId();
+                        App.statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
                     }
                 });
             }

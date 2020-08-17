@@ -46,12 +46,10 @@ public class DrawPanel extends JPanel implements Runnable {
         setBackground(BACKGROUND_COLOR);
 
         getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control Z"), "undo");
-        getActionMap().put("undo", new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                App.project.undo();
-            }
-        });
+        getActionMap().put("undo", controller.undoAction);
+
+        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control shift Z"), "redo");
+        getActionMap().put("redo", controller.redoAction);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package flower.model.elements;
 
 import flower.App;
+import flower.controller.StatusPanelController;
 import flower.util.Command;
 
 import javax.swing.JComponent;
@@ -104,22 +105,18 @@ abstract public class AbstractBlock {
             if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) {
 
                 App.project.add(new Command() {
-
                     final String backup = code;
-
                     @Override
                     public void execute() {
                         code = codeField.getText();
                         normalizeSize();
+                        App.statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         code = backup;
                         normalizeSize();
-                    }
-                    @Override
-                    public String info() {
-                        return "Edited block #" + getId();
+                        App.statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
                     }
                 });
             }

@@ -103,7 +103,7 @@ public class Line {
 
     @Override
     public String toString() {
-        return "Line{" + "begin=" + begin + ", end=" + end + ", ghost=" + ghost + '}';
+        return String.format("from %d, %d to %d, %d", begin.x, begin.y, end.x, end.y);
     }
 
 }

@@ -7,7 +7,6 @@ import flower.model.elements.Line;
 import flower.util.Command;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class Project {
 
@@ -17,7 +16,8 @@ public class Project {
     public String inputParams;
     public final ArrayList<Project> libs;
 
-    private final Stack<Command> history;
+    private final ArrayList<Command> history;
+    private int historyIndex = 0;
 
     public Project() {
         lines = new ArrayList<>();
@@ -25,7 +25,7 @@ public class Project {
         name = "Untitled";
         inputParams = "";
         libs = new ArrayList<>();
-        history = new Stack<>();
+        history = new ArrayList<>();
     }
 
     public void clear() {
@@ -38,19 +38,29 @@ public class Project {
     }
 
     public void add(Command command) {
-        App.statusPanel.controller.pushLog(command.info(), StatusPanelController.INFO);
-        history.push(command);
+        history.add(command);
         command.execute();
+        historyIndex = history.size();
     }
 
     public void undo() {
-        if (history.isEmpty()) {
-            App.statusPanel.controller.setStatus("There is no operation to undo", StatusPanelController.ERROR);
+        if (historyIndex == 0) {
+            App.statusPanel.controller.setStatus("Already at the first state", StatusPanelController.ERROR);
             return;
         }
-        Command command = history.pop();
+        Command command = history.get(historyIndex - 1);
         command.undo();
-        App.statusPanel.controller.pushLog("Reverted: " + command.info(), StatusPanelController.INFO);
+        historyIndex--;
+    }
+
+    public void redo() {
+        if (historyIndex == history.size()) {
+            App.statusPanel.controller.setStatus("Already at the last state", StatusPanelController.ERROR);
+            return;
+        }
+        Command command = history.get(historyIndex);
+        command.execute();
+        historyIndex++;
     }
 
 }
