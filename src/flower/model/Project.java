@@ -50,6 +50,7 @@ public class Project {
         }
         Command command = history.pop();
         command.undo();
+        App.statusPanel.controller.pushLog("Reverted: " + command.info(), StatusPanelController.INFO);
     }
 
 }
