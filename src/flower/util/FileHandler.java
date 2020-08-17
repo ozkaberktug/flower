@@ -239,6 +239,8 @@ public class FileHandler {
 
             // todo: in the future libs tag will be added
 
+            App.drawPanel.controller.relocate();
+
             // inform user
             ff.getAbsolutePath();
 

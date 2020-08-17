@@ -48,7 +48,7 @@ public class ToolbarPanelController extends MouseAdapter {
 
             // RELOCATE BUTTON
         } else if (e.getComponent() == App.toolbarPanel.getRelocateBtn()) {
-            // todo
+            App.drawPanel.controller.relocate();
         }
 
     }

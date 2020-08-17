@@ -13,6 +13,7 @@ import flower.model.elements.StopBlock;
 
 import java.awt.Cursor;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -83,6 +84,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         pen.end = null;
         mode = NO_OPERATION;
         hoveringBlock = null;
+    }
+
+    public void relocate() {
+        toScreen.setToIdentity();
+        if (!App.project.blocks.isEmpty()) {
+            Rectangle rect = App.project.blocks.get(0).getInnerBounds();
+            toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
+        }
     }
 
     @Override
