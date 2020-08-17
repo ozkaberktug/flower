@@ -10,6 +10,7 @@ import flower.model.elements.Line;
 import flower.model.elements.OutputBlock;
 import flower.model.elements.StartBlock;
 import flower.model.elements.StopBlock;
+import flower.util.Command;
 
 import java.awt.Cursor;
 import java.awt.Point;
@@ -96,42 +97,58 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (dragging) return;
-        if (App.isInputProcessing() && e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
-            AbstractBlock ab = getBlockType();
-            if (ab != null) ab.showDialog(e.getLocationOnScreen());
-        }
-        if (App.isInputProcessing() && e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
-            AbstractBlock block;
-            Point cellCoords = getCellCoords(mouse);
-            switch (blockToAdd) {
-                case "START":
-                    block = new StartBlock(cellCoords);
-                    break;
-                case "STOP":
-                    block = new StopBlock(cellCoords);
-                    break;
-                case "COMMAND":
-                    block = new CommandBlock(cellCoords);
-                    break;
-                case "IF":
-                    block = new IfBlock(cellCoords);
-                    break;
-                case "INPUT":
-                    block = new InputBlock(cellCoords);
-                    break;
-                case "OUTPUT":
-                    block = new OutputBlock(cellCoords);
-                    break;
-                case "LABEL":
-                    block = new LabelBlock(cellCoords);
-                    break;
-                default:
-                    throw new UnsupportedOperationException();
+        if (App.isInputProcessing() && !dragging) {
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+                AbstractBlock ab = getBlockType();
+                if (ab != null) ab.showDialog(e.getLocationOnScreen());
             }
-            App.project.blocks.add(block);
-
-            App.selectPanel.controller.clear();
+            if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
+                AbstractBlock block;
+                String blockType = blockToAdd;
+                Point cellCoords = getCellCoords(mouse);
+                switch (blockType) {
+                    case "START":
+                        block = new StartBlock(cellCoords);
+                        break;
+                    case "STOP":
+                        block = new StopBlock(cellCoords);
+                        break;
+                    case "COMMAND":
+                        block = new CommandBlock(cellCoords);
+                        break;
+                    case "IF":
+                        block = new IfBlock(cellCoords);
+                        break;
+                    case "INPUT":
+                        block = new InputBlock(cellCoords);
+                        break;
+                    case "OUTPUT":
+                        block = new OutputBlock(cellCoords);
+                        break;
+                    case "LABEL":
+                        block = new LabelBlock(cellCoords);
+                        break;
+                    default:
+                        throw new UnsupportedOperationException();
+                }
+                App.project.add(new Command() {
+                    @Override
+                    public void execute() {
+                        App.project.blocks.add(block);
+                        App.statusPanel.controller.setStatus(blockType + " added", StatusPanelController.INFO);
+                    }
+                    @Override
+                    public void undo() {
+                        App.project.blocks.remove(block);
+                        App.statusPanel.controller.setStatus(blockType + " removed", StatusPanelController.INFO);
+                    }
+                    @Override
+                    public String info() {
+                        return String.format("%s block created with id %d at %d, %d", blockType, block.getId(), cellCoords.x, cellCoords.y);
+                    }
+                });
+                App.selectPanel.controller.clear();
+            }
         }
     }
 
