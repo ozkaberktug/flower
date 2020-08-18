@@ -5,7 +5,6 @@ import flower.controller.DrawPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.Line;
 
-import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
@@ -17,7 +16,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
-import java.awt.event.ActionEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;

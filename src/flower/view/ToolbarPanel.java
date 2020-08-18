@@ -8,7 +8,6 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JToolBar;
 import java.awt.Dimension;
 
 public class ToolbarPanel extends JPanel {
@@ -59,11 +58,11 @@ public class ToolbarPanel extends JPanel {
         qualityBtn.setEnabled(false);
         qualityBtn.addMouseListener(controller);
 
-        add(gridBtn);
-        add(Box.createRigidArea(new Dimension(10, 0)));
         add(qualityBtn);
         add(Box.createRigidArea(new Dimension(10, 0)));
         add(relocateBtn);
+        add(Box.createRigidArea(new Dimension(10, 0)));
+        add(gridBtn);
         add(Box.createRigidArea(new Dimension(5, 0)));
     }
 

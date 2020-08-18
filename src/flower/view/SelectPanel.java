@@ -4,7 +4,6 @@ import flower.controller.SelectPanelController;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.JToggleButton;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeSelectionModel;
@@ -22,6 +21,7 @@ public class SelectPanel extends JPanel {
         setPreferredSize(new Dimension(150, 100));
         setBorder(BorderFactory.createTitledBorder("Add to Flow"));
         constructTree();
+        setBackground(tree.getBackground());
         add(tree, BorderLayout.CENTER);
     }
 

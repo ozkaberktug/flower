@@ -14,6 +14,6 @@ public class ViewConstants {
     public static final BasicStroke BOLD_STROKE = new BasicStroke(TILESIZE / 4.f);
     public static final BasicStroke NORMAL_STROKE = new BasicStroke(2.f);
     public static final BasicStroke DASHED_STROKE = new BasicStroke(1.f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 0, new float[]{4}, 0);
-    public static final Color BACKGROUND_COLOR = new Color(220, 220, 220);
+    public static final Color BACKGROUND_COLOR = Color.WHITE;
 
 }
