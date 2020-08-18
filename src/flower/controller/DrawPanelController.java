@@ -196,14 +196,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                             public void execute() {
                                 App.project.lines.remove(line);
                                 App.statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
-                                App.statusPanel.controller.pushLog("Line " + line.toString(), StatusPanelController.INFO);
+                                App.statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
 
                             }
                             @Override
                             public void undo() {
                                 App.project.lines.add(line);
                                 App.statusPanel.controller.setStatus("Undo: Line deleted", StatusPanelController.INFO);
-                                App.statusPanel.controller.pushLog("Undo: Line " + line.toString(), StatusPanelController.INFO);
+                                App.statusPanel.controller.pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
                             }
                         });
 

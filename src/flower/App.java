@@ -41,7 +41,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final StatusPanel statusPanel = new StatusPanel();
     public static final ToolbarPanel toolbarPanel = new ToolbarPanel();
     public static Interpreter interpreter = new Interpreter();
-    private static final ExceptionHandler exceptionHandler = new ExceptionHandler();
+    public static final ExceptionHandler exceptionHandler = new ExceptionHandler();
 
     private static boolean inputProcessing = true;
     public static void blockInputProcessing() { inputProcessing = false; }

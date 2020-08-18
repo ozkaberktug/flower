@@ -1,6 +1,7 @@
 package flower.util;
 
 import flower.App;
+import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
@@ -86,6 +87,8 @@ public class FileHandler {
     }
 
     private static void save(File ff) {
+        App.statusPanel.controller.setStatus("Saving", StatusPanelController.INFO);
+        App.statusPanel.controller.pushLog("Saving project", StatusPanelController.INFO);
 
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
@@ -148,16 +151,20 @@ public class FileHandler {
             transformer.transform(source, result);
 
             // inform user
-            ff.getAbsolutePath();
+            App.statusPanel.controller.setStatus("Project saved successfully", StatusPanelController.INFO);
+            App.statusPanel.controller.pushLog("Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO);
 
         } catch (Exception e) {
-            e.getMessage();
-
+            App.exceptionHandler.handle(e, ExceptionHandler.NORMAL);
+            App.statusPanel.controller.setStatus("Project could not saved", StatusPanelController.ERROR);
+            App.statusPanel.controller.pushLog("Project could not saved due to " + e.toString(), StatusPanelController.ERROR);
         }
 
     }
 
     private static void open(File ff) {
+        App.statusPanel.controller.setStatus("Loading", StatusPanelController.INFO);
+        App.statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
 
         // clear project
         App.project.clear();
@@ -242,16 +249,21 @@ public class FileHandler {
             App.drawPanel.controller.relocate();
 
             // inform user
-            ff.getAbsolutePath();
+            App.statusPanel.controller.setStatus("Project loaded successfully", StatusPanelController.INFO);
+            App.statusPanel.controller.pushLog("Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO);
 
         } catch (Exception e) {
-            e.getMessage();
-
+            App.exceptionHandler.handle(e, ExceptionHandler.NORMAL);
+            App.statusPanel.controller.setStatus("Project could not load", StatusPanelController.ERROR);
+            App.statusPanel.controller.pushLog("Project could not load due to " + e.toString(), StatusPanelController.ERROR);
         }
 
     }
 
     private static void export(File ff) {
+        App.statusPanel.controller.setStatus("Exporting", StatusPanelController.INFO);
+        App.statusPanel.controller.pushLog("Exporting project", StatusPanelController.INFO);
+
         if (!ff.getName().toUpperCase().endsWith(".PNG")) ff = new File(ff.getAbsolutePath() + ".png");
 
         AffineTransform af = new AffineTransform(1, 0, 0, 1, 0, 0);
@@ -316,14 +328,16 @@ public class FileHandler {
         // save and return
         try {
             ImageIO.write(bufferedImage, "PNG", ff);
+
         } catch (Exception e) {
-            e.getMessage();
-
-            return;
+            App.exceptionHandler.handle(e, ExceptionHandler.NORMAL);
+            App.statusPanel.controller.setStatus("Project could not export", StatusPanelController.ERROR);
+            App.statusPanel.controller.pushLog("Project could not export due to " + e.toString(), StatusPanelController.ERROR);
         }
-        // notify the UI
-        ff.getAbsolutePath();
 
+        App.statusPanel.controller.setStatus("Project exported successfully", StatusPanelController.INFO);
+        App.statusPanel.controller.pushLog("Project exported to " + ff.getAbsolutePath(), StatusPanelController.INFO);
     }
+
 
 }
