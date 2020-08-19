@@ -264,7 +264,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                         App.project.lines.add(d2);
                                         App.project.lines.remove(line);
                                         App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-
+//                                        App.statusPanel.controller.setStatus("Line separation", StatusPanelController.INFO);
                                     }
                                     @Override
                                     public void undo() {
@@ -272,6 +272,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                         App.project.lines.remove(d2);
                                         App.project.lines.add(line);
                                         App.statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                                        App.statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
                                     }
                                 });
                                 division = true;
@@ -287,6 +288,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                         App.project.lines.add(d2);
                                         App.project.lines.remove(line);
                                         App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+//                                        App.statusPanel.controller.setStatus("Line separation", StatusPanelController.INFO);
                                     }
                                     @Override
                                     public void undo() {
@@ -294,6 +296,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                         App.project.lines.remove(d2);
                                         App.project.lines.add(line);
                                         App.statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                                        App.statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
                                     }
                                 });
                                 division = true;
@@ -306,11 +309,13 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                         @Override
                         public void execute() {
                             App.project.lines.add(created);
+                            App.statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
                             App.statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
                         }
                         @Override
                         public void undo() {
                             App.project.lines.remove(created);
+                            App.statusPanel.controller.setStatus("Undo: Line added", StatusPanelController.INFO);
                             App.statusPanel.controller.pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
                         }
                     });

@@ -1,6 +1,7 @@
 package flower.util;
 
 import flower.App;
+import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
@@ -13,101 +14,99 @@ import flower.model.elements.StopBlock;
 import javax.swing.JOptionPane;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Stack;
 
 public class Interpreter extends Thread {
 
     public boolean isRunning = false;
-    private final HashMap<String, Double> symbolTable;
-
-
-    public Interpreter() {
-        setUncaughtExceptionHandler((thread, exception) -> {
-            String[] msg = exception.getMessage().split("/");
-
-            App.toolbarPanel.controller.stopSimulation();
-        });
-        symbolTable = new HashMap<>();
-    }
+    private final HashMap<String, Double> symbolTable = new HashMap<>();
 
     @Override
     public void run() {
-        // init environment
-        isRunning = true;
+        try {
+            // init environment
+            isRunning = true;
+            App.statusPanel.controller.setStatus("Simulation started...", StatusPanelController.INFO);
+            App.statusPanel.controller.pushLog("Simulation started", StatusPanelController.INFO);
 
-        long beginTime = System.currentTimeMillis();
+            long beginTime = System.currentTimeMillis();
 
-        // check if there are any blocks
-        if (App.project.blocks.isEmpty()) throw new RuntimeException("No blocks./No block to process.");
+            // check if there are any blocks
+            if (App.project.blocks.isEmpty())
+                throw new InterpreterException("There are not any blocks", "No blocks to process");
 
-        // first search for START block
-        AbstractBlock currentBlock = null;
-        for (AbstractBlock block : App.project.blocks) {
-            if (block instanceof StartBlock) {
-                if (currentBlock == null) currentBlock = block;
-                else throw new RuntimeException("Multiple START blocks./Multiple start blocks found!");
-            }
-        }
-        if (currentBlock == null)
-            throw new RuntimeException("No START block./There is no entry point in the flowchart.");
-
-        currentBlock.setProcessing(true);
-
-        // fetch and decode cycle
-        while (isRunning) {
-
-
-            // decode and get the output pin
-            Point ptBegin = decodeBlock(currentBlock);
-
-            // null out the currentBlock for the next stage
-            currentBlock.setProcessing(false);
-            currentBlock = null;
-
-            // use DFS to find next block
-            Stack<Point> ss = new Stack<>();
-            ArrayList<Point> visited = new ArrayList<>();
-            ss.push(ptBegin);
-            while (!ss.empty()) {
-                Point p = ss.pop();
-                visited.add(p);
-
-                // check if we found a block input pin
-                for (AbstractBlock block : App.project.blocks) {
-                    Point[] inputPins = block.getInputPins();
-                    if (inputPins != null && inputPins[0].equals(p)) {
-                        if (currentBlock != null)
-                            throw new RuntimeException("Parallel execution./Output of one block is connected to at least two other [ID1:" + currentBlock.getId() + " ID2:" + block.getId() + "] block input.");
-                        currentBlock = block;
-                    }
+            // first search for START block
+            AbstractBlock currentBlock = null;
+            for (AbstractBlock block : App.project.blocks) {
+                if (block instanceof StartBlock) {
+                    if (currentBlock == null) currentBlock = block;
+                    else throw new InterpreterException("Multiple entry points found", "More than one START blocks");
                 }
-
-
-                // find which line(s) contains this point
-                for (Line line : App.project.lines) {
-                    if (line.begin.equals(p) || line.end.equals(p)) {
-                        if (!visited.contains(line.begin)) {
-                            ss.push(line.begin);
-                            visited.add(line.begin);
-                        }
-                        if (!visited.contains(line.end)) {
-                            ss.push(line.end);
-                            visited.add(line.end);
-                        }
-                    }
-                }
-
             }
-            if (currentBlock == null) throw new RuntimeException("Dangling block./Not connected to STOP block.");
+            if (currentBlock == null) throw new InterpreterException("There is no entry point", "No START block");
+
             currentBlock.setProcessing(true);
-            if (currentBlock instanceof StopBlock) isRunning = false;
-        }
-        double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
-        String.format("%.4f", diffTime);
 
-        App.toolbarPanel.controller.stopSimulation();
+            // fetch and decode cycle
+            while (isRunning) {
+
+                // decode and get the output pin
+                Point ptBegin = decodeBlock(currentBlock);
+
+                // null out the currentBlock for the next stage
+                currentBlock.setProcessing(false);
+                currentBlock = null;
+
+                // use DFS to find next block
+                Stack<Point> ss = new Stack<>();
+                ArrayList<Point> visited = new ArrayList<>();
+                ss.push(ptBegin);
+                while (!ss.empty()) {
+                    Point p = ss.pop();
+                    visited.add(p);
+
+                    // check if we found a block input pin
+                    for (AbstractBlock block : App.project.blocks) {
+                        Point[] inputPins = block.getInputPins();
+                        if (inputPins != null && inputPins[0].equals(p)) {
+                            if (currentBlock != null)
+                                throw new InterpreterException("Ambiguity detected in the path", "Parallel execution between #" + currentBlock.getId() + " #" + block.getId());
+                            currentBlock = block;
+                        }
+                    }
+
+
+                    // find which line(s) contains this point
+                    for (Line line : App.project.lines) {
+                        if (line.begin.equals(p) || line.end.equals(p)) {
+                            if (!visited.contains(line.begin)) {
+                                ss.push(line.begin);
+                                visited.add(line.begin);
+                            }
+                            if (!visited.contains(line.end)) {
+                                ss.push(line.end);
+                                visited.add(line.end);
+                            }
+                        }
+                    }
+
+                }
+                if (currentBlock == null)
+                    throw new InterpreterException("Dangling block found", "Not connected to STOP block.");
+                currentBlock.setProcessing(true);
+                if (currentBlock instanceof StopBlock) isRunning = false;
+            }
+
+            double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
+            App.statusPanel.controller.setStatus(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
+            App.statusPanel.controller.pushLog(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
+        } catch (InterpreterException ex) {
+            App.statusPanel.controller.pushLog("Simulation stopped due to: " + ex.description, ex.severity);
+            App.statusPanel.controller.setStatus(ex.tip, ex.severity);
+        } finally {
+            App.toolbarPanel.controller.stopSimulation();
+        }
     }
 
     private Point decodeBlock(AbstractBlock block) {
@@ -127,9 +126,12 @@ public class Interpreter extends Thread {
                 // therefore, first token is a variable and second token must be an equal sign!
 
                 // error checks
-                if (tokens.length < 3) throw new RuntimeException("syntax error / syntax error");
-                if (tokens[0].type != Token.VARIABLE) throw new RuntimeException("var name invalid/var name invalid");
-                if (!tokens[1].data.equals("=")) throw new RuntimeException("assignment error/equal sign not present");
+                if (tokens.length < 3)
+                    throw new InterpreterException("Syntax error", "Syntax error on " + block.getTypeString() + "#" + block.getId());
+                if (tokens[0].type != Token.VARIABLE)
+                    throw new InterpreterException("Syntax error", tokens[0].data + " should be a valid variable name on " + block.getTypeString() + "#" + block.getId());
+                if (!tokens[1].data.equals("="))
+                    throw new InterpreterException("Syntax error", "Equal sign not presented on " + block.getTypeString() + "#" + block.getId());
 
                 // do calc and put it assign
                 symbolTable.put(tokens[0].data, evalExpr(tokens, 2));
@@ -160,14 +162,16 @@ public class Interpreter extends Thread {
             if (block.getCode().contains(",")) {
                 for (String expr : block.getCode().split(",")) {
                     Token[] t = getTokens(expr.toCharArray());
-                    if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
+                    if (t.length != 1 && t[0].type != Token.VARIABLE)
+                        throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + block.getTypeString() + "#" + block.getId());
                     String msg = "Please enter a value for " + expr;
                     String value = JOptionPane.showInputDialog(null, msg);
                     symbolTable.put(t[0].data, Double.parseDouble(value));
                 }
             } else {
                 Token[] t = getTokens(block.getCode().toCharArray());
-                if (t.length != 1 && t[0].type != Token.VARIABLE) throw new RuntimeException("invalid var name!");
+                if (t.length != 1 && t[0].type != Token.VARIABLE)
+                    throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + block.getTypeString() + "#" + block.getId());
                 String msg = "Please enter a value for " + block.getCode();
                 String value = JOptionPane.showInputDialog(null, msg);
                 symbolTable.put(t[0].data, Double.parseDouble(value));
@@ -212,7 +216,8 @@ public class Interpreter extends Thread {
             // token is operand
             if (token.type == Token.VARIABLE || token.type == Token.NUMBER) {
                 if (token.type == Token.VARIABLE) {
-                    if (!symbolTable.containsKey(token.data)) throw new RuntimeException("Variable/not known!");
+                    if (!symbolTable.containsKey(token.data))
+                        throw new InterpreterException("Identifier not recognized:" + token.data, "Identifier not recognized" + token.data);
                     operand.push(symbolTable.get(token.data));
                 }
                 if (token.type == Token.NUMBER) {
@@ -328,7 +333,7 @@ public class Interpreter extends Thread {
                 token.type = Token.VARIABLE;
                 tokens.add(token);
             } else {
-                throw new RuntimeException("Unidentified character./Could not parse: " + Arrays.toString(text));
+                throw new InterpreterException("Unidentified character found", "Could not parse because of unidentified character.");
             }
 
         }
