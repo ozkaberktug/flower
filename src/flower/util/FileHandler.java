@@ -61,6 +61,7 @@ public class FileHandler {
         chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
+                app.resetApp();
                 open(chooser.getSelectedFile());
                 app.setTitle("flower - " + App.project.name);
             } else {
@@ -165,9 +166,6 @@ public class FileHandler {
     private static void open(File ff) {
         App.statusPanel.controller.setStatus("Loading", StatusPanelController.INFO);
         App.statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
-
-        // clear project
-        App.project.clear();
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();

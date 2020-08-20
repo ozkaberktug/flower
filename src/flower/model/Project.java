@@ -35,6 +35,7 @@ public class Project {
         inputParams = "";
         libs.clear();
         history.clear();
+        historyIndex = 0;
     }
 
     public void add(Command command) {

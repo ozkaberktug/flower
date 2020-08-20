@@ -93,7 +93,6 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     public void clear() {
         blockToAdd = null;
-        toggleGrids = true;
         toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
         mouse = null;
         dragging = false;
@@ -102,6 +101,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         pen.end = null;
         mode = NO_OPERATION;
         hoveringBlock = null;
+        relocate();
     }
 
     public void relocate() {

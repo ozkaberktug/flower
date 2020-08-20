@@ -63,6 +63,15 @@ public class ToolbarPanelController extends MouseAdapter {
         App.toolbarPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
+    public void clear() {
+        App.drawPanel.controller.setToggleQuality(false);
+        App.toolbarPanel.getQualityBtn().setEnabled(false);
+        App.toolbarPanel.getQualityBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.QUALITY_OFF));
+        App.drawPanel.controller.setToggleGrids(true);
+        App.toolbarPanel.getGridBtn().setEnabled(true);
+        App.toolbarPanel.getGridBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.GRIDS_ON));
+    }
+
     public void runSimulation() {
         App.toolbarPanel.getRunBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.RUN));
         App.toolbarPanel.getStopBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.STOP));

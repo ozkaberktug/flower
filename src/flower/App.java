@@ -32,7 +32,7 @@ import java.awt.event.WindowListener;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
-    public static final String version_string = "0.2.0";
+    public static final String version_string = "0.2.1";
     public static final String about_string = "<html>Version: " + App.version_string + "<br/>This program written by Berktuğ Kaan Özkan<br/>github.com/ozkaberktug</html>";
 
     public static final Project project = new Project();
@@ -144,16 +144,21 @@ public class App extends JFrame implements WindowListener, ActionListener {
         setJMenuBar(menuBar);
     }
 
+    public void resetApp() {
+        project.clear();
+        selectPanel.controller.clear();
+        drawPanel.controller.clear();
+        toolbarPanel.controller.clear();
+        setTitle("flower - Untitled");
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "New":
                 if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
-                project.clear();
-                selectPanel.controller.clear();
-                drawPanel.controller.clear();
-                setTitle("flower - Untitled");
+                resetApp();
                 statusPanel.controller.pushLog("Created new project.", StatusPanelController.INFO);
                 statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
                 break;
@@ -176,9 +181,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
     }
 
     @Override
-    public void windowOpened(WindowEvent e) { }
-
-    @Override
     public void windowClosing(WindowEvent e) {
         if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
             return;
@@ -187,6 +189,9 @@ public class App extends JFrame implements WindowListener, ActionListener {
         dispose();
         System.exit(0);
     }
+
+    @Override
+    public void windowOpened(WindowEvent e) { }
 
     @Override
     public void windowClosed(WindowEvent e) { }
@@ -202,6 +207,5 @@ public class App extends JFrame implements WindowListener, ActionListener {
 
     @Override
     public void windowDeactivated(WindowEvent e) { }
-
 
 }
