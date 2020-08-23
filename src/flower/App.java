@@ -10,25 +10,9 @@ import flower.view.SelectPanel;
 import flower.view.StatusPanel;
 import flower.view.ToolbarPanel;
 
-import javax.swing.Box;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.KeyStroke;
-import javax.swing.UIManager;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
@@ -121,6 +105,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         fileMenu.addSeparator();
         JMenuItem exportMenuItem = new JMenuItem("Export");
         exportMenuItem.setMnemonic(KeyEvent.VK_E);
+        exportMenuItem.setAccelerator(KeyStroke.getKeyStroke("control E"));
         exportMenuItem.addActionListener(this);
         exportMenuItem.setToolTipText("Export as PNG file.");
         fileMenu.add(exportMenuItem);
@@ -132,10 +117,51 @@ public class App extends JFrame implements WindowListener, ActionListener {
         exitMenuItem.setToolTipText("Exit the application.");
         fileMenu.add(exitMenuItem);
         //**********//
+        JMenu editMenu = new JMenu("Edit");
+        editMenu.setMnemonic(KeyEvent.VK_E);
+        menuBar.add(editMenu);
+        //**//
+        JMenuItem gotoMenuItem = new JMenuItem("Go to block");
+        gotoMenuItem.setMnemonic(KeyEvent.VK_G);
+        gotoMenuItem.addActionListener(this);
+        gotoMenuItem.setToolTipText("Find block by given id.");
+        editMenu.add(gotoMenuItem);
+        //**//
+        JMenuItem findMenuItem = new JMenuItem("Find");
+        findMenuItem.setMnemonic(KeyEvent.VK_F);
+        findMenuItem.setAccelerator(KeyStroke.getKeyStroke("control F"));
+        findMenuItem.addActionListener(this);
+        findMenuItem.setToolTipText("Find text occurrences.");
+        editMenu.add(findMenuItem);
+        //**//
+        JMenuItem replaceMenuItem = new JMenuItem("Replace");
+        replaceMenuItem.setMnemonic(KeyEvent.VK_R);
+        replaceMenuItem.setAccelerator(KeyStroke.getKeyStroke("control R"));
+        replaceMenuItem.addActionListener(this);
+        replaceMenuItem.setToolTipText("Replace texts.");
+        editMenu.add(replaceMenuItem);
+        //**********//
+        JMenu projectMenu = new JMenu("Project");
+        projectMenu.setMnemonic(KeyEvent.VK_P);
+        menuBar.add(projectMenu);
+        //**//
+        JMenuItem inputMenuItem = new JMenuItem("Input parameters");
+        inputMenuItem.setMnemonic(KeyEvent.VK_I);
+        inputMenuItem.addActionListener(this);
+        inputMenuItem.setToolTipText("Set or view input parameters.");
+        projectMenu.add(inputMenuItem);
+        //**//
+        JMenuItem statisticsMenuItem = new JMenuItem("Statistics");
+        statisticsMenuItem.setMnemonic(KeyEvent.VK_S);
+        statisticsMenuItem.addActionListener(this);
+        statisticsMenuItem.setToolTipText("View project statistics.");
+        projectMenu.add(statisticsMenuItem);
+        //**********//
         menuBar.add(Box.createHorizontalGlue());
         JMenu helpMenu = new JMenu("Help");
         helpMenu.setMnemonic(KeyEvent.VK_H);
         menuBar.add(helpMenu);
+        //**//
         JMenuItem aboutMenuItem = new JMenuItem("About");
         aboutMenuItem.setMnemonic(KeyEvent.VK_A);
         aboutMenuItem.addActionListener(this);

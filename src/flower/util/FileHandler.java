@@ -2,23 +2,14 @@ package flower.util;
 
 import flower.App;
 import flower.controller.StatusPanelController;
-import flower.model.elements.AbstractBlock;
-import flower.model.elements.CommandBlock;
-import flower.model.elements.IfBlock;
-import flower.model.elements.InputBlock;
-import flower.model.elements.LabelBlock;
-import flower.model.elements.Line;
-import flower.model.elements.OutputBlock;
-import flower.model.elements.StartBlock;
-import flower.model.elements.StopBlock;
+import flower.model.elements.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -27,11 +18,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -44,7 +31,7 @@ public class FileHandler {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileNameExtensionFilter("PNG files", "png"));
-        if (chooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showDialog(null, "Export") == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
                 if (JOptionPane.showConfirmDialog(null, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     export(chooser.getSelectedFile());
@@ -88,8 +75,8 @@ public class FileHandler {
     }
 
     private static void save(File ff) {
-        App.statusPanel.controller.setStatus("Saving", StatusPanelController.INFO);
-        App.statusPanel.controller.pushLog("Saving project", StatusPanelController.INFO);
+        App.statusPanel.controller.setStatus("Saving...", StatusPanelController.INFO);
+        App.statusPanel.controller.pushLog("Saving project...", StatusPanelController.INFO);
 
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
@@ -164,7 +151,7 @@ public class FileHandler {
     }
 
     private static void open(File ff) {
-        App.statusPanel.controller.setStatus("Loading", StatusPanelController.INFO);
+        App.statusPanel.controller.setStatus("Loading...", StatusPanelController.INFO);
         App.statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
 
         try {
@@ -259,8 +246,8 @@ public class FileHandler {
     }
 
     private static void export(File ff) {
-        App.statusPanel.controller.setStatus("Exporting", StatusPanelController.INFO);
-        App.statusPanel.controller.pushLog("Exporting project", StatusPanelController.INFO);
+        App.statusPanel.controller.setStatus("Exporting...", StatusPanelController.INFO);
+        App.statusPanel.controller.pushLog("Exporting project...", StatusPanelController.INFO);
 
         if (!ff.getName().toUpperCase().endsWith(".PNG")) ff = new File(ff.getAbsolutePath() + ".png");
 
@@ -274,7 +261,8 @@ public class FileHandler {
 
         // check if there is anything
         if (App.project.lines.isEmpty() && App.project.blocks.isEmpty()) {
-
+            App.statusPanel.controller.setStatus("There is no element to be export", StatusPanelController.ERROR);
+            App.statusPanel.controller.pushLog("Project could not exported because there is no element", StatusPanelController.ERROR);
             return;
         }
 
@@ -336,6 +324,5 @@ public class FileHandler {
         App.statusPanel.controller.setStatus("Project exported successfully", StatusPanelController.INFO);
         App.statusPanel.controller.pushLog("Project exported to " + ff.getAbsolutePath(), StatusPanelController.INFO);
     }
-
 
 }
