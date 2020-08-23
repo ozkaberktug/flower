@@ -16,7 +16,7 @@ import java.awt.event.*;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
-    public static final String version_string = "0.2.1";
+    public static final String version_string = "0.3.0";
     public static final String about_string = "<html>Version: " + App.version_string + "<br/>This program written by Berktuğ Kaan Özkan<br/>github.com/ozkaberktug</html>";
 
     public static final Project project = new Project();
