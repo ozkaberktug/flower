@@ -122,6 +122,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         menuBar.add(editMenu);
         //**//
         JMenuItem gotoMenuItem = new JMenuItem("Go to block");
+        gotoMenuItem.setActionCommand("Goto");
         gotoMenuItem.setMnemonic(KeyEvent.VK_G);
         gotoMenuItem.addActionListener(this);
         gotoMenuItem.setToolTipText("Find block by given id.");
@@ -151,6 +152,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         inputMenuItem.setToolTipText("Set or view input parameters.");
         projectMenu.add(inputMenuItem);
         //**//
+        projectMenu.addSeparator();
         JMenuItem statisticsMenuItem = new JMenuItem("Statistics");
         statisticsMenuItem.setMnemonic(KeyEvent.VK_S);
         statisticsMenuItem.addActionListener(this);
@@ -204,6 +206,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 JOptionPane.showMessageDialog(this, about_string, "About", JOptionPane.INFORMATION_MESSAGE);
                 break;
         }
+        System.out.println(e.getActionCommand());
     }
 
     @Override
