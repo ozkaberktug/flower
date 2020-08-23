@@ -9,8 +9,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -25,56 +23,9 @@ import java.io.File;
 
 import static flower.view.ViewConstants.TILESIZE;
 
-public class FileHandler {
+public class FileOperations {
 
-    public static void showExportDialog() {
-        JFileChooser chooser = new JFileChooser(new File("."));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("PNG files", "png"));
-        if (chooser.showDialog(null, "Export") == JFileChooser.APPROVE_OPTION) {
-            if (chooser.getSelectedFile().exists()) {
-                if (JOptionPane.showConfirmDialog(null, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    export(chooser.getSelectedFile());
-                }
-            } else {
-                export(chooser.getSelectedFile());
-            }
-        }
-    }
-
-    public static void showOpenDialog(App app) {
-        JFileChooser chooser = new JFileChooser(new File("."));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
-        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            if (chooser.getSelectedFile().exists()) {
-                app.resetApp();
-                open(chooser.getSelectedFile());
-                app.setTitle("flower - " + App.project.name);
-            } else {
-                JOptionPane.showMessageDialog(app, "No such file!");
-            }
-        }
-    }
-
-    public static void showSaveDialog(App app) {
-        JFileChooser chooser = new JFileChooser(new File("."));
-        chooser.setAcceptAllFileFilterUsed(false);
-        chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
-        if (chooser.showSaveDialog(app) == JFileChooser.APPROVE_OPTION) {
-            if (chooser.getSelectedFile().exists()) {
-                if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                    save(chooser.getSelectedFile());
-                    app.setTitle("flower - " + App.project.name);
-                }
-            } else {
-                save(chooser.getSelectedFile());
-                app.setTitle("flower - " + App.project.name);
-            }
-        }
-    }
-
-    private static void save(File ff) {
+    public static void save(File ff) {
         App.statusPanel.controller.setStatus("Saving...", StatusPanelController.INFO);
         App.statusPanel.controller.pushLog("Saving project...", StatusPanelController.INFO);
 
@@ -150,7 +101,7 @@ public class FileHandler {
 
     }
 
-    private static void open(File ff) {
+    public static void open(File ff) {
         App.statusPanel.controller.setStatus("Loading...", StatusPanelController.INFO);
         App.statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
 
@@ -245,7 +196,7 @@ public class FileHandler {
 
     }
 
-    private static void export(File ff) {
+    public static void export(File ff) {
         App.statusPanel.controller.setStatus("Exporting...", StatusPanelController.INFO);
         App.statusPanel.controller.pushLog("Exporting project...", StatusPanelController.INFO);
 

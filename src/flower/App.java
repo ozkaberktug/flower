@@ -2,8 +2,8 @@ package flower;
 
 import flower.controller.StatusPanelController;
 import flower.model.Project;
+import flower.util.Dialogs;
 import flower.util.ExceptionHandler;
-import flower.util.FileHandler;
 import flower.util.Interpreter;
 import flower.view.DrawPanel;
 import flower.view.SelectPanel;
@@ -28,9 +28,18 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final ExceptionHandler exceptionHandler = new ExceptionHandler();
 
     private static boolean inputProcessing = true;
-    public static void blockInputProcessing() { inputProcessing = false; }
-    public static void enableInputProcessing() {inputProcessing = true;}
-    public static boolean isInputProcessing() {return inputProcessing;}
+
+    public static void blockInputProcessing() {
+        inputProcessing = false;
+    }
+
+    public static void enableInputProcessing() {
+        inputProcessing = true;
+    }
+
+    public static boolean isInputProcessing() {
+        return inputProcessing;
+    }
 
     public App() {
         super("flower - Untitled");
@@ -149,6 +158,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         JMenuItem inputMenuItem = new JMenuItem("Input parameters");
         inputMenuItem.setMnemonic(KeyEvent.VK_I);
         inputMenuItem.addActionListener(this);
+        inputMenuItem.setActionCommand("Input");
         inputMenuItem.setToolTipText("Set or view input parameters.");
         projectMenu.add(inputMenuItem);
         //**//
@@ -191,19 +201,25 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
                 break;
             case "Open":
-                FileHandler.showOpenDialog(this);
+                Dialogs.showOpenDialog(this);
                 break;
             case "Save":
-                FileHandler.showSaveDialog(this);
+                Dialogs.showSaveDialog(this);
                 break;
             case "Export":
-                FileHandler.showExportDialog();
+                Dialogs.showExportDialog();
                 break;
             case "Exit":
                 windowClosing(null);
                 break;
             case "About":
                 JOptionPane.showMessageDialog(this, about_string, "About", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "Input":
+                Dialogs.showInputParamsDialog();
+                break;
+            case "Statistics":
+                Dialogs.showStatisticsDialog();
                 break;
         }
         System.out.println(e.getActionCommand());
@@ -220,21 +236,27 @@ public class App extends JFrame implements WindowListener, ActionListener {
     }
 
     @Override
-    public void windowOpened(WindowEvent e) { }
+    public void windowOpened(WindowEvent e) {
+    }
 
     @Override
-    public void windowClosed(WindowEvent e) { }
+    public void windowClosed(WindowEvent e) {
+    }
 
     @Override
-    public void windowIconified(WindowEvent e) { }
+    public void windowIconified(WindowEvent e) {
+    }
 
     @Override
-    public void windowDeiconified(WindowEvent e) { }
+    public void windowDeiconified(WindowEvent e) {
+    }
 
     @Override
-    public void windowActivated(WindowEvent e) { }
+    public void windowActivated(WindowEvent e) {
+    }
 
     @Override
-    public void windowDeactivated(WindowEvent e) { }
+    public void windowDeactivated(WindowEvent e) {
+    }
 
 }

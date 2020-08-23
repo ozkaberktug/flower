@@ -1,0 +1,78 @@
+package flower.util;
+
+import flower.App;
+
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+
+import static flower.view.ViewConstants.CODE_FONT;
+
+public class Dialogs {
+
+    public static void showExportDialog() {
+        JFileChooser chooser = new JFileChooser(new File("."));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("PNG files", "png"));
+        if (chooser.showDialog(null, "Export") == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFile().exists()) {
+                if (JOptionPane.showConfirmDialog(null, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    FileOperations.export(chooser.getSelectedFile());
+                }
+            } else {
+                FileOperations.export(chooser.getSelectedFile());
+            }
+        }
+    }
+
+    public static void showOpenDialog(App app) {
+        JFileChooser chooser = new JFileChooser(new File("."));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFile().exists()) {
+                app.resetApp();
+                FileOperations.open(chooser.getSelectedFile());
+                app.setTitle("flower - " + App.project.name);
+            } else {
+                JOptionPane.showMessageDialog(app, "No such file!");
+            }
+        }
+    }
+
+    public static void showSaveDialog(App app) {
+        JFileChooser chooser = new JFileChooser(new File("."));
+        chooser.setAcceptAllFileFilterUsed(false);
+        chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
+        if (chooser.showSaveDialog(app) == JFileChooser.APPROVE_OPTION) {
+            if (chooser.getSelectedFile().exists()) {
+                if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    FileOperations.save(chooser.getSelectedFile());
+                    app.setTitle("flower - " + App.project.name);
+                }
+            } else {
+                FileOperations.save(chooser.getSelectedFile());
+                app.setTitle("flower - " + App.project.name);
+            }
+        }
+    }
+
+    public static void showStatisticsDialog() {
+        // todo
+        String title = "Project Statistics";
+        JScrollPane scrollPane = new JScrollPane();
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter input parameters:"), scrollPane};
+        JOptionPane.showMessageDialog(null, inputs, title, JOptionPane.PLAIN_MESSAGE);
+    }
+
+    public static void showInputParamsDialog() {
+        String title = "Input Parameters";
+        JTextArea codeArea = new JTextArea(App.project.inputParams, 5, 40);
+        codeArea.setFont(CODE_FONT);
+        JScrollPane codeScrollPane = new JScrollPane(codeArea);
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter input parameters:"), codeScrollPane};
+        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) App.project.inputParams = codeArea.getText();
+    }
+
+}
