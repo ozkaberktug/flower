@@ -1,6 +1,7 @@
 package flower.util;
 
 import flower.App;
+import flower.model.elements.AbstractBlock;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -58,10 +59,56 @@ public class Dialogs {
     }
 
     public static void showStatisticsDialog() {
-        // todo
+        int numStartBlock = 0;
+        int numStopBlock = 0;
+        int numIfBlock = 0;
+        int numCommandBlock = 0;
+        int numInputBlock = 0;
+        int numOutputBlock = 0;
+        int numLabelBlock = 0;
+        for (AbstractBlock ab : App.project.blocks) {
+            switch (ab.getType()) {
+                case AbstractBlock.COMMAND_BLOCK:
+                    numCommandBlock++;
+                    break;
+                case AbstractBlock.IF_BLOCK:
+                    numIfBlock++;
+                    break;
+                case AbstractBlock.START_BLOCK:
+                    numStartBlock++;
+                    break;
+                case AbstractBlock.STOP_BLOCK:
+                    numStopBlock++;
+                    break;
+                case AbstractBlock.INPUT_BLOCK:
+                    numInputBlock++;
+                    break;
+                case AbstractBlock.OUTPUT_BLOCK:
+                    numOutputBlock++;
+                    break;
+                case AbstractBlock.LABEL_BLOCK:
+                    numLabelBlock++;
+                    break;
+            }
+        }
+
         String title = "Project Statistics";
-        JScrollPane scrollPane = new JScrollPane();
-        final JComponent[] inputs = new JComponent[]{new JLabel("Enter input parameters:"), scrollPane};
+        String[] columnNames = {"Element Type", "Number"};
+        Object[][] data = {
+                {"START", numStartBlock},
+                {"STOP", numStopBlock},
+                {"COMMAND", numCommandBlock},
+                {"IF", numIfBlock},
+                {"INPUT", numInputBlock},
+                {"OUTPUT", numOutputBlock},
+                {"LABEL", numLabelBlock},
+                {"Lines", App.project.lines.size()},
+        };
+        JTable table = new JTable(data, columnNames);
+        table.setFillsViewportHeight(true);
+        table.setPreferredScrollableViewportSize(table.getPreferredSize());
+        JScrollPane scrollPane = new JScrollPane(table);
+        final JComponent[] inputs = new JComponent[]{scrollPane};
         JOptionPane.showMessageDialog(null, inputs, title, JOptionPane.PLAIN_MESSAGE);
     }
 
