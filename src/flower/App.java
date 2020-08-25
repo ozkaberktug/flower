@@ -224,6 +224,9 @@ public class App extends JFrame implements WindowListener, ActionListener {
             case "Goto":
                 Dialogs.showGotoDialog();
                 break;
+            case "Find":
+                Dialogs.showFindDialog();
+                break;
         }
         System.out.println(e.getActionCommand());
     }

@@ -140,4 +140,28 @@ public class Dialogs {
             }
         }
     }
+
+    public static void showFindDialog() {
+        // todo: find next button may be added
+        String title = "Find";
+
+        JTextField field = new JTextField(40);
+        field.setFont(CODE_FONT);
+
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter the text:"), field};
+        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (!field.getText().isEmpty() && !field.getText().matches("\\s+")) {
+                for (AbstractBlock block : App.project.blocks)
+                    if (block.getCode().contains(field.getText()))
+                        App.drawPanel.controller.locate(block.getId());
+                    else
+                        App.statusPanel.controller.setStatus("There is no match for " + field.getText(), StatusPanelController.INFO);
+            } else {
+                App.statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
+            }
+        }
+    }
+
 }

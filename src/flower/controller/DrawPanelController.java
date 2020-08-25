@@ -121,8 +121,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     public void relocate() {
         toScreen.setToIdentity();
         if (!App.project.blocks.isEmpty()) {
-            Rectangle rect = App.project.blocks.get(0).getOuterBounds();
-            toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
+            locate(App.project.blocks.get(0).getId());
         }
     }
 
@@ -130,8 +129,8 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         toScreen.setToIdentity();
         for (AbstractBlock block : App.project.blocks)
             if (block.getId() == id) {
-                Rectangle rect = App.project.blocks.get(0).getOuterBounds();
-                toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
+                Rectangle rect = block.getOuterBounds();
+                toScreen.translate((App.drawPanel.getWidth() - (rect.x + rect.width) * TILESIZE) / 2.f, (App.drawPanel.getHeight() - (rect.y + rect.height) * TILESIZE) / 2.f);
                 return;
             }
         App.statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
