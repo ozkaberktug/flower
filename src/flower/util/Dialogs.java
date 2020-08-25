@@ -126,7 +126,7 @@ public class Dialogs {
     public static void showGotoDialog() {
         String title = "Go to";
 
-        JTextField field = new JTextField(40);
+        JTextField field = new JTextField(10);
         field.setFont(CODE_FONT);
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter block id:"), field};
@@ -145,7 +145,7 @@ public class Dialogs {
         // todo: find next button may be added
         String title = "Find";
 
-        JTextField field = new JTextField(40);
+        JTextField field = new JTextField(30);
         field.setFont(CODE_FONT);
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter the text:"), field};
@@ -165,11 +165,12 @@ public class Dialogs {
     }
 
     public static void showReplaceDialog() {
+        // todo: replace next button may be added
         String title = "Replace";
 
-        JTextField findField = new JTextField(40);
+        JTextField findField = new JTextField(30);
         findField.setFont(CODE_FONT);
-        JTextField replaceField = new JTextField(40);
+        JTextField replaceField = new JTextField(30);
         replaceField.setFont(CODE_FONT);
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Find:"), findField, new JLabel("Replace:"), replaceField};
