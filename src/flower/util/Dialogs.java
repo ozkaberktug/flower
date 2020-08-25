@@ -164,4 +164,27 @@ public class Dialogs {
         }
     }
 
+    public static void showReplaceDialog() {
+        String title = "Replace";
+
+        JTextField findField = new JTextField(40);
+        findField.setFont(CODE_FONT);
+        JTextField replaceField = new JTextField(40);
+        replaceField.setFont(CODE_FONT);
+
+        final JComponent[] inputs = new JComponent[]{new JLabel("Find:"), findField, new JLabel("Replace:"), replaceField};
+        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (!findField.getText().isEmpty() && !findField.getText().matches("\\s+")) {
+                for (AbstractBlock block : App.project.blocks)
+                    if (block.getCode().contains(findField.getText()))
+                        block.setCode(block.getCode().replace(findField.getText(), replaceField.getText()));
+                    else
+                        App.statusPanel.controller.setStatus("There is no match for " + findField.getText(), StatusPanelController.INFO);
+            } else {
+                App.statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
+            }
+        }
+    }
 }

@@ -4,20 +4,10 @@ import flower.App;
 import flower.controller.StatusPanelController;
 import flower.util.Command;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
+import javax.swing.*;
+import java.awt.*;
 
-import static flower.view.ViewConstants.CODE_FONT;
-import static flower.view.ViewConstants.NORMAL_STROKE;
-import static flower.view.ViewConstants.PADDING;
-import static flower.view.ViewConstants.TILESIZE;
+import static flower.view.ViewConstants.*;
 
 abstract public class AbstractBlock {
 
@@ -176,7 +166,6 @@ abstract public class AbstractBlock {
     // only called from open method
     public void setInnerBounds(Rectangle r) {area = r;}
 
-    // only called from open method
     public void setCode(String code) {this.code = code;}
 
     /* test functions */
