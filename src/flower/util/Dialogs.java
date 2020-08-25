@@ -1,6 +1,7 @@
 package flower.util;
 
 import flower.App;
+import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 
 import javax.swing.*;
@@ -122,4 +123,21 @@ public class Dialogs {
         if (result == JOptionPane.OK_OPTION) App.project.inputParams = codeArea.getText();
     }
 
+    public static void showGotoDialog() {
+        String title = "Go to";
+
+        JTextField field = new JTextField(40);
+        field.setFont(CODE_FONT);
+
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter block id:"), field};
+        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            if (!field.getText().isEmpty() && field.getText().matches("\\d+")) {
+                App.drawPanel.controller.locate(Integer.parseInt(field.getText()));
+            } else {
+                App.statusPanel.controller.setStatus("Enter a valid id!", StatusPanelController.ERROR);
+            }
+        }
+    }
 }

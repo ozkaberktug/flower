@@ -1,27 +1,12 @@
 package flower.controller;
 
 import flower.App;
-import flower.model.elements.AbstractBlock;
-import flower.model.elements.CommandBlock;
-import flower.model.elements.IfBlock;
-import flower.model.elements.InputBlock;
-import flower.model.elements.LabelBlock;
-import flower.model.elements.Line;
-import flower.model.elements.OutputBlock;
-import flower.model.elements.StartBlock;
-import flower.model.elements.StopBlock;
+import flower.model.elements.*;
 import flower.util.Command;
 
-import javax.swing.AbstractAction;
-import java.awt.Cursor;
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -63,17 +48,45 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         pen.setGhost(true);
     }
 
-    public void setToggleGrids(boolean b) {toggleGrids = b;}
-    public void setToggleQuality(boolean b) {toggleQuality = b;}
-    public void setBlockToAdd(String block) {blockToAdd = block;}
+    public void setToggleGrids(boolean b) {
+        toggleGrids = b;
+    }
 
-    public boolean isToggleQuality() {return toggleQuality;}
-    public boolean isToggleGrids() {return toggleGrids;}
-    public AffineTransform getTransform() {return toScreen;}
-    public Point2D getMousePos() {return mouse;}
-    public AbstractBlock getHoveringBlock() {return hoveringBlock;}
-    public int getMode() {return mode;}
-    public Line getPen() {return pen;}
+    public void setToggleQuality(boolean b) {
+        toggleQuality = b;
+    }
+
+    public void setBlockToAdd(String block) {
+        blockToAdd = block;
+    }
+
+    public boolean isToggleQuality() {
+        return toggleQuality;
+    }
+
+    public boolean isToggleGrids() {
+        return toggleGrids;
+    }
+
+    public AffineTransform getTransform() {
+        return toScreen;
+    }
+
+    public Point2D getMousePos() {
+        return mouse;
+    }
+
+    public AbstractBlock getHoveringBlock() {
+        return hoveringBlock;
+    }
+
+    public int getMode() {
+        return mode;
+    }
+
+    public Line getPen() {
+        return pen;
+    }
 
     public Point getCellCoords(Point2D point2D) {
         int hoverY = (int) point2D.getY();
@@ -84,6 +97,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         hoverY /= TILESIZE;
         return new Point(hoverX, hoverY);
     }
+
     private AbstractBlock getBlockType() {
         Point m = getCellCoords(mouse);
         for (AbstractBlock ab : App.project.blocks)
@@ -110,6 +124,17 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             Rectangle rect = App.project.blocks.get(0).getOuterBounds();
             toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
         }
+    }
+
+    public void locate(int id) {
+        toScreen.setToIdentity();
+        for (AbstractBlock block : App.project.blocks)
+            if (block.getId() == id) {
+                Rectangle rect = App.project.blocks.get(0).getOuterBounds();
+                toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
+                return;
+            }
+        App.statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
     }
 
     @Override
@@ -154,6 +179,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                         App.statusPanel.controller.setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
                         App.statusPanel.controller.pushLog(String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
+
                     @Override
                     public void undo() {
                         App.project.blocks.remove(block);
@@ -199,6 +225,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                 App.statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
 
                             }
+
                             @Override
                             public void undo() {
                                 App.project.lines.add(line);
@@ -219,6 +246,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                         App.statusPanel.controller.pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
                         App.project.blocks.remove(b);
                     }
+
                     @Override
                     public void undo() {
                         App.statusPanel.controller.setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
@@ -266,6 +294,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                         App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
 //                                        App.statusPanel.controller.setStatus("Line separation", StatusPanelController.INFO);
                                     }
+
                                     @Override
                                     public void undo() {
                                         App.project.lines.remove(d1);
@@ -290,6 +319,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                         App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
 //                                        App.statusPanel.controller.setStatus("Line separation", StatusPanelController.INFO);
                                     }
+
                                     @Override
                                     public void undo() {
                                         App.project.lines.remove(d1);
@@ -312,6 +342,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                             App.statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
                             App.statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
                         }
+
                         @Override
                         public void undo() {
                             App.project.lines.remove(created);
