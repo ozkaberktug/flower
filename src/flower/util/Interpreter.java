@@ -15,12 +15,14 @@ import javax.swing.JOptionPane;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Stack;
 
 public class Interpreter extends Thread {
 
     public boolean isRunning = false;
     private final HashMap<String, Double> symbolTable = new HashMap<>();
+    private LinkedList<String> parameters = new LinkedList<String>();
 
     @Override
     public void run() {
@@ -29,6 +31,10 @@ public class Interpreter extends Thread {
             isRunning = true;
             App.statusPanel.controller.setStatus("Simulation started...", StatusPanelController.INFO);
             App.statusPanel.controller.pushLog("Simulation started", StatusPanelController.INFO);
+            for (String param : App.project.inputParams.split("\\s+"))
+                if (!param.isEmpty()) parameters.add(param);
+
+            System.out.println("parameters = " + parameters);
 
             long beginTime = System.currentTimeMillis();
 
@@ -164,17 +170,25 @@ public class Interpreter extends Thread {
                     Token[] t = getTokens(expr.toCharArray());
                     if (t.length != 1 && t[0].type != Token.VARIABLE)
                         throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + block.getTypeString() + "#" + block.getId());
-                    String msg = "Please enter a value for " + expr;
-                    String value = JOptionPane.showInputDialog(null, msg);
-                    symbolTable.put(t[0].data, Double.parseDouble(value));
+                    if (parameters.isEmpty()) {
+                        String msg = "Please enter a value for " + expr;
+                        String value = JOptionPane.showInputDialog(null, msg);
+                        symbolTable.put(t[0].data, Double.parseDouble(value));
+                    } else {
+                        symbolTable.put(t[0].data, Double.parseDouble(parameters.pop()));
+                    }
                 }
             } else {
                 Token[] t = getTokens(block.getCode().toCharArray());
                 if (t.length != 1 && t[0].type != Token.VARIABLE)
                     throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + block.getTypeString() + "#" + block.getId());
-                String msg = "Please enter a value for " + block.getCode();
-                String value = JOptionPane.showInputDialog(null, msg);
-                symbolTable.put(t[0].data, Double.parseDouble(value));
+                if (parameters.isEmpty()) {
+                    String msg = "Please enter a value for " + block.getCode();
+                    String value = JOptionPane.showInputDialog(null, msg);
+                    symbolTable.put(t[0].data, Double.parseDouble(value));
+                } else {
+                    symbolTable.put(t[0].data, Double.parseDouble(parameters.pop()));
+                }
             }
 
             // move to next block
