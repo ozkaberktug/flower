@@ -4,10 +4,20 @@ import flower.App;
 import flower.controller.StatusPanelController;
 import flower.util.Command;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 
-import static flower.view.ViewConstants.*;
+import static flower.view.ViewConstants.CODE_FONT;
+import static flower.view.ViewConstants.NORMAL_STROKE;
+import static flower.view.ViewConstants.PADDING;
+import static flower.view.ViewConstants.TILESIZE;
 
 abstract public class AbstractBlock {
 

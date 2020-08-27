@@ -1,6 +1,8 @@
 package flower.view;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Font;
 
 public class ViewConstants {
 

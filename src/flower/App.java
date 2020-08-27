@@ -10,9 +10,24 @@ import flower.view.SelectPanel;
 import flower.view.StatusPanel;
 import flower.view.ToolbarPanel;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.Box;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.KeyStroke;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class App extends JFrame implements WindowListener, ActionListener {
 
@@ -44,11 +59,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public App() {
         super("flower - Untitled");
         Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
-            exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-        }
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         addWindowListener(this);

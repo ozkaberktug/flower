@@ -1,12 +1,27 @@
 package flower.controller;
 
 import flower.App;
-import flower.model.elements.*;
+import flower.model.elements.AbstractBlock;
+import flower.model.elements.CommandBlock;
+import flower.model.elements.IfBlock;
+import flower.model.elements.InputBlock;
+import flower.model.elements.LabelBlock;
+import flower.model.elements.Line;
+import flower.model.elements.OutputBlock;
+import flower.model.elements.StartBlock;
+import flower.model.elements.StopBlock;
 import flower.util.Command;
 
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
+import javax.swing.AbstractAction;
+import java.awt.Cursor;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
