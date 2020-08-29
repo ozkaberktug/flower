@@ -125,12 +125,10 @@ abstract public class AbstractBlock {
     }
 
     public void moveTo(Point delta) {
-//        if(delta.x == 0 && delta.y == 0) return;
-//        String msgTxt = String.format("Block with id %d has been moved from %d, %d to %d, %d", getId(), area.x, area.y, area.x + delta.x, area.y + delta.y);
-//        App.statusPanel.controller.pushLog(msgTxt, StatusPanelController.INFO);
+        if(delta.x == 0 && delta.y == 0) return;
 
         App.project.add(new Command() {
-            Point backup = new Point(area.x, area.y);
+            final Point backup = new Point(area.x, area.y);
             @Override
             public void execute() {
                 area.x += delta.x;
