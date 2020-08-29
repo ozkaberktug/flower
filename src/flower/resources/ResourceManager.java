@@ -19,8 +19,7 @@ public class ResourceManager {
 
     public static ImageIcon getImageIcon(String path) {
         URL ref = App.class.getResource("resources/"+path);
-        ImageIcon icon = new ImageIcon(ref);
-        return icon;
+        return new ImageIcon(ref);
     }
 
 }

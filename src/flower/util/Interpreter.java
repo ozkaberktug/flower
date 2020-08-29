@@ -22,7 +22,7 @@ public class Interpreter extends Thread {
 
     public boolean isRunning = false;
     private final HashMap<String, Double> symbolTable = new HashMap<>();
-    private LinkedList<String> parameters = new LinkedList<String>();
+    private final LinkedList<String> parameters = new LinkedList<>();
 
     @Override
     public void run() {
