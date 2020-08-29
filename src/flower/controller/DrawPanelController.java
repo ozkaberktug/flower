@@ -30,9 +30,14 @@ import static flower.view.ViewConstants.TILESIZE;
 
 public class DrawPanelController implements MouseMotionListener, MouseListener, MouseWheelListener {
 
+    /* STATIC FIELDS */
+
     public static final int NO_OPERATION = 0;
     public static final int DRAW_LINE = 1;
     public static final int DRAG_BLOCK = 3;
+
+
+    /* ACTIONS */
 
     public final AbstractAction undoAction = new AbstractAction() {
         @Override
@@ -40,13 +45,15 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             App.project.undo();
         }
     };
-
     public final AbstractAction redoAction = new AbstractAction() {
         @Override
         public void actionPerformed(ActionEvent e) {
             App.project.redo();
         }
     };
+
+
+    /* PRIVATE FIELDS */
 
     private AffineTransform toScreen = new AffineTransform(1, 0, 0, 1, 0, 0);
     private Point2D mouse = null;
@@ -59,49 +66,31 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     private boolean toggleGrids = true;
     private boolean toggleQuality = false;
 
-    public DrawPanelController() {
-        pen.setGhost(true);
-    }
 
-    public void setToggleGrids(boolean b) {
-        toggleGrids = b;
-    }
+    /*CONSTRUCTOR*/
 
-    public void setToggleQuality(boolean b) {
-        toggleQuality = b;
-    }
+    public DrawPanelController() { pen.setGhost(true); }
 
-    public void setBlockToAdd(String block) {
-        blockToAdd = block;
-    }
 
-    public boolean isToggleQuality() {
-        return toggleQuality;
-    }
+    /* SETTER METHODS */
 
-    public boolean isToggleGrids() {
-        return toggleGrids;
-    }
+    public void setToggleGrids(boolean b) { toggleGrids = b; }
+    public void setToggleQuality(boolean b) { toggleQuality = b; }
+    public void setBlockToAdd(String block) { blockToAdd = block; }
 
-    public AffineTransform getTransform() {
-        return toScreen;
-    }
 
-    public Point2D getMousePos() {
-        return mouse;
-    }
+    /* GETTER METHODS */
 
-    public AbstractBlock getHoveringBlock() {
-        return hoveringBlock;
-    }
+    public boolean isToggleQuality() { return toggleQuality; }
+    public boolean isToggleGrids() { return toggleGrids; }
+    public AffineTransform getTransform() { return toScreen; }
+    public Point2D getMousePos() { return mouse; }
+    public AbstractBlock getHoveringBlock() { return hoveringBlock; }
+    public int getMode() { return mode; }
+    public Line getPen() { return pen; }
 
-    public int getMode() {
-        return mode;
-    }
 
-    public Line getPen() {
-        return pen;
-    }
+    /* UTILITY METHODS */
 
     public Point getCellCoords(Point2D point2D) {
         int hoverY = (int) point2D.getY();
@@ -134,10 +123,8 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     }
 
     public void relocate() {
-        toScreen.setToIdentity();
-        if (!App.project.blocks.isEmpty()) {
-            locate(App.project.blocks.get(0).getId());
-        }
+        if (!App.project.blocks.isEmpty()) locate(App.project.blocks.get(0).getId());
+        else toScreen.setToIdentity();
     }
 
     public void locate(int id) {
@@ -154,14 +141,17 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         App.statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
     }
 
+
+    /* FUNCTIONAL */
+
     @Override
     public void mouseClicked(MouseEvent e) {
         if (App.isInputProcessing() && !dragging) {
-            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {    // double left click - open options
                 AbstractBlock ab = getBlockType();
                 if (ab != null) ab.showDialog();
             }
-            if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {
+            if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {        // left click - add item
                 AbstractBlock block;
                 Point cellCoords = getCellCoords(mouse);
                 switch (blockToAdd) {
@@ -187,7 +177,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                         block = new LabelBlock(cellCoords);
                         break;
                     default:
-                        throw new UnsupportedOperationException();
+                        throw new RuntimeException("CRITICAL: blockToAdd string is invalid");
                 }
                 App.project.add(new Command() {
                     @Override
@@ -211,172 +201,147 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (click != MouseEvent.NOBUTTON) return;
-        click = e.getButton();
+        if (App.isInputProcessing() && click == MouseEvent.NOBUTTON) {
+            click = e.getButton();
 
-        if (App.isInputProcessing() && click == MouseEvent.BUTTON1) {  // left mouse click
-            AbstractBlock b = getBlockType();   // get the block under the mouse
-            for (AbstractBlock ab : App.project.blocks) // clear all the selections
-                ab.setSelected(false);
-            if (b == null) {    // empty space clicked
-                mode = DRAW_LINE;
-                pen.end = pen.begin = getCellCoords(mouse);
-            } else {    // block clicked
-                mode = DRAG_BLOCK;
-                pen.end = pen.begin = getCellCoords(mouse);
-                b.setSelected(true);
-            }
-        }
-
-        if (App.isInputProcessing() && click == MouseEvent.BUTTON3) {  // right mouse click - delete item
-            AbstractBlock b = getBlockType();   // get the block under the mouse
-            if (b == null) {    // it is a line remove it
-                for (Line line : App.project.lines) {
-                    if (line.containsInclusive(getCellCoords(mouse))) {
-
-                        App.project.add(new Command() {
-                            @Override
-                            public void execute() {
-                                App.project.lines.remove(line);
-                                App.statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
-                                App.statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
-
-                            }
-
-                            @Override
-                            public void undo() {
-                                App.project.lines.add(line);
-                                App.statusPanel.controller.setStatus("Undo: Line deleted", StatusPanelController.INFO);
-                                App.statusPanel.controller.pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
-                            }
-                        });
-
-                        break;
-                    }
+            if (click == MouseEvent.BUTTON1) {    // left mouse click - select item
+                AbstractBlock b = getBlockType();   // get the block under the mouse
+                for (AbstractBlock ab : App.project.blocks) // clear all the selections
+                    ab.setSelected(false);
+                if (b == null) {    // empty space clicked
+                    mode = DRAW_LINE;
+                    pen.end = pen.begin = getCellCoords(mouse);
+                } else {    // block clicked
+                    mode = DRAG_BLOCK;
+                    pen.end = pen.begin = getCellCoords(mouse);
+                    b.setSelected(true);
                 }
-            } else {    // it is a block remove it
+            }
 
-                App.project.add(new Command() {
-                    @Override
-                    public void execute() {
-                        App.statusPanel.controller.setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
-                        App.statusPanel.controller.pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
-                        App.project.blocks.remove(b);
+            if (click == MouseEvent.BUTTON3) {  // right mouse click - delete item
+                AbstractBlock b = getBlockType();   // get the block under the mouse
+                if (b == null) {    // it is a line remove it
+                    for (Line line : App.project.lines) {
+                        if (line.containsInclusive(getCellCoords(mouse))) {
+                            App.project.add(new Command() {
+                                @Override
+                                public void execute() {
+                                    App.project.lines.remove(line);
+                                    App.statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
+                                    App.statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
+                                }
+                                @Override
+                                public void undo() {
+                                    App.project.lines.add(line);
+                                    App.statusPanel.controller.setStatus("Undo: Line deleted", StatusPanelController.INFO);
+                                    App.statusPanel.controller.pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
+                                }
+                            });
+                            break;
+                        }
                     }
-
-                    @Override
-                    public void undo() {
-                        App.statusPanel.controller.setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
-                        App.statusPanel.controller.pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
-                        App.project.blocks.add(b);
-                    }
-                });
-
+                } else {    // it is a block remove it
+                    App.project.add(new Command() {
+                        @Override
+                        public void execute() {
+                            App.statusPanel.controller.setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.statusPanel.controller.pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
+                            App.project.blocks.remove(b);
+                        }
+                        @Override
+                        public void undo() {
+                            App.statusPanel.controller.setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.statusPanel.controller.pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
+                            App.project.blocks.add(b);
+                        }
+                    });
+                }
             }
         }
-
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (click != e.getButton()) return; // only one click at a time
-        click = MouseEvent.NOBUTTON;
-        dragging = false;
+        if (App.isInputProcessing() && click == e.getButton()) {
+            click = MouseEvent.NOBUTTON;
+            dragging = false;
 
-        if (App.isInputProcessing() && e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
-            Point tmp = getCellCoords(mouse);
-            if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) {
-                pen.end = tmp;
-                if (!pen.begin.equals(pen.end)) {   // lines should be at least 2 block long
+            if (e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
+                Point tmp = getCellCoords(mouse);
+                if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) {
+                    pen.end = tmp;
+                    if (!pen.begin.equals(pen.end)) {   // lines should be at least 2 block long
 
-                    Line created = new Line(pen.begin, pen.end);
+                        Line created = new Line(pen.begin, pen.end);
 
-                    // check if pt begin/end fall on other lines
-                    // and divide the line into two
-                    boolean division = true;
-                    while (division) {
-                        division = false;
-                        for (Line line : App.project.lines) {
-                            // use exclusive method bc division not required on end points.
-                            if (line.containsExclusive(created.begin)) {
-                                Line d1 = new Line(line.begin, created.begin);
-                                Line d2 = new Line(created.begin, line.end);
-
-                                App.project.add(new Command() {
-                                    @Override
-                                    public void execute() {
-                                        App.project.lines.add(d1);
-                                        App.project.lines.add(d2);
-                                        App.project.lines.remove(line);
-                                        App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-//                                        App.statusPanel.controller.setStatus("Line separation", StatusPanelController.INFO);
-                                    }
-
-                                    @Override
-                                    public void undo() {
-                                        App.project.lines.remove(d1);
-                                        App.project.lines.remove(d2);
-                                        App.project.lines.add(line);
-                                        App.statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-                                        App.statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
-                                    }
-                                });
-                                division = true;
-                                break;
-                            }
-                            if (line.containsExclusive(created.end)) {
-                                Line d1 = new Line(line.begin, created.end);
-                                Line d2 = new Line(created.end, line.end);
-                                App.project.add(new Command() {
-                                    @Override
-                                    public void execute() {
-                                        App.project.lines.add(d1);
-                                        App.project.lines.add(d2);
-                                        App.project.lines.remove(line);
-                                        App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-//                                        App.statusPanel.controller.setStatus("Line separation", StatusPanelController.INFO);
-                                    }
-
-                                    @Override
-                                    public void undo() {
-                                        App.project.lines.remove(d1);
-                                        App.project.lines.remove(d2);
-                                        App.project.lines.add(line);
-                                        App.statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-                                        App.statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
-                                    }
-                                });
-                                division = true;
-                                break;
+                        // check if pt begin/end fall on other lines
+                        // and divide the line into two
+                        boolean division = true;
+                        while (division) {
+                            division = false;
+                            for (Line line : App.project.lines) {
+                                // use exclusive method bc division not required on end points.
+                                if (line.containsExclusive(created.begin)) {
+                                    Line d1 = new Line(line.begin, created.begin);
+                                    Line d2 = new Line(created.begin, line.end);
+                                    separateLines(line, d1, d2);
+                                    division = true;
+                                    break;
+                                }
+                                if (line.containsExclusive(created.end)) {
+                                    Line d1 = new Line(line.begin, created.end);
+                                    Line d2 = new Line(created.end, line.end);
+                                    separateLines(line, d1, d2);
+                                    division = true;
+                                    break;
+                                }
                             }
                         }
+
+                        App.project.add(new Command() {
+                            @Override
+                            public void execute() {
+                                App.project.lines.add(created);
+                                App.statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
+                                App.statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
+                            }
+                            @Override
+                            public void undo() {
+                                App.project.lines.remove(created);
+                                App.statusPanel.controller.setStatus("Undo: Line added", StatusPanelController.INFO);
+                                App.statusPanel.controller.pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
+                            }
+                        });
+
                     }
-
-                    App.project.add(new Command() {
-                        @Override
-                        public void execute() {
-                            App.project.lines.add(created);
-                            App.statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
-                            App.statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
-                        }
-
-                        @Override
-                        public void undo() {
-                            App.project.lines.remove(created);
-                            App.statusPanel.controller.setStatus("Undo: Line added", StatusPanelController.INFO);
-                            App.statusPanel.controller.pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
-                        }
-                    });
-
                 }
             }
-        }
 
-        // reset
-        if (getBlockType() != null) App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        else App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-        pen.begin = pen.end = null;
-        mode = NO_OPERATION;
+            // reset
+            if (getBlockType() != null) App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            else App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            pen.begin = pen.end = null;
+            mode = NO_OPERATION;
+        }
+    }
+    private void separateLines(Line line, Line d1, Line d2) {
+        App.project.add(new Command() {
+            @Override
+            public void execute() {
+                App.project.lines.add(d1);
+                App.project.lines.add(d2);
+                App.project.lines.remove(line);
+                App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+            }
+            @Override
+            public void undo() {
+                App.project.lines.remove(d1);
+                App.project.lines.remove(d2);
+                App.project.lines.add(line);
+                App.statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                App.statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
+            }
+        });
     }
 
     @Override
