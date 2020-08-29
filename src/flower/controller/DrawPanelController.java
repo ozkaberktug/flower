@@ -145,7 +145,10 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         for (AbstractBlock block : App.project.blocks)
             if (block.getId() == id) {
                 Rectangle rect = block.getOuterBounds();
-                toScreen.translate((App.drawPanel.getWidth() - (rect.x + rect.width) * TILESIZE) / 2.f, (App.drawPanel.getHeight() - (rect.y + rect.height) * TILESIZE) / 2.f);
+                // position object to top left corner
+                toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
+                // now center
+                toScreen.translate((App.drawPanel.getWidth() - rect.width * TILESIZE) / 2.f, (App.drawPanel.getHeight() - rect.height * TILESIZE) / 2.f);
                 return;
             }
         App.statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
