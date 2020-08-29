@@ -65,6 +65,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     private String blockToAdd = null;
     private boolean toggleGrids = true;
     private boolean toggleQuality = false;
+    private Point ptMoveTo = new Point();
 
 
     /*CONSTRUCTOR*/
@@ -119,6 +120,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         pen.end = null;
         mode = NO_OPERATION;
         hoveringBlock = null;
+        ptMoveTo = new Point();
         relocate();
     }
 
@@ -147,10 +149,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     @Override
     public void mouseClicked(MouseEvent e) {
         if (App.isInputProcessing() && !dragging) {
+
+
+
             if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {    // double left click - open options
                 AbstractBlock ab = getBlockType();
                 if (ab != null) ab.showDialog();
             }
+
             if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {        // left click - add item
                 AbstractBlock block;
                 Point cellCoords = getCellCoords(mouse);
@@ -263,10 +269,8 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     @Override
     public void mouseReleased(MouseEvent e) {
         if (App.isInputProcessing() && click == e.getButton()) {
-            click = MouseEvent.NOBUTTON;
-            dragging = false;
 
-            if (e.getButton() == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
+            if (click == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
                 Point tmp = getCellCoords(mouse);
                 if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) {
                     pen.end = tmp;
@@ -317,11 +321,18 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 }
             }
 
+            if (click == MouseEvent.BUTTON1 && mode == DRAG_BLOCK) {
+                for (AbstractBlock block : App.project.blocks) if (block.isSelected()) block.moveTo(ptMoveTo);
+                ptMoveTo = new Point();
+            }
+
             // reset
             if (getBlockType() != null) App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             else App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             pen.begin = pen.end = null;
             mode = NO_OPERATION;
+            click = MouseEvent.NOBUTTON;
+            dragging = false;
         }
     }
     private void separateLines(Line line, Line d1, Line d2) {
@@ -377,17 +388,8 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 }
                 if (mode == DRAG_BLOCK) {
                     pen.end = getCellCoords(mouse);
-                    Point d = new Point(pen.end.x - pen.begin.x, pen.end.y - pen.begin.y);
-                    for (AbstractBlock ab : App.project.blocks) {
-                        if (ab.isSelected()) {
-                            ab.moveTo(d);
-//                        for (AbstractBlock other : App.project.blocks) {
-//                            if (ab.getId() != other.getId() && ab.getOuterBounds().intersects(other.getOuterBounds())) {
-//                                ab.moveTo(new Point(-d.x, -d.y));
-//                            }
-//                        }
-                        }
-                    }
+                    ptMoveTo.x += pen.end.x - pen.begin.x;
+                    ptMoveTo.y += pen.end.y - pen.begin.y;
                     pen.begin = pen.end;
                     App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 }
