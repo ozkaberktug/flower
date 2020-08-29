@@ -133,12 +133,14 @@ abstract public class AbstractBlock {
             public void execute() {
                 area.x += delta.x;
                 area.y += delta.y;
+                App.statusPanel.controller.setStatus("Block moved", StatusPanelController.INFO);
                 App.statusPanel.controller.pushLog("#" + getId() + " moved to " + area.x + "," + area.y, StatusPanelController.INFO);
             }
             @Override
             public void undo() {
                 area.x = backup.x;
                 area.y = backup.y;
+                App.statusPanel.controller.setStatus("Undo: Block moved", StatusPanelController.INFO);
                 App.statusPanel.controller.pushLog("Undo: #" + getId() + " moved to " + area.x + "," + area.y, StatusPanelController.INFO);
             }
         });
