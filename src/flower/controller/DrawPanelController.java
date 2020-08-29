@@ -151,13 +151,12 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         if (App.isInputProcessing() && !dragging) {
 
 
-
-            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2) {    // double left click - open options
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && blockToAdd == null) {    // double left click - open options
                 AbstractBlock ab = getBlockType();
                 if (ab != null) ab.showDialog();
             }
 
-            if (e.getButton() == MouseEvent.BUTTON1 && blockToAdd != null) {        // left click - add item
+            if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 1 && blockToAdd != null) {        // left click - add item
                 AbstractBlock block;
                 Point cellCoords = getCellCoords(mouse);
                 switch (blockToAdd) {
@@ -203,6 +202,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 App.selectPanel.controller.clear();
             }
         }
+
     }
 
     @Override
@@ -211,16 +211,22 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             click = e.getButton();
 
             if (click == MouseEvent.BUTTON1) {    // left mouse click - select item
-                AbstractBlock b = getBlockType();   // get the block under the mouse
-                for (AbstractBlock ab : App.project.blocks) // clear all the selections
-                    ab.setSelected(false);
-                if (b == null) {    // empty space clicked
-                    mode = DRAW_LINE;
-                    pen.end = pen.begin = getCellCoords(mouse);
-                } else {    // block clicked
-                    mode = DRAG_BLOCK;
-                    pen.end = pen.begin = getCellCoords(mouse);
-                    b.setSelected(true);
+                pen.end = pen.begin = getCellCoords(mouse);
+                if (e.isControlDown()) {
+                    AbstractBlock ab = getBlockType();
+                    if (ab != null) ab.setSelected(!ab.isSelected());
+                } else {
+                    AbstractBlock b = getBlockType();   // get the block under the mouse
+                    if (b == null) {    // empty space clicked
+                        mode = DRAW_LINE;
+                        for (AbstractBlock ab : App.project.blocks) ab.setSelected(false);
+                    } else {    // block clicked
+                        mode = DRAG_BLOCK;
+                        if (!b.isSelected()) {
+                            for (AbstractBlock ab : App.project.blocks) ab.setSelected(false);
+                            b.setSelected(true);
+                        }
+                    }
                 }
             }
 
@@ -264,6 +270,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 }
             }
         }
+
     }
 
     @Override
