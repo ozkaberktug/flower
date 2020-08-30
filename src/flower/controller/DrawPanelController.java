@@ -12,11 +12,9 @@ import flower.model.elements.StartBlock;
 import flower.model.elements.StopBlock;
 import flower.util.Command;
 
-import javax.swing.AbstractAction;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -35,22 +33,6 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     public static final int NO_OPERATION = 0;
     public static final int DRAW_LINE = 1;
     public static final int DRAG_BLOCK = 3;
-
-
-    /* ACTIONS */
-
-    public final AbstractAction undoAction = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            App.project.undo();
-        }
-    };
-    public final AbstractAction redoAction = new AbstractAction() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            App.project.redo();
-        }
-    };
 
 
     /* PRIVATE FIELDS */

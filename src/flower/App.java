@@ -140,6 +140,21 @@ public class App extends JFrame implements WindowListener, ActionListener {
         editMenu.setMnemonic(KeyEvent.VK_E);
         menuBar.add(editMenu);
         //**//
+        JMenuItem undoMenuItem = new JMenuItem("Undo");
+        undoMenuItem.setActionCommand("Undo");
+        undoMenuItem.setAccelerator(KeyStroke.getKeyStroke("control Z"));
+        undoMenuItem.addActionListener(this);
+        undoMenuItem.setToolTipText("Undo last action.");
+        editMenu.add(undoMenuItem);
+        //**//
+        JMenuItem redoMenuItem = new JMenuItem("Redo");
+        redoMenuItem.setActionCommand("Redo");
+        redoMenuItem.setAccelerator(KeyStroke.getKeyStroke("control shift Z"));
+        redoMenuItem.addActionListener(this);
+        redoMenuItem.setToolTipText("Redo last action.");
+        editMenu.add(redoMenuItem);
+        //**//
+        editMenu.addSeparator();
         JMenuItem gotoMenuItem = new JMenuItem("Go to block");
         gotoMenuItem.setActionCommand("Goto");
         gotoMenuItem.setMnemonic(KeyEvent.VK_G);
@@ -239,6 +254,12 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 break;
             case "Replace":
                 Dialogs.showReplaceDialog();
+                break;
+            case "Undo":
+                App.project.undo();
+                break;
+            case "Redo":
+                App.project.redo();
                 break;
         }
         System.out.println(e.getActionCommand());

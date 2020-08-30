@@ -7,7 +7,6 @@ import flower.model.elements.Line;
 
 import javax.swing.BorderFactory;
 import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -43,11 +42,11 @@ public class DrawPanel extends JPanel implements Runnable {
         setOpaque(true);
         setBackground(BACKGROUND_COLOR);
 
-        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control Z"), "undo");
-        getActionMap().put("undo", controller.undoAction);
-
-        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control shift Z"), "redo");
-        getActionMap().put("redo", controller.redoAction);
+//        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control Z"), "undo");
+//        getActionMap().put("undo", controller.undoAction);
+//
+//        getInputMap(WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control shift Z"), "redo");
+//        getActionMap().put("redo", controller.redoAction);
     }
 
     @Override
