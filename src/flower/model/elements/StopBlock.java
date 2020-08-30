@@ -26,6 +26,17 @@ public class StopBlock extends AbstractBlock {
         code = "";
     }
 
+    public StopBlock(StopBlock block) {
+        super();
+        this.code = block.code;
+        this.type = block.type;
+        this.area = block.area;
+        this.breakpoint = block.breakpoint;
+        this.hovered = block.hovered;
+        this.selected = block.selected;
+        this.processing = block.processing;
+    }
+
     @Override
     public void draw(Graphics2D graphics2D) {
         super.draw(graphics2D);

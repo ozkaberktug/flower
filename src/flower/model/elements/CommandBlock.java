@@ -27,8 +27,18 @@ public class CommandBlock extends AbstractBlock {
         type = COMMAND_BLOCK;
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
-//        String msgTxt = String.format("Command Block with id %d has been created at %d, %d.", getId(), offset.x, offset.y);
-//        App.statusPanel.controller.pushLog(msgTxt, StatusPanelController.INFO);
+    }
+
+    public CommandBlock(CommandBlock block) {
+        super();
+        this.codeLenMaxH = block.codeLenMaxH;
+        this.code = block.code;
+        this.type = block.type;
+        this.area = block.area;
+        this.breakpoint = block.breakpoint;
+        this.hovered = block.hovered;
+        this.selected = block.selected;
+        this.processing = block.processing;
     }
 
     public CommandBlock() {
