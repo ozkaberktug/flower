@@ -142,6 +142,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         //**//
         JMenuItem undoMenuItem = new JMenuItem("Undo");
         undoMenuItem.setActionCommand("Undo");
+        undoMenuItem.setMnemonic(KeyEvent.VK_U);
         undoMenuItem.setAccelerator(KeyStroke.getKeyStroke("control Z"));
         undoMenuItem.addActionListener(this);
         undoMenuItem.setToolTipText("Undo last action.");
@@ -149,6 +150,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         //**//
         JMenuItem redoMenuItem = new JMenuItem("Redo");
         redoMenuItem.setActionCommand("Redo");
+        redoMenuItem.setMnemonic(KeyEvent.VK_R);
         redoMenuItem.setAccelerator(KeyStroke.getKeyStroke("control shift Z"));
         redoMenuItem.addActionListener(this);
         redoMenuItem.setToolTipText("Redo last action.");
@@ -158,6 +160,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         JMenuItem gotoMenuItem = new JMenuItem("Go to block");
         gotoMenuItem.setActionCommand("Goto");
         gotoMenuItem.setMnemonic(KeyEvent.VK_G);
+        gotoMenuItem.setAccelerator(KeyStroke.getKeyStroke("control G"));
         gotoMenuItem.addActionListener(this);
         gotoMenuItem.setToolTipText("Find block by given id.");
         editMenu.add(gotoMenuItem);
