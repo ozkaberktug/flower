@@ -4,8 +4,10 @@ import flower.App;
 import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
 import flower.model.elements.ChartElement;
+import flower.resources.ResourceManager;
 
 import javax.swing.JComponent;
+import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -14,7 +16,9 @@ import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.Dimension;
 import java.io.File;
+import java.io.IOException;
 
 import static flower.view.ViewConstants.CODE_FONT;
 
@@ -24,9 +28,9 @@ public class Dialogs {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileNameExtensionFilter("PNG files", "png"));
-        if (chooser.showDialog(null, "Export") == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showDialog(App.getInstance(), "Export") == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
-                if (JOptionPane.showConfirmDialog(null, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(App.getInstance(), "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     FileOperations.export(chooser.getSelectedFile());
                 }
             } else {
@@ -35,34 +39,34 @@ public class Dialogs {
         }
     }
 
-    public static void showOpenDialog(App app) {
+    public static void showOpenDialog() {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
-        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showOpenDialog(App.getInstance()) == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
-                app.resetApp();
+                App.getInstance().resetApp();
                 FileOperations.open(chooser.getSelectedFile());
-                app.setTitle("flower - " + App.getInstance().project.name);
+                App.getInstance().setTitle("flower - " + App.getInstance().project.name);
             } else {
-                JOptionPane.showMessageDialog(app, "No such file!");
+                JOptionPane.showMessageDialog(App.getInstance(), "No such file!");
             }
         }
     }
 
-    public static void showSaveDialog(App app) {
+    public static void showSaveDialog() {
         JFileChooser chooser = new JFileChooser(new File("."));
         chooser.setAcceptAllFileFilterUsed(false);
         chooser.setFileFilter(new FileNameExtensionFilter("Flower Projects (*.fp)", "fp"));
-        if (chooser.showSaveDialog(app) == JFileChooser.APPROVE_OPTION) {
+        if (chooser.showSaveDialog(App.getInstance()) == JFileChooser.APPROVE_OPTION) {
             if (chooser.getSelectedFile().exists()) {
-                if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                if (JOptionPane.showConfirmDialog(App.getInstance(), "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     FileOperations.save(chooser.getSelectedFile());
-                    app.setTitle("flower - " + App.getInstance().project.name);
+                    App.getInstance().setTitle("flower - " + App.getInstance().project.name);
                 }
             } else {
                 FileOperations.save(chooser.getSelectedFile());
-                app.setTitle("flower - " + App.getInstance().project.name);
+                App.getInstance().setTitle("flower - " + App.getInstance().project.name);
             }
         }
     }
@@ -109,7 +113,7 @@ public class Dialogs {
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
         JScrollPane scrollPane = new JScrollPane(table);
         final JComponent[] inputs = new JComponent[]{scrollPane};
-        JOptionPane.showMessageDialog(null, inputs, title, JOptionPane.PLAIN_MESSAGE);
+        JOptionPane.showMessageDialog(App.getInstance(), inputs, title, JOptionPane.PLAIN_MESSAGE);
     }
 
     public static void showInputParamsDialog() {
@@ -118,7 +122,7 @@ public class Dialogs {
         codeArea.setFont(CODE_FONT);
         JScrollPane codeScrollPane = new JScrollPane(codeArea);
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter input parameters:"), codeScrollPane};
-        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(App.getInstance(), inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) App.getInstance().project.inputParams = codeArea.getText();
     }
 
@@ -129,7 +133,7 @@ public class Dialogs {
         field.setFont(CODE_FONT);
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter block id:"), field};
-        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(App.getInstance(), inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             if (!field.getText().isEmpty() && field.getText().matches("\\d+")) {
@@ -148,7 +152,7 @@ public class Dialogs {
         field.setFont(CODE_FONT);
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter the text:"), field};
-        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(App.getInstance(), inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             if (!field.getText().isEmpty() && !field.getText().matches("\\s+")) {
@@ -173,7 +177,7 @@ public class Dialogs {
         replaceField.setFont(CODE_FONT);
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Find:"), findField, new JLabel("Replace:"), replaceField};
-        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        int result = JOptionPane.showConfirmDialog(App.getInstance(), inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
             if (!findField.getText().isEmpty() && !findField.getText().matches("\\s+")) {
@@ -185,6 +189,20 @@ public class Dialogs {
             } else {
                 App.getInstance().statusPanel.getController().setStatus("Enter a valid text!", StatusPanelController.ERROR);
             }
+        }
+    }
+
+    public static void showAboutDialog() {
+        try {
+            JEditorPane editorPane = new JEditorPane();
+            editorPane.setEditable(false);
+            editorPane.setPage(ResourceManager.ABOUT_PAGE);
+            JScrollPane editorScrollPane = new JScrollPane(editorPane);
+            editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+            editorScrollPane.setPreferredSize(new Dimension(400, 500));
+            JOptionPane.showMessageDialog(App.getInstance(), editorScrollPane, "About", JOptionPane.PLAIN_MESSAGE);
+        } catch (IOException e) {
+            App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
         }
     }
 

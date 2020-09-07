@@ -32,7 +32,6 @@ import java.awt.event.WindowListener;
 public class App extends JFrame implements WindowListener, ActionListener {
 
     public static final String version_string = "0.3.0";
-    public static final String about_string = "<html>Version: " + App.version_string + "<br/>This program written by Berktuğ Kaan Özkan<br/>github.com/ozkaberktug</html>";
 
     public final Project project = new Project();
     public final DrawPanel drawPanel = new DrawPanel();
@@ -85,10 +84,10 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 statusPanel.getController().setStatus("Ready", StatusPanelController.INFO);
                 break;
             case "Open":
-                Dialogs.showOpenDialog(this);
+                Dialogs.showOpenDialog();
                 break;
             case "Save":
-                Dialogs.showSaveDialog(this);
+                Dialogs.showSaveDialog();
                 break;
             case "Export":
                 Dialogs.showExportDialog();
@@ -97,7 +96,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 windowClosing(null);
                 break;
             case "About":
-                JOptionPane.showMessageDialog(this, about_string, "About", JOptionPane.INFORMATION_MESSAGE);
+                Dialogs.showAboutDialog();
                 break;
             case "Input":
                 Dialogs.showInputParamsDialog();
