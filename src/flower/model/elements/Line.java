@@ -8,21 +8,23 @@ import static flower.view.ViewConstants.BOLD_STROKE;
 import static flower.view.ViewConstants.PADDING;
 import static flower.view.ViewConstants.TILESIZE;
 
-public class Line {
+public class Line extends ChartElement {
 
     public Point begin;
     public Point end;
     private boolean ghost = false;
 
-    public Line() {}
+    public Line() {super(LINE);}
 
     public Line(int bx, int by, int ex, int ey) {
+        super(LINE);
         begin = new Point(bx, by);
         end = new Point(ex, ey);
         normalize();
     }
 
     public Line(Point b, Point e) {
+        super(LINE);
         begin = b;
         end = e;
         normalize();
@@ -36,17 +38,17 @@ public class Line {
         }
     }
 
-    public boolean isGhost() {return ghost;}
+//    public boolean isGhost() {return ghost;}
 
     public void setGhost(boolean sel) {ghost = sel;}
 
-    public boolean contains(Line line) {
-        if (end.y == line.end.y && begin.y == line.begin.y) return (begin.x <= line.begin.x && end.x >= line.end.x);
-        else if (end.x == line.end.x && begin.x == line.begin.x)
-            return (begin.y <= line.begin.y && end.y >= line.end.y);
-        // perpendicular case which is always false
-        return false;
-    }
+//    public boolean contains(Line line) {
+//        if (end.y == line.end.y && begin.y == line.begin.y) return (begin.x <= line.begin.x && end.x >= line.end.x);
+//        else if (end.x == line.end.x && begin.x == line.begin.x)
+//            return (begin.y <= line.begin.y && end.y >= line.end.y);
+//        // perpendicular case which is always false
+//        return false;
+//    }
 
     public boolean containsInclusive(Point p) {
         boolean sameX = false;
@@ -95,11 +97,11 @@ public class Line {
 
     public boolean isHorizontal() { return (begin.y == end.y); }
 
-    public boolean isPerpendicularTo(Line line) {
-        boolean b1 = isHorizontal() && line.isVertical();
-        boolean b2 = isVertical() && line.isHorizontal();
-        return b1 || b2;
-    }
+//    public boolean isPerpendicularTo(Line line) {
+//        boolean b1 = isHorizontal() && line.isVertical();
+//        boolean b2 = isVertical() && line.isHorizontal();
+//        return b1 || b2;
+//    }
 
     @Override
     public String toString() {

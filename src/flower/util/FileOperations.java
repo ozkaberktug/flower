@@ -3,6 +3,7 @@ package flower.util;
 import flower.App;
 import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
+import flower.model.elements.ChartElement;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
 import flower.model.elements.InputBlock;
@@ -160,25 +161,25 @@ public class FileOperations {
                 String code = blockNode.getAttribute("code");
                 AbstractBlock block;
                 switch (type) {
-                    case AbstractBlock.COMMAND_BLOCK:
+                    case ChartElement.COMMAND_BLOCK:
                         block = new CommandBlock();
                         break;
-                    case AbstractBlock.IF_BLOCK:
+                    case ChartElement.IF_BLOCK:
                         block = new IfBlock();
                         break;
-                    case AbstractBlock.INPUT_BLOCK:
+                    case ChartElement.INPUT_BLOCK:
                         block = new InputBlock();
                         break;
-                    case AbstractBlock.LABEL_BLOCK:
+                    case ChartElement.LABEL_BLOCK:
                         block = new LabelBlock();
                         break;
-                    case AbstractBlock.OUTPUT_BLOCK:
+                    case ChartElement.OUTPUT_BLOCK:
                         block = new OutputBlock();
                         break;
-                    case AbstractBlock.START_BLOCK:
+                    case ChartElement.START_BLOCK:
                         block = new StartBlock();
                         break;
-                    case AbstractBlock.STOP_BLOCK:
+                    case ChartElement.STOP_BLOCK:
                         block = new StopBlock();
                         break;
                     default:

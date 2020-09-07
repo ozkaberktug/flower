@@ -13,23 +13,20 @@ import static flower.view.ViewConstants.TILESIZE;
 public class StopBlock extends AbstractBlock {
 
     public StopBlock(Point offset) {
-        super();
-        type = STOP_BLOCK;
+        super(STOP_BLOCK);
         area = new Rectangle(offset.x, offset.y, 5, 2);
         code = "STOP";
     }
 
     public StopBlock() {
-        super();
-        type = STOP_BLOCK;
+        super(STOP_BLOCK);
         area = new Rectangle();
         code = "";
     }
 
     public StopBlock(StopBlock block) {
-        super();
+        super(STOP_BLOCK);
         this.code = block.code;
-        this.type = block.type;
         this.area = block.area;
         this.breakpoint = block.breakpoint;
         this.hovered = block.hovered;
@@ -64,8 +61,6 @@ public class StopBlock extends AbstractBlock {
     }
 
     @Override
-    public Point[] getOutputPins() {
-        return null;
-    }
+    public Point[] getOutputPins() { return null; }
 
 }

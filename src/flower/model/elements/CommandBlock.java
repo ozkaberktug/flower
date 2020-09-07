@@ -1,9 +1,5 @@
 package flower.model.elements;
 
-import flower.App;
-import flower.controller.StatusPanelController;
-import flower.util.Command;
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -23,17 +19,15 @@ public class CommandBlock extends AbstractBlock {
     private int codeLenMaxH = 0;
 
     public CommandBlock(Point offset) {
-        super();
-        type = COMMAND_BLOCK;
+        super(COMMAND_BLOCK);
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }
 
     public CommandBlock(CommandBlock block) {
-        super();
+        super(COMMAND_BLOCK);
         this.codeLenMaxH = block.codeLenMaxH;
         this.code = block.code;
-        this.type = block.type;
         this.area = block.area;
         this.breakpoint = block.breakpoint;
         this.hovered = block.hovered;
@@ -42,8 +36,7 @@ public class CommandBlock extends AbstractBlock {
     }
 
     public CommandBlock() {
-        super();
-        type = COMMAND_BLOCK;
+        super(COMMAND_BLOCK);
         area = new Rectangle();
         code = "";
     }
@@ -69,26 +62,9 @@ public class CommandBlock extends AbstractBlock {
 
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter statement:"), codeScrollPane};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) {
-            if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) {
-                App.getInstance().project.add(new Command() {
-                    final String backup = code;
-                    @Override
-                    public void execute() {
-                        code = codeArea.getText();
-                        normalizeSize();
-                        App.getInstance().statusPanel.getController().pushLog("Edited block #" + getId(), StatusPanelController.INFO);
-                    }
-                    @Override
-                    public void undo() {
-                        code = backup;
-                        normalizeSize();
-                        App.getInstance().statusPanel.getController().pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
-                    }
-                });
-            }
-        }
 
+        if (result == JOptionPane.OK_OPTION && !codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+"))
+            saveChanges(codeArea.getText());
     }
 
     @Override

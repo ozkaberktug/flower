@@ -1,9 +1,5 @@
 package flower.model.elements;
 
-import flower.App;
-import flower.controller.StatusPanelController;
-import flower.util.Command;
-
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -22,23 +18,20 @@ import static flower.view.ViewConstants.TILESIZE;
 public class LabelBlock extends AbstractBlock {
 
     public LabelBlock(Point offset) {
-        super();
-        type = LABEL_BLOCK;
+        super(LABEL_BLOCK);
         code = "Type your comment";
         area = new Rectangle(offset.x, offset.y, code.length() / 2, 1);
     }
 
     public LabelBlock() {
-        super();
-        type = LABEL_BLOCK;
+        super(LABEL_BLOCK);
         code = "";
         area = new Rectangle();
     }
 
     public LabelBlock(LabelBlock block) {
-        super();
+        super(LABEL_BLOCK);
         this.code = block.code;
-        this.type = block.type;
         this.area = block.area;
         this.breakpoint = block.breakpoint;
         this.hovered = block.hovered;
@@ -69,25 +62,8 @@ public class LabelBlock extends AbstractBlock {
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter your comment:"), codeField};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        if (result == JOptionPane.OK_OPTION) {
-            if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) {
-                App.getInstance().project.add(new Command() {
-                    final String backup = code;
-                    @Override
-                    public void execute() {
-                        code = codeField.getText();
-                        normalizeSize();
-                        App.getInstance().statusPanel.getController().pushLog("Edited block #" + getId(), StatusPanelController.INFO);
-                    }
-                    @Override
-                    public void undo() {
-                        code = backup;
-                        normalizeSize();
-                        App.getInstance().statusPanel.getController().pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
-                    }
-                });
-            }
-        }
+        if (result == JOptionPane.OK_OPTION && !codeField.getText().isEmpty() && !codeField.getText().matches("\\s+"))
+            saveChanges(codeField.getText());
     }
 
 

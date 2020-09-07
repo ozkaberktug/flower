@@ -15,23 +15,20 @@ public class IfBlock extends AbstractBlock {
     public static final int FALSE_OUTPUT = 1;
 
     public IfBlock(Point offset) {
-        super();
-        type = IF_BLOCK;
+        super(IF_BLOCK);
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }
 
     public IfBlock() {
-        super();
-        type = IF_BLOCK;
+        super(IF_BLOCK);
         area = new Rectangle();
         code = "";
     }
 
     public IfBlock(IfBlock block) {
-        super();
+        super(IF_BLOCK);
         this.code = block.code;
-        this.type = block.type;
         this.area = block.area;
         this.breakpoint = block.breakpoint;
         this.hovered = block.hovered;

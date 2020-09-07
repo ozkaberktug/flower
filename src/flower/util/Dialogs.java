@@ -3,6 +3,7 @@ package flower.util;
 import flower.App;
 import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
+import flower.model.elements.ChartElement;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -76,25 +77,25 @@ public class Dialogs {
         int numLabelBlock = 0;
         for (AbstractBlock ab : App.getInstance().project.blocks) {
             switch (ab.getType()) {
-                case AbstractBlock.COMMAND_BLOCK:
+                case ChartElement.COMMAND_BLOCK:
                     numCommandBlock++;
                     break;
-                case AbstractBlock.IF_BLOCK:
+                case ChartElement.IF_BLOCK:
                     numIfBlock++;
                     break;
-                case AbstractBlock.START_BLOCK:
+                case ChartElement.START_BLOCK:
                     numStartBlock++;
                     break;
-                case AbstractBlock.STOP_BLOCK:
+                case ChartElement.STOP_BLOCK:
                     numStopBlock++;
                     break;
-                case AbstractBlock.INPUT_BLOCK:
+                case ChartElement.INPUT_BLOCK:
                     numInputBlock++;
                     break;
-                case AbstractBlock.OUTPUT_BLOCK:
+                case ChartElement.OUTPUT_BLOCK:
                     numOutputBlock++;
                     break;
-                case AbstractBlock.LABEL_BLOCK:
+                case ChartElement.LABEL_BLOCK:
                     numLabelBlock++;
                     break;
             }
@@ -102,16 +103,7 @@ public class Dialogs {
 
         String title = "Project Statistics";
         String[] columnNames = {"Element Type", "Number"};
-        Object[][] data = {
-                {"START", numStartBlock},
-                {"STOP", numStopBlock},
-                {"COMMAND", numCommandBlock},
-                {"IF", numIfBlock},
-                {"INPUT", numInputBlock},
-                {"OUTPUT", numOutputBlock},
-                {"LABEL", numLabelBlock},
-                {"Lines", App.getInstance().project.lines.size()},
-        };
+        Object[][] data = {{"START", numStartBlock}, {"STOP", numStopBlock}, {"COMMAND", numCommandBlock}, {"IF", numIfBlock}, {"INPUT", numInputBlock}, {"OUTPUT", numOutputBlock}, {"LABEL", numLabelBlock}, {"Lines", App.getInstance().project.lines.size()},};
         JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
         table.setPreferredScrollableViewportSize(table.getPreferredSize());
@@ -195,4 +187,5 @@ public class Dialogs {
             }
         }
     }
+
 }

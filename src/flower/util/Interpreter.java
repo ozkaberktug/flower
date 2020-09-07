@@ -3,6 +3,7 @@ package flower.util;
 import flower.App;
 import flower.controller.StatusPanelController;
 import flower.model.elements.AbstractBlock;
+import flower.model.elements.ChartElement;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
 import flower.model.elements.InputBlock;
@@ -133,11 +134,11 @@ public class Interpreter extends Thread {
 
                 // error checks
                 if (tokens.length < 3)
-                    throw new InterpreterException("Syntax error", "Syntax error on " + block.getTypeString() + "#" + block.getId());
+                    throw new InterpreterException("Syntax error", "Syntax error on " + ChartElement.getTypeString(block.getType()) + "#" + block.getId());
                 if (tokens[0].type != Token.VARIABLE)
-                    throw new InterpreterException("Syntax error", tokens[0].data + " should be a valid variable name on " + block.getTypeString() + "#" + block.getId());
+                    throw new InterpreterException("Syntax error", tokens[0].data + " should be a valid variable name on " + ChartElement.getTypeString(block.getType()) + "#" + block.getId());
                 if (!tokens[1].data.equals("="))
-                    throw new InterpreterException("Syntax error", "Equal sign not presented on " + block.getTypeString() + "#" + block.getId());
+                    throw new InterpreterException("Syntax error", "Equal sign not presented on " + ChartElement.getTypeString(block.getType()) + "#" + block.getId());
 
                 // do calc and put it assign
                 symbolTable.put(tokens[0].data, evalExpr(tokens, 2));
@@ -169,7 +170,7 @@ public class Interpreter extends Thread {
                 for (String expr : block.getCode().split(",")) {
                     Token[] t = getTokens(expr.toCharArray());
                     if (t.length != 1 && t[0].type != Token.VARIABLE)
-                        throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + block.getTypeString() + "#" + block.getId());
+                        throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + ChartElement.getTypeString(block.getType()) + "#" + block.getId());
                     if (parameters.isEmpty()) {
                         String msg = "Please enter a value for " + expr;
                         String value = JOptionPane.showInputDialog(null, msg);
@@ -181,7 +182,7 @@ public class Interpreter extends Thread {
             } else {
                 Token[] t = getTokens(block.getCode().toCharArray());
                 if (t.length != 1 && t[0].type != Token.VARIABLE)
-                    throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + block.getTypeString() + "#" + block.getId());
+                    throw new InterpreterException("Invalid variable name", "Invalid variable name " + t[0].data + " on " + ChartElement.getTypeString(block.getType()) + "#" + block.getId());
                 if (parameters.isEmpty()) {
                     String msg = "Please enter a value for " + block.getCode();
                     String value = JOptionPane.showInputDialog(null, msg);

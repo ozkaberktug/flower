@@ -18,7 +18,7 @@ public class ResourceManager {
     public static final String GRIDS_OFF = "grids-off.png";
 
     public static ImageIcon getImageIcon(String path) {
-        URL ref = App.class.getResource("resources/"+path);
+        URL ref = App.class.getResource("resources/" + path);
         return new ImageIcon(ref);
     }
 

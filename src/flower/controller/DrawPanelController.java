@@ -2,6 +2,7 @@ package flower.controller;
 
 import flower.App;
 import flower.model.elements.AbstractBlock;
+import flower.model.elements.ChartElement;
 import flower.model.elements.CommandBlock;
 import flower.model.elements.IfBlock;
 import flower.model.elements.InputBlock;
@@ -169,15 +170,15 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     @Override
                     public void execute() {
                         App.getInstance().project.blocks.add(block);
-                        App.getInstance().statusPanel.getController().setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
-                        App.getInstance().statusPanel.getController().pushLog(String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().setStatus(ChartElement.getTypeString(block.getType()) + " added", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog(String.format("%s block created with id %d at %d, %d", ChartElement.getTypeString(block.getType()), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
 
                     @Override
                     public void undo() {
                         App.getInstance().project.blocks.remove(block);
-                        App.getInstance().statusPanel.getController().setStatus("Undo: " + block.getTypeString() + " added", StatusPanelController.INFO);
-                        App.getInstance().statusPanel.getController().pushLog(String.format("Undo: %s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().setStatus("Undo: " + ChartElement.getTypeString(block.getType()) + " added", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog(String.format("Undo: %s block created with id %d at %d, %d", ChartElement.getTypeString(block.getType()), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
                 });
                 App.getInstance().selectPanel.getController().clear();
@@ -237,13 +238,13 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     App.getInstance().project.add(new Command() {
                         @Override
                         public void execute() {
-                            App.getInstance().statusPanel.getController().setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.getInstance().statusPanel.getController().setStatus(ChartElement.getTypeString(b.getType()) + " deleted", StatusPanelController.INFO);
                             App.getInstance().statusPanel.getController().pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
                             App.getInstance().project.blocks.remove(b);
                         }
                         @Override
                         public void undo() {
-                            App.getInstance().statusPanel.getController().setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.getInstance().statusPanel.getController().setStatus("Undo: " + ChartElement.getTypeString(b.getType()) + " deleted", StatusPanelController.INFO);
                             App.getInstance().statusPanel.getController().pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
                             App.getInstance().project.blocks.add(b);
                         }
@@ -310,12 +311,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
 
             if (click == MouseEvent.BUTTON1 && mode == DRAG_BLOCK) {
-                for (AbstractBlock block : App.getInstance().project.blocks) if (block.isSelected()) block.moveTo(ptMoveTo);
+                for (AbstractBlock block : App.getInstance().project.blocks)
+                    if (block.isSelected()) block.moveTo(ptMoveTo);
                 ptMoveTo = new Point();
             }
 
             // reset
-            if (getBlockType() != null) App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            if (getBlockType() != null)
+                App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             else App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             pen.begin = pen.end = null;
             mode = NO_OPERATION;

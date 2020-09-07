@@ -12,23 +12,20 @@ import static flower.view.ViewConstants.TILESIZE;
 public class OutputBlock extends AbstractBlock {
 
     public OutputBlock(Point offset) {
-        super();
-        type = OUTPUT_BLOCK;
+        super(OUTPUT_BLOCK);
         area = new Rectangle(offset.x, offset.y, 9, 5);
         code = "";
     }
 
     public OutputBlock() {
-        super();
-        type = OUTPUT_BLOCK;
+        super(OUTPUT_BLOCK);
         area = new Rectangle();
         code = "";
     }
 
     public OutputBlock(OutputBlock block) {
-        super();
+        super(OUTPUT_BLOCK);
         this.code = block.code;
-        this.type = block.type;
         this.area = block.area;
         this.breakpoint = block.breakpoint;
         this.hovered = block.hovered;
