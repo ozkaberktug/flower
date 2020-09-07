@@ -90,7 +90,6 @@ abstract public class AbstractBlock extends ChartElement {
         });
     }
 
-
     public void moveTo(Point delta) {
         if (delta.x == 0 && delta.y == 0) return;
 
@@ -146,6 +145,6 @@ abstract public class AbstractBlock extends ChartElement {
     public boolean isSelected() {return selected;}
     public boolean isHovered() {return hovered;}
     public boolean isBreakpoint() {return breakpoint;}
-    public boolean isProcessing() {return processing;}
+//    public boolean isProcessing() {return processing;}
 
 }

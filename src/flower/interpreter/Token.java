@@ -1,4 +1,4 @@
-package flower.util;
+package flower.interpreter;
 
 public class Token {
 

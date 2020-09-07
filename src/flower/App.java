@@ -1,10 +1,10 @@
 package flower;
 
 import flower.controller.StatusPanelController;
+import flower.interpreter.Interpreter;
 import flower.model.Project;
 import flower.util.Dialogs;
 import flower.util.ExceptionHandler;
-import flower.util.Interpreter;
 import flower.view.DrawPanel;
 import flower.view.SelectPanel;
 import flower.view.StatusPanel;

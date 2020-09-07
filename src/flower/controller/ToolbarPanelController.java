@@ -1,9 +1,9 @@
 package flower.controller;
 
 import flower.App;
+import flower.interpreter.Interpreter;
 import flower.model.elements.AbstractBlock;
 import flower.resources.ResourceManager;
-import flower.util.Interpreter;
 
 import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
