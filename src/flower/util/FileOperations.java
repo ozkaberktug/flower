@@ -38,13 +38,13 @@ import static flower.view.ViewConstants.TILESIZE;
 public class FileOperations {
 
     public static void save(File ff) {
-        App.statusPanel.controller.setStatus("Saving...", StatusPanelController.INFO);
-        App.statusPanel.controller.pushLog("Saving project...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.setStatus("Saving...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.pushLog("Saving project...", StatusPanelController.INFO);
 
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
 
-        App.project.name = ff.getName().substring(0, ff.getName().length() - 3);
+        App.getInstance().project.name = ff.getName().substring(0, ff.getName().length() - 3);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -58,8 +58,8 @@ public class FileOperations {
 
             // project tag and its attr
             Element projectTag = doc.createElement("project");
-            projectTag.setAttribute("name", App.project.name);
-            projectTag.setAttribute("inputParams", App.project.inputParams);
+            projectTag.setAttribute("name", App.getInstance().project.name);
+            projectTag.setAttribute("inputParams", App.getInstance().project.inputParams);
             appTag.appendChild(projectTag);
 
             // lines tag
@@ -67,7 +67,7 @@ public class FileOperations {
             projectTag.appendChild(linesTag);
 
             // iterate lines
-            for (Line line : App.project.lines) {
+            for (Line line : App.getInstance().project.lines) {
                 Element lineTag = doc.createElement("line");
                 lineTag.setAttribute("pos", String.format("%d,%d,%d,%d", line.begin.x, line.begin.y, line.end.x, line.end.y));
                 linesTag.appendChild(lineTag);
@@ -78,7 +78,7 @@ public class FileOperations {
             projectTag.appendChild(blocksTag);
 
             // iterate blocks
-            for (AbstractBlock block : App.project.blocks) {
+            for (AbstractBlock block : App.getInstance().project.blocks) {
                 Element blockTag = doc.createElement("block");
                 Rectangle area = block.getInnerBounds();
                 blockTag.setAttribute("id", String.valueOf(block.getId()));
@@ -102,20 +102,20 @@ public class FileOperations {
             transformer.transform(source, result);
 
             // inform user
-            App.statusPanel.controller.setStatus("Project saved successfully", StatusPanelController.INFO);
-            App.statusPanel.controller.pushLog("Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.setStatus("Project saved successfully", StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.pushLog("Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO);
 
         } catch (Exception e) {
-            App.exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-            App.statusPanel.controller.setStatus("Project could not saved", StatusPanelController.ERROR);
-            App.statusPanel.controller.pushLog("Project could not saved due to " + e.toString(), StatusPanelController.ERROR);
+            App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
+            App.getInstance().statusPanel.controller.setStatus("Project could not saved", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.controller.pushLog("Project could not saved due to " + e.toString(), StatusPanelController.ERROR);
         }
 
     }
 
     public static void open(File ff) {
-        App.statusPanel.controller.setStatus("Loading...", StatusPanelController.INFO);
-        App.statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.setStatus("Loading...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -136,8 +136,8 @@ public class FileOperations {
 
             // get project node
             Element projectNode = (Element) rootNode.getElementsByTagName("project").item(0);
-            App.project.name = projectNode.getAttribute("name");
-            App.project.inputParams = projectNode.getAttribute("inputParams");
+            App.getInstance().project.name = projectNode.getAttribute("name");
+            App.getInstance().project.inputParams = projectNode.getAttribute("inputParams");
 
             // get lines
             NodeList linesNodeList = projectNode.getElementsByTagName("lines").item(0).getChildNodes();
@@ -145,7 +145,7 @@ public class FileOperations {
                 if (linesNodeList.item(i).getNodeType() != Node.ELEMENT_NODE) continue;
                 Element lineNode = (Element) linesNodeList.item(i);
                 String[] points = lineNode.getAttribute("pos").split(",");
-                App.project.lines.add(new Line(Integer.parseInt(points[0]), Integer.parseInt(points[1]), Integer.parseInt(points[2]), Integer.parseInt(points[3])));
+                App.getInstance().project.lines.add(new Line(Integer.parseInt(points[0]), Integer.parseInt(points[1]), Integer.parseInt(points[2]), Integer.parseInt(points[3])));
             }
 
             // get blocks
@@ -189,28 +189,28 @@ public class FileOperations {
                 block.setInnerBounds(new Rectangle(Integer.parseInt(area[0]), Integer.parseInt(area[1]), Integer.parseInt(area[2]), Integer.parseInt(area[3])));
                 block.setCode(code);
                 block.normalizeSize();
-                App.project.blocks.add(block);
+                App.getInstance().project.blocks.add(block);
             }
 
             // todo: in the future libs tag will be added
 
-            App.drawPanel.controller.relocate();
+            App.getInstance().drawPanel.controller.relocate();
 
             // inform user
-            App.statusPanel.controller.setStatus("Project loaded successfully", StatusPanelController.INFO);
-            App.statusPanel.controller.pushLog("Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.setStatus("Project loaded successfully", StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.pushLog("Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO);
 
         } catch (Exception e) {
-            App.exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-            App.statusPanel.controller.setStatus("Project could not load", StatusPanelController.ERROR);
-            App.statusPanel.controller.pushLog("Project could not load due to " + e.toString(), StatusPanelController.ERROR);
+            App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
+            App.getInstance().statusPanel.controller.setStatus("Project could not load", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.controller.pushLog("Project could not load due to " + e.toString(), StatusPanelController.ERROR);
         }
 
     }
 
     public static void export(File ff) {
-        App.statusPanel.controller.setStatus("Exporting...", StatusPanelController.INFO);
-        App.statusPanel.controller.pushLog("Exporting project...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.setStatus("Exporting...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.pushLog("Exporting project...", StatusPanelController.INFO);
 
         if (!ff.getName().toUpperCase().endsWith(".PNG")) ff = new File(ff.getAbsolutePath() + ".png");
 
@@ -223,14 +223,14 @@ public class FileOperations {
         af.scale(scalingFactor, scalingFactor);
 
         // check if there is anything
-        if (App.project.lines.isEmpty() && App.project.blocks.isEmpty()) {
-            App.statusPanel.controller.setStatus("There is no element to be export", StatusPanelController.ERROR);
-            App.statusPanel.controller.pushLog("Project could not exported because there is no element", StatusPanelController.ERROR);
+        if (App.getInstance().project.lines.isEmpty() && App.getInstance().project.blocks.isEmpty()) {
+            App.getInstance().statusPanel.controller.setStatus("There is no element to be export", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.controller.pushLog("Project could not exported because there is no element", StatusPanelController.ERROR);
             return;
         }
 
         // check line bounds
-        for (Line line : App.project.lines) {
+        for (Line line : App.getInstance().project.lines) {
             if (line.begin.x < ULC.x) ULC.x = line.begin.x;
             if (line.begin.y < ULC.y) ULC.y = line.begin.y;
             if (line.end.x < ULC.x) ULC.x = line.end.x;
@@ -242,7 +242,7 @@ public class FileOperations {
         }
 
         // check block bounds
-        for (AbstractBlock ab : App.project.blocks) {
+        for (AbstractBlock ab : App.getInstance().project.blocks) {
             Rectangle bound = ab.getInnerBounds();
             if (bound.x < ULC.x) ULC.x = bound.x;
             if (bound.y < ULC.y) ULC.y = bound.y;
@@ -270,8 +270,8 @@ public class FileOperations {
 
         // draw each element
         graphics2D.setTransform(af);
-        for (Line line : App.project.lines) line.draw(graphics2D);
-        for (AbstractBlock ab : App.project.blocks) ab.draw(graphics2D);
+        for (Line line : App.getInstance().project.lines) line.draw(graphics2D);
+        for (AbstractBlock ab : App.getInstance().project.blocks) ab.draw(graphics2D);
         graphics2D.dispose();
 
         // save and return
@@ -279,13 +279,13 @@ public class FileOperations {
             ImageIO.write(bufferedImage, "PNG", ff);
 
         } catch (Exception e) {
-            App.exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-            App.statusPanel.controller.setStatus("Project could not export", StatusPanelController.ERROR);
-            App.statusPanel.controller.pushLog("Project could not export due to " + e.toString(), StatusPanelController.ERROR);
+            App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
+            App.getInstance().statusPanel.controller.setStatus("Project could not export", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.controller.pushLog("Project could not export due to " + e.toString(), StatusPanelController.ERROR);
         }
 
-        App.statusPanel.controller.setStatus("Project exported successfully", StatusPanelController.INFO);
-        App.statusPanel.controller.pushLog("Project exported to " + ff.getAbsolutePath(), StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.setStatus("Project exported successfully", StatusPanelController.INFO);
+        App.getInstance().statusPanel.controller.pushLog("Project exported to " + ff.getAbsolutePath(), StatusPanelController.INFO);
     }
 
 }

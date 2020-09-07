@@ -29,9 +29,9 @@ public class Interpreter extends Thread {
         try {
             // init environment
             isRunning = true;
-            App.statusPanel.controller.setStatus("Simulation started...", StatusPanelController.INFO);
-            App.statusPanel.controller.pushLog("Simulation started", StatusPanelController.INFO);
-            for (String param : App.project.inputParams.split("\\s+"))
+            App.getInstance().statusPanel.controller.setStatus("Simulation started...", StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.pushLog("Simulation started", StatusPanelController.INFO);
+            for (String param : App.getInstance().project.inputParams.split("\\s+"))
                 if (!param.isEmpty()) parameters.add(param);
 
             System.out.println("parameters = " + parameters);
@@ -39,12 +39,12 @@ public class Interpreter extends Thread {
             long beginTime = System.currentTimeMillis();
 
             // check if there are any blocks
-            if (App.project.blocks.isEmpty())
+            if (App.getInstance().project.blocks.isEmpty())
                 throw new InterpreterException("There are not any blocks", "No blocks to process");
 
             // first search for START block
             AbstractBlock currentBlock = null;
-            for (AbstractBlock block : App.project.blocks) {
+            for (AbstractBlock block : App.getInstance().project.blocks) {
                 if (block instanceof StartBlock) {
                     if (currentBlock == null) currentBlock = block;
                     else throw new InterpreterException("Multiple entry points found", "More than one START blocks");
@@ -73,7 +73,7 @@ public class Interpreter extends Thread {
                     visited.add(p);
 
                     // check if we found a block input pin
-                    for (AbstractBlock block : App.project.blocks) {
+                    for (AbstractBlock block : App.getInstance().project.blocks) {
                         Point[] inputPins = block.getInputPins();
                         if (inputPins != null && inputPins[0].equals(p)) {
                             if (currentBlock != null)
@@ -84,7 +84,7 @@ public class Interpreter extends Thread {
 
 
                     // find which line(s) contains this point
-                    for (Line line : App.project.lines) {
+                    for (Line line : App.getInstance().project.lines) {
                         if (line.begin.equals(p) || line.end.equals(p)) {
                             if (!visited.contains(line.begin)) {
                                 ss.push(line.begin);
@@ -105,13 +105,13 @@ public class Interpreter extends Thread {
             }
 
             double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
-            App.statusPanel.controller.setStatus(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
-            App.statusPanel.controller.pushLog(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.setStatus(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
+            App.getInstance().statusPanel.controller.pushLog(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
         } catch (InterpreterException ex) {
-            App.statusPanel.controller.pushLog("Simulation stopped due to: " + ex.description, ex.severity);
-            App.statusPanel.controller.setStatus(ex.tip, ex.severity);
+            App.getInstance().statusPanel.controller.pushLog("Simulation stopped due to: " + ex.description, ex.severity);
+            App.getInstance().statusPanel.controller.setStatus(ex.tip, ex.severity);
         } finally {
-            App.toolbarPanel.controller.stopSimulation();
+            App.getInstance().toolbarPanel.controller.stopSimulation();
         }
     }
 

@@ -71,19 +71,19 @@ public class LabelBlock extends AbstractBlock {
 
         if (result == JOptionPane.OK_OPTION) {
             if (!codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) {
-                App.project.add(new Command() {
+                App.getInstance().project.add(new Command() {
                     final String backup = code;
                     @Override
                     public void execute() {
                         code = codeField.getText();
                         normalizeSize();
-                        App.statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         code = backup;
                         normalizeSize();
-                        App.statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
                     }
                 });
             }

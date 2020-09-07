@@ -100,9 +100,9 @@ public class DrawPanel extends JPanel implements Runnable {
 
         // draw lines and blocks
         if (controller.getMousePos() != null && controller.getMode() == DRAW_LINE) controller.getPen().draw(graphics2D);
-        for (Line line : App.project.lines) line.draw(graphics2D);
+        for (Line line : App.getInstance().project.lines) line.draw(graphics2D);
         graphics2D.setColor(Color.BLACK);
-        for (AbstractBlock ab : App.project.blocks) ab.draw(graphics2D);
+        for (AbstractBlock ab : App.getInstance().project.blocks) ab.draw(graphics2D);
         graphics2D.dispose();
         Toolkit.getDefaultToolkit().sync();
     }

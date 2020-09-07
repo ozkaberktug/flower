@@ -47,7 +47,7 @@ public class Project {
 
     public void undo() {
         if (historyIndex == 0) {
-            App.statusPanel.controller.setStatus("Reached to the first state", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.controller.setStatus("Reached to the first state", StatusPanelController.ERROR);
             return;
         }
         Command command = history.get(historyIndex - 1);
@@ -57,7 +57,7 @@ public class Project {
 
     public void redo() {
         if (historyIndex == history.size()) {
-            App.statusPanel.controller.setStatus("Reached to the last state", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.controller.setStatus("Reached to the last state", StatusPanelController.ERROR);
             return;
         }
         Command command = history.get(historyIndex);

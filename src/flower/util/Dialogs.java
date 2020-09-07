@@ -42,7 +42,7 @@ public class Dialogs {
             if (chooser.getSelectedFile().exists()) {
                 app.resetApp();
                 FileOperations.open(chooser.getSelectedFile());
-                app.setTitle("flower - " + App.project.name);
+                app.setTitle("flower - " + App.getInstance().project.name);
             } else {
                 JOptionPane.showMessageDialog(app, "No such file!");
             }
@@ -57,11 +57,11 @@ public class Dialogs {
             if (chooser.getSelectedFile().exists()) {
                 if (JOptionPane.showConfirmDialog(app, "Overwrite?", "File Exists", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
                     FileOperations.save(chooser.getSelectedFile());
-                    app.setTitle("flower - " + App.project.name);
+                    app.setTitle("flower - " + App.getInstance().project.name);
                 }
             } else {
                 FileOperations.save(chooser.getSelectedFile());
-                app.setTitle("flower - " + App.project.name);
+                app.setTitle("flower - " + App.getInstance().project.name);
             }
         }
     }
@@ -74,7 +74,7 @@ public class Dialogs {
         int numInputBlock = 0;
         int numOutputBlock = 0;
         int numLabelBlock = 0;
-        for (AbstractBlock ab : App.project.blocks) {
+        for (AbstractBlock ab : App.getInstance().project.blocks) {
             switch (ab.getType()) {
                 case AbstractBlock.COMMAND_BLOCK:
                     numCommandBlock++;
@@ -110,7 +110,7 @@ public class Dialogs {
                 {"INPUT", numInputBlock},
                 {"OUTPUT", numOutputBlock},
                 {"LABEL", numLabelBlock},
-                {"Lines", App.project.lines.size()},
+                {"Lines", App.getInstance().project.lines.size()},
         };
         JTable table = new JTable(data, columnNames);
         table.setFillsViewportHeight(true);
@@ -122,12 +122,12 @@ public class Dialogs {
 
     public static void showInputParamsDialog() {
         String title = "Input Parameters";
-        JTextArea codeArea = new JTextArea(App.project.inputParams, 5, 40);
+        JTextArea codeArea = new JTextArea(App.getInstance().project.inputParams, 5, 40);
         codeArea.setFont(CODE_FONT);
         JScrollPane codeScrollPane = new JScrollPane(codeArea);
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter input parameters:"), codeScrollPane};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-        if (result == JOptionPane.OK_OPTION) App.project.inputParams = codeArea.getText();
+        if (result == JOptionPane.OK_OPTION) App.getInstance().project.inputParams = codeArea.getText();
     }
 
     public static void showGotoDialog() {
@@ -141,9 +141,9 @@ public class Dialogs {
 
         if (result == JOptionPane.OK_OPTION) {
             if (!field.getText().isEmpty() && field.getText().matches("\\d+")) {
-                App.drawPanel.controller.locate(Integer.parseInt(field.getText()));
+                App.getInstance().drawPanel.controller.locate(Integer.parseInt(field.getText()));
             } else {
-                App.statusPanel.controller.setStatus("Enter a valid id!", StatusPanelController.ERROR);
+                App.getInstance().statusPanel.controller.setStatus("Enter a valid id!", StatusPanelController.ERROR);
             }
         }
     }
@@ -160,13 +160,13 @@ public class Dialogs {
 
         if (result == JOptionPane.OK_OPTION) {
             if (!field.getText().isEmpty() && !field.getText().matches("\\s+")) {
-                for (AbstractBlock block : App.project.blocks)
+                for (AbstractBlock block : App.getInstance().project.blocks)
                     if (block.getCode().contains(field.getText()))
-                        App.drawPanel.controller.locate(block.getId());
+                        App.getInstance().drawPanel.controller.locate(block.getId());
                     else
-                        App.statusPanel.controller.setStatus("There is no match for " + field.getText(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.setStatus("There is no match for " + field.getText(), StatusPanelController.INFO);
             } else {
-                App.statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
+                App.getInstance().statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
             }
         }
     }
@@ -185,13 +185,13 @@ public class Dialogs {
 
         if (result == JOptionPane.OK_OPTION) {
             if (!findField.getText().isEmpty() && !findField.getText().matches("\\s+")) {
-                for (AbstractBlock block : App.project.blocks)
+                for (AbstractBlock block : App.getInstance().project.blocks)
                     if (block.getCode().contains(findField.getText()))
                         block.setCode(block.getCode().replace(findField.getText(), replaceField.getText()));
                     else
-                        App.statusPanel.controller.setStatus("There is no match for " + findField.getText(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.setStatus("There is no match for " + findField.getText(), StatusPanelController.INFO);
             } else {
-                App.statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
+                App.getInstance().statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
             }
         }
     }

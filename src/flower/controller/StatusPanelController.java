@@ -21,37 +21,37 @@ public class StatusPanelController extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (App.statusPanel.getBottomPane().isVisible()) {
-            App.statusPanel.getBottomPane().setVisible(false);
-            App.statusPanel.getButton().setIcon(ResourceManager.getImageIcon(ResourceManager.ARROW_UP));
+        if (App.getInstance().statusPanel.getBottomPane().isVisible()) {
+            App.getInstance().statusPanel.getBottomPane().setVisible(false);
+            App.getInstance().statusPanel.getButton().setIcon(ResourceManager.getImageIcon(ResourceManager.ARROW_UP));
         } else {
-            App.statusPanel.getBottomPane().setVisible(true);
-            App.statusPanel.getButton().setIcon(ResourceManager.getImageIcon(ResourceManager.ARROW_DOWN));
+            App.getInstance().statusPanel.getBottomPane().setVisible(true);
+            App.getInstance().statusPanel.getButton().setIcon(ResourceManager.getImageIcon(ResourceManager.ARROW_DOWN));
         }
         update();
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        App.statusPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        App.getInstance().statusPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        App.statusPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        App.getInstance().statusPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
     }
 
     private void update() {
-        App.statusPanel.revalidate();
-        App.statusPanel.repaint();
+        App.getInstance().statusPanel.revalidate();
+        App.getInstance().statusPanel.repaint();
     }
 
     public void setStatus(String statusTxt, int msgType) {
         status = statusTxt;
-        App.statusPanel.getLabel().setText(status);
-        if (msgType == ERROR) App.statusPanel.getLabel().setForeground(Color.RED);
-        if (msgType == WARNING) App.statusPanel.getLabel().setForeground(Color.ORANGE);
-        if (msgType == INFO) App.statusPanel.getLabel().setForeground(Color.BLACK);
+        App.getInstance().statusPanel.getLabel().setText(status);
+        if (msgType == ERROR) App.getInstance().statusPanel.getLabel().setForeground(Color.RED);
+        if (msgType == WARNING) App.getInstance().statusPanel.getLabel().setForeground(Color.ORANGE);
+        if (msgType == INFO) App.getInstance().statusPanel.getLabel().setForeground(Color.BLACK);
         update();
     }
 
@@ -65,7 +65,7 @@ public class StatusPanelController extends MouseAdapter {
         log.append("] ");
         log.append(msgTxt);
         log.append("\n");
-        App.statusPanel.getArea().setText(log.toString());
+        App.getInstance().statusPanel.getArea().setText(log.toString());
         update();
     }
 

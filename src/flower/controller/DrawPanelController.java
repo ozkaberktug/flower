@@ -87,7 +87,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     private AbstractBlock getBlockType() {
         Point m = getCellCoords(mouse);
-        for (AbstractBlock ab : App.project.blocks)
+        for (AbstractBlock ab : App.getInstance().project.blocks)
             if (ab.getInnerBounds().contains(m)) return ab;
         return null;
     }
@@ -107,22 +107,22 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     }
 
     public void relocate() {
-        if (!App.project.blocks.isEmpty()) locate(App.project.blocks.get(0).getId());
+        if (!App.getInstance().project.blocks.isEmpty()) locate(App.getInstance().project.blocks.get(0).getId());
         else toScreen.setToIdentity();
     }
 
     public void locate(int id) {
         toScreen.setToIdentity();
-        for (AbstractBlock block : App.project.blocks)
+        for (AbstractBlock block : App.getInstance().project.blocks)
             if (block.getId() == id) {
                 Rectangle rect = block.getOuterBounds();
                 // position object to top left corner
                 toScreen.translate(-rect.x * TILESIZE, -rect.y * TILESIZE);
                 // now center
-                toScreen.translate((App.drawPanel.getWidth() - rect.width * TILESIZE) / 2.f, (App.drawPanel.getHeight() - rect.height * TILESIZE) / 2.f);
+                toScreen.translate((App.getInstance().drawPanel.getWidth() - rect.width * TILESIZE) / 2.f, (App.getInstance().drawPanel.getHeight() - rect.height * TILESIZE) / 2.f);
                 return;
             }
-        App.statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
+        App.getInstance().statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
     }
 
 
@@ -130,8 +130,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        if (App.isInputProcessing() && !dragging) {
-
+        if (App.getInstance().isInputProcessing() && !dragging) {
 
             if (e.getButton() == MouseEvent.BUTTON1 && e.getClickCount() == 2 && blockToAdd == null) {    // double left click - open options
                 AbstractBlock ab = getBlockType();
@@ -166,22 +165,22 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     default:
                         throw new RuntimeException("CRITICAL: blockToAdd string is invalid");
                 }
-                App.project.add(new Command() {
+                App.getInstance().project.add(new Command() {
                     @Override
                     public void execute() {
-                        App.project.blocks.add(block);
-                        App.statusPanel.controller.setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
-                        App.statusPanel.controller.pushLog(String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
+                        App.getInstance().project.blocks.add(block);
+                        App.getInstance().statusPanel.controller.setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.pushLog(String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
 
                     @Override
                     public void undo() {
-                        App.project.blocks.remove(block);
-                        App.statusPanel.controller.setStatus("Undo: " + block.getTypeString() + " added", StatusPanelController.INFO);
-                        App.statusPanel.controller.pushLog(String.format("Undo: %s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
+                        App.getInstance().project.blocks.remove(block);
+                        App.getInstance().statusPanel.controller.setStatus("Undo: " + block.getTypeString() + " added", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.pushLog(String.format("Undo: %s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
                 });
-                App.selectPanel.controller.clear();
+                App.getInstance().selectPanel.controller.clear();
             }
         }
 
@@ -189,7 +188,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mousePressed(MouseEvent e) {
-        if (App.isInputProcessing() && click == MouseEvent.NOBUTTON) {
+        if (App.getInstance().isInputProcessing() && click == MouseEvent.NOBUTTON) {
             click = e.getButton();
 
             if (click == MouseEvent.BUTTON1) {    // left mouse click - select item
@@ -201,11 +200,11 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     AbstractBlock b = getBlockType();   // get the block under the mouse
                     if (b == null) {    // empty space clicked
                         mode = DRAW_LINE;
-                        for (AbstractBlock ab : App.project.blocks) ab.setSelected(false);
+                        for (AbstractBlock ab : App.getInstance().project.blocks) ab.setSelected(false);
                     } else {    // block clicked
                         mode = DRAG_BLOCK;
                         if (!b.isSelected()) {
-                            for (AbstractBlock ab : App.project.blocks) ab.setSelected(false);
+                            for (AbstractBlock ab : App.getInstance().project.blocks) ab.setSelected(false);
                             b.setSelected(true);
                         }
                     }
@@ -215,38 +214,38 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             if (click == MouseEvent.BUTTON3) {  // right mouse click - delete item
                 AbstractBlock b = getBlockType();   // get the block under the mouse
                 if (b == null) {    // it is a line remove it
-                    for (Line line : App.project.lines) {
+                    for (Line line : App.getInstance().project.lines) {
                         if (line.containsInclusive(getCellCoords(mouse))) {
-                            App.project.add(new Command() {
+                            App.getInstance().project.add(new Command() {
                                 @Override
                                 public void execute() {
-                                    App.project.lines.remove(line);
-                                    App.statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
-                                    App.statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
+                                    App.getInstance().project.lines.remove(line);
+                                    App.getInstance().statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
+                                    App.getInstance().statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
                                 }
                                 @Override
                                 public void undo() {
-                                    App.project.lines.add(line);
-                                    App.statusPanel.controller.setStatus("Undo: Line deleted", StatusPanelController.INFO);
-                                    App.statusPanel.controller.pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
+                                    App.getInstance().project.lines.add(line);
+                                    App.getInstance().statusPanel.controller.setStatus("Undo: Line deleted", StatusPanelController.INFO);
+                                    App.getInstance().statusPanel.controller.pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
                                 }
                             });
                             break;
                         }
                     }
                 } else {    // it is a block remove it
-                    App.project.add(new Command() {
+                    App.getInstance().project.add(new Command() {
                         @Override
                         public void execute() {
-                            App.statusPanel.controller.setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
-                            App.statusPanel.controller.pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
-                            App.project.blocks.remove(b);
+                            App.getInstance().statusPanel.controller.setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.getInstance().statusPanel.controller.pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
+                            App.getInstance().project.blocks.remove(b);
                         }
                         @Override
                         public void undo() {
-                            App.statusPanel.controller.setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
-                            App.statusPanel.controller.pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
-                            App.project.blocks.add(b);
+                            App.getInstance().statusPanel.controller.setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.getInstance().statusPanel.controller.pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
+                            App.getInstance().project.blocks.add(b);
                         }
                     });
                 }
@@ -257,7 +256,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        if (App.isInputProcessing() && click == e.getButton()) {
+        if (App.getInstance().isInputProcessing() && click == e.getButton()) {
 
             if (click == MouseEvent.BUTTON1 && mode == DRAW_LINE) {
                 Point tmp = getCellCoords(mouse);
@@ -272,7 +271,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                         boolean division = true;
                         while (division) {
                             division = false;
-                            for (Line line : App.project.lines) {
+                            for (Line line : App.getInstance().project.lines) {
                                 // use exclusive method bc division not required on end points.
                                 if (line.containsExclusive(created.begin)) {
                                     Line d1 = new Line(line.begin, created.begin);
@@ -291,18 +290,18 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                             }
                         }
 
-                        App.project.add(new Command() {
+                        App.getInstance().project.add(new Command() {
                             @Override
                             public void execute() {
-                                App.project.lines.add(created);
-                                App.statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
-                                App.statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
+                                App.getInstance().project.lines.add(created);
+                                App.getInstance().statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
+                                App.getInstance().statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
                             }
                             @Override
                             public void undo() {
-                                App.project.lines.remove(created);
-                                App.statusPanel.controller.setStatus("Undo: Line added", StatusPanelController.INFO);
-                                App.statusPanel.controller.pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
+                                App.getInstance().project.lines.remove(created);
+                                App.getInstance().statusPanel.controller.setStatus("Undo: Line added", StatusPanelController.INFO);
+                                App.getInstance().statusPanel.controller.pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
                             }
                         });
 
@@ -311,13 +310,13 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
 
             if (click == MouseEvent.BUTTON1 && mode == DRAG_BLOCK) {
-                for (AbstractBlock block : App.project.blocks) if (block.isSelected()) block.moveTo(ptMoveTo);
+                for (AbstractBlock block : App.getInstance().project.blocks) if (block.isSelected()) block.moveTo(ptMoveTo);
                 ptMoveTo = new Point();
             }
 
             // reset
-            if (getBlockType() != null) App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-            else App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+            if (getBlockType() != null) App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            else App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             pen.begin = pen.end = null;
             mode = NO_OPERATION;
             click = MouseEvent.NOBUTTON;
@@ -325,33 +324,33 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         }
     }
     private void separateLines(Line line, Line d1, Line d2) {
-        App.project.add(new Command() {
+        App.getInstance().project.add(new Command() {
             @Override
             public void execute() {
-                App.project.lines.add(d1);
-                App.project.lines.add(d2);
-                App.project.lines.remove(line);
-                App.statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                App.getInstance().project.lines.add(d1);
+                App.getInstance().project.lines.add(d2);
+                App.getInstance().project.lines.remove(line);
+                App.getInstance().statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
             }
             @Override
             public void undo() {
-                App.project.lines.remove(d1);
-                App.project.lines.remove(d2);
-                App.project.lines.add(line);
-                App.statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-                App.statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
+                App.getInstance().project.lines.remove(d1);
+                App.getInstance().project.lines.remove(d2);
+                App.getInstance().project.lines.add(line);
+                App.getInstance().statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                App.getInstance().statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
             }
         });
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+        App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
         if (hoveringBlock != null) {
             hoveringBlock.setHovered(false);
             hoveringBlock = null;
@@ -366,11 +365,11 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             Point2D dist = new Point2D.Double(target.getX() - mouse.getX(), target.getY() - mouse.getY());
             if (click == MouseEvent.BUTTON2) {
                 toScreen.translate(dist.getX(), dist.getY());
-                App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
             }
             mouse = toScreen.inverseTransform(mouseEvent.getPoint(), null);
 
-            if (App.isInputProcessing()) {
+            if (App.getInstance().isInputProcessing()) {
                 if (mode == DRAW_LINE) {
                     Point tmp = getCellCoords(mouse);
                     if (tmp.x == pen.begin.x || tmp.y == pen.begin.y) pen.end = tmp;
@@ -380,7 +379,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     ptMoveTo.x += pen.end.x - pen.begin.x;
                     ptMoveTo.y += pen.end.y - pen.begin.y;
                     pen.begin = pen.end;
-                    App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+                    App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
                 }
             }
         } catch (NoninvertibleTransformException e) {
@@ -399,13 +398,13 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             }
             AbstractBlock ab = getBlockType();
             if (ab != null) {
-                App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
                 ab.setHovered(true);
                 hoveringBlock = ab;
             } else if (blockToAdd != null) {
-                App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+                App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             } else {
-                App.drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+                App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
             }
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();

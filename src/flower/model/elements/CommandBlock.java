@@ -71,19 +71,19 @@ public class CommandBlock extends AbstractBlock {
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) {
-                App.project.add(new Command() {
+                App.getInstance().project.add(new Command() {
                     final String backup = code;
                     @Override
                     public void execute() {
                         code = codeArea.getText();
                         normalizeSize();
-                        App.statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         code = backup;
                         normalizeSize();
-                        App.statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
                     }
                 });
             }

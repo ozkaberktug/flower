@@ -34,30 +34,25 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public static final String version_string = "0.3.0";
     public static final String about_string = "<html>Version: " + App.version_string + "<br/>This program written by Berktuğ Kaan Özkan<br/>github.com/ozkaberktug</html>";
 
-    public static final Project project = new Project();
-    public static final DrawPanel drawPanel = new DrawPanel();
-    public static final SelectPanel selectPanel = new SelectPanel();
-    public static final StatusPanel statusPanel = new StatusPanel();
-    public static final ToolbarPanel toolbarPanel = new ToolbarPanel();
-    public static Interpreter interpreter = new Interpreter();
-    public static final ExceptionHandler exceptionHandler = new ExceptionHandler();
+    public final Project project = new Project();
+    public final DrawPanel drawPanel = new DrawPanel();
+    public final SelectPanel selectPanel = new SelectPanel();
+    public final StatusPanel statusPanel = new StatusPanel();
+    public final ToolbarPanel toolbarPanel = new ToolbarPanel();
+    public Interpreter interpreter = new Interpreter();
+    public final ExceptionHandler exceptionHandler = new ExceptionHandler();
 
-    private static boolean inputProcessing = true;
+    private boolean inputProcessing = true;
+    public void blockInputProcessing() { inputProcessing = false; }
+    public void enableInputProcessing() { inputProcessing = true; }
+    public boolean isInputProcessing() { return inputProcessing; }
 
-    public static void blockInputProcessing() {
-        inputProcessing = false;
-    }
-
-    public static void enableInputProcessing() {
-        inputProcessing = true;
-    }
-
-    public static boolean isInputProcessing() {
-        return inputProcessing;
-    }
+    private static App instance;
+    public static App getInstance() { return instance; }
 
     public App() {
         super("flower - Untitled");
+        instance = this;
         Thread.setDefaultUncaughtExceptionHandler(exceptionHandler);
         setResizable(true);
         setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -69,6 +64,63 @@ public class App extends JFrame implements WindowListener, ActionListener {
         setLocationRelativeTo(null);
         statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
         statusPanel.controller.pushLog("flower v" + version_string, StatusPanelController.INFO);
+    }
+
+    public void resetApp() {
+        project.clear();
+        selectPanel.controller.clear();
+        drawPanel.controller.clear();
+        toolbarPanel.controller.clear();
+        setTitle("flower - Untitled");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "New":
+                if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+                    return;
+                resetApp();
+                statusPanel.controller.pushLog("Created new project.", StatusPanelController.INFO);
+                statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
+                break;
+            case "Open":
+                Dialogs.showOpenDialog(this);
+                break;
+            case "Save":
+                Dialogs.showSaveDialog(this);
+                break;
+            case "Export":
+                Dialogs.showExportDialog();
+                break;
+            case "Exit":
+                windowClosing(null);
+                break;
+            case "About":
+                JOptionPane.showMessageDialog(this, about_string, "About", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case "Input":
+                Dialogs.showInputParamsDialog();
+                break;
+            case "Statistics":
+                Dialogs.showStatisticsDialog();
+                break;
+            case "Goto":
+                Dialogs.showGotoDialog();
+                break;
+            case "Find":
+                Dialogs.showFindDialog();
+                break;
+            case "Replace":
+                Dialogs.showReplaceDialog();
+                break;
+            case "Undo":
+                project.undo();
+                break;
+            case "Redo":
+                project.redo();
+                break;
+        }
     }
 
     // create and add components to UI
@@ -208,64 +260,6 @@ public class App extends JFrame implements WindowListener, ActionListener {
         aboutMenuItem.setToolTipText("About Flowchart Designer");
         helpMenu.add(aboutMenuItem);
         setJMenuBar(menuBar);
-    }
-
-    public void resetApp() {
-        project.clear();
-        selectPanel.controller.clear();
-        drawPanel.controller.clear();
-        toolbarPanel.controller.clear();
-        setTitle("flower - Untitled");
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "New":
-                if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
-                    return;
-                resetApp();
-                statusPanel.controller.pushLog("Created new project.", StatusPanelController.INFO);
-                statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
-                break;
-            case "Open":
-                Dialogs.showOpenDialog(this);
-                break;
-            case "Save":
-                Dialogs.showSaveDialog(this);
-                break;
-            case "Export":
-                Dialogs.showExportDialog();
-                break;
-            case "Exit":
-                windowClosing(null);
-                break;
-            case "About":
-                JOptionPane.showMessageDialog(this, about_string, "About", JOptionPane.INFORMATION_MESSAGE);
-                break;
-            case "Input":
-                Dialogs.showInputParamsDialog();
-                break;
-            case "Statistics":
-                Dialogs.showStatisticsDialog();
-                break;
-            case "Goto":
-                Dialogs.showGotoDialog();
-                break;
-            case "Find":
-                Dialogs.showFindDialog();
-                break;
-            case "Replace":
-                Dialogs.showReplaceDialog();
-                break;
-            case "Undo":
-                App.project.undo();
-                break;
-            case "Redo":
-                App.project.redo();
-                break;
-        }
-        System.out.println(e.getActionCommand());
     }
 
     @Override
