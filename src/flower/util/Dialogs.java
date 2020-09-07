@@ -141,9 +141,9 @@ public class Dialogs {
 
         if (result == JOptionPane.OK_OPTION) {
             if (!field.getText().isEmpty() && field.getText().matches("\\d+")) {
-                App.getInstance().drawPanel.controller.locate(Integer.parseInt(field.getText()));
+                App.getInstance().drawPanel.getController().locate(Integer.parseInt(field.getText()));
             } else {
-                App.getInstance().statusPanel.controller.setStatus("Enter a valid id!", StatusPanelController.ERROR);
+                App.getInstance().statusPanel.getController().setStatus("Enter a valid id!", StatusPanelController.ERROR);
             }
         }
     }
@@ -162,11 +162,11 @@ public class Dialogs {
             if (!field.getText().isEmpty() && !field.getText().matches("\\s+")) {
                 for (AbstractBlock block : App.getInstance().project.blocks)
                     if (block.getCode().contains(field.getText()))
-                        App.getInstance().drawPanel.controller.locate(block.getId());
+                        App.getInstance().drawPanel.getController().locate(block.getId());
                     else
-                        App.getInstance().statusPanel.controller.setStatus("There is no match for " + field.getText(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().setStatus("There is no match for " + field.getText(), StatusPanelController.INFO);
             } else {
-                App.getInstance().statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
+                App.getInstance().statusPanel.getController().setStatus("Enter a valid text!", StatusPanelController.ERROR);
             }
         }
     }
@@ -189,9 +189,9 @@ public class Dialogs {
                     if (block.getCode().contains(findField.getText()))
                         block.setCode(block.getCode().replace(findField.getText(), replaceField.getText()));
                     else
-                        App.getInstance().statusPanel.controller.setStatus("There is no match for " + findField.getText(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().setStatus("There is no match for " + findField.getText(), StatusPanelController.INFO);
             } else {
-                App.getInstance().statusPanel.controller.setStatus("Enter a valid text!", StatusPanelController.ERROR);
+                App.getInstance().statusPanel.getController().setStatus("Enter a valid text!", StatusPanelController.ERROR);
             }
         }
     }

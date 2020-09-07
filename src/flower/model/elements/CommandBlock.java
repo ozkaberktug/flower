@@ -77,13 +77,13 @@ public class CommandBlock extends AbstractBlock {
                     public void execute() {
                         code = codeArea.getText();
                         normalizeSize();
-                        App.getInstance().statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog("Edited block #" + getId(), StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         code = backup;
                         normalizeSize();
-                        App.getInstance().statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
                     }
                 });
             }

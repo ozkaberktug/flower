@@ -24,31 +24,31 @@ public class ToolbarPanelController extends MouseAdapter {
 
             // GRID BUTTON - ON -> OFF
         else if (e.getComponent() == App.getInstance().toolbarPanel.getGridBtn() && App.getInstance().toolbarPanel.getGridBtn().isEnabled()) {
-            App.getInstance().drawPanel.controller.setToggleGrids(false);
+            App.getInstance().drawPanel.getController().setToggleGrids(false);
             App.getInstance().toolbarPanel.getGridBtn().setEnabled(false);
             App.getInstance().toolbarPanel.getGridBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.GRIDS_OFF));
 
             // GRID BUTTON - OFF -> ON
         } else if (e.getComponent() == App.getInstance().toolbarPanel.getGridBtn() && !App.getInstance().toolbarPanel.getGridBtn().isEnabled()) {
-            App.getInstance().drawPanel.controller.setToggleGrids(true);
+            App.getInstance().drawPanel.getController().setToggleGrids(true);
             App.getInstance().toolbarPanel.getGridBtn().setEnabled(true);
             App.getInstance().toolbarPanel.getGridBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.GRIDS_ON));
 
             // QUALITY BUTTON - ON -> OFF
         } else if (e.getComponent() == App.getInstance().toolbarPanel.getQualityBtn() && App.getInstance().toolbarPanel.getQualityBtn().isEnabled()) {
-            App.getInstance().drawPanel.controller.setToggleQuality(false);
+            App.getInstance().drawPanel.getController().setToggleQuality(false);
             App.getInstance().toolbarPanel.getQualityBtn().setEnabled(false);
             App.getInstance().toolbarPanel.getQualityBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.QUALITY_OFF));
 
             // QUALITY BUTTON - OFF -> ON
         } else if (e.getComponent() == App.getInstance().toolbarPanel.getQualityBtn() && !App.getInstance().toolbarPanel.getQualityBtn().isEnabled()) {
-            App.getInstance().drawPanel.controller.setToggleQuality(true);
+            App.getInstance().drawPanel.getController().setToggleQuality(true);
             App.getInstance().toolbarPanel.getQualityBtn().setEnabled(true);
             App.getInstance().toolbarPanel.getQualityBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.QUALITY_ON));
 
             // RELOCATE BUTTON
         } else if (e.getComponent() == App.getInstance().toolbarPanel.getRelocateBtn()) {
-            App.getInstance().drawPanel.controller.relocate();
+            App.getInstance().drawPanel.getController().relocate();
         }
 
     }
@@ -64,10 +64,10 @@ public class ToolbarPanelController extends MouseAdapter {
     }
 
     public void clear() {
-        App.getInstance().drawPanel.controller.setToggleQuality(false);
+        App.getInstance().drawPanel.getController().setToggleQuality(false);
         App.getInstance().toolbarPanel.getQualityBtn().setEnabled(false);
         App.getInstance().toolbarPanel.getQualityBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.QUALITY_OFF));
-        App.getInstance().drawPanel.controller.setToggleGrids(true);
+        App.getInstance().drawPanel.getController().setToggleGrids(true);
         App.getInstance().toolbarPanel.getGridBtn().setEnabled(true);
         App.getInstance().toolbarPanel.getGridBtn().setIcon(ResourceManager.getImageIcon(ResourceManager.GRIDS_ON));
     }

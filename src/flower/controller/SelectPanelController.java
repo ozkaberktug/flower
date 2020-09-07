@@ -16,8 +16,8 @@ public class SelectPanelController extends MouseAdapter implements TreeSelection
         DefaultMutableTreeNode selected = (DefaultMutableTreeNode) App.getInstance().selectPanel.getTree().getLastSelectedPathComponent();
         if (selected != null && selected.isLeaf()) {
             String obj = (String) selected.getUserObject();
-            App.getInstance().drawPanel.controller.setBlockToAdd(obj);
-            App.getInstance().statusPanel.controller.setStatus(obj + " selected", StatusPanelController.INFO);
+            App.getInstance().drawPanel.getController().setBlockToAdd(obj);
+            App.getInstance().statusPanel.getController().setStatus(obj + " selected", StatusPanelController.INFO);
         }
     }
 
@@ -28,13 +28,13 @@ public class SelectPanelController extends MouseAdapter implements TreeSelection
         int row = App.getInstance().selectPanel.getTree().getRowForLocation(e.getX(), e.getY());
         if (row == -1) { // click on the "empty surface"
             clear();
-            App.getInstance().statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().setStatus("Ready", StatusPanelController.INFO);
         }
     }
 
     public void clear() {
         App.getInstance().selectPanel.getTree().clearSelection();
-        App.getInstance().drawPanel.controller.setBlockToAdd(null);
+        App.getInstance().drawPanel.getController().setBlockToAdd(null);
     }
 
 }

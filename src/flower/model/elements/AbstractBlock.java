@@ -110,13 +110,13 @@ abstract public class AbstractBlock {
                     public void execute() {
                         code = codeField.getText();
                         normalizeSize();
-                        App.getInstance().statusPanel.controller.pushLog("Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog("Edited block #" + getId(), StatusPanelController.INFO);
                     }
                     @Override
                     public void undo() {
                         code = backup;
                         normalizeSize();
-                        App.getInstance().statusPanel.controller.pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
                     }
                 });
             }
@@ -133,15 +133,15 @@ abstract public class AbstractBlock {
             public void execute() {
                 area.x += delta.x;
                 area.y += delta.y;
-                App.getInstance().statusPanel.controller.setStatus("Block moved", StatusPanelController.INFO);
-                App.getInstance().statusPanel.controller.pushLog("#" + getId() + " moved to " + area.x + "," + area.y, StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().setStatus("Block moved", StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().pushLog("#" + getId() + " moved to " + area.x + "," + area.y, StatusPanelController.INFO);
             }
             @Override
             public void undo() {
                 area.x = backup.x;
                 area.y = backup.y;
-                App.getInstance().statusPanel.controller.setStatus("Undo: Block moved", StatusPanelController.INFO);
-                App.getInstance().statusPanel.controller.pushLog("Undo: #" + getId() + " moved to " + area.x + "," + area.y, StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().setStatus("Undo: Block moved", StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().pushLog("Undo: #" + getId() + " moved to " + area.x + "," + area.y, StatusPanelController.INFO);
             }
         });
 

@@ -19,7 +19,7 @@ import java.awt.Insets;
 
 public class StatusPanel extends JPanel {
 
-    public final StatusPanelController controller = new StatusPanelController();
+    private final StatusPanelController controller = new StatusPanelController();
 
     private JLabel label;
     private JLabel button;
@@ -34,9 +34,10 @@ public class StatusPanel extends JPanel {
     public StatusPanel() {
         super(new GridBagLayout());
         setBorder(BorderFactory.createLoweredBevelBorder());
-
         initComponent();
     }
+
+    public StatusPanelController getController() { return controller; }
 
     private void initComponent() {
 

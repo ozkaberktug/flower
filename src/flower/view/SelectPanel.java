@@ -12,7 +12,7 @@ import java.awt.Dimension;
 
 public class SelectPanel extends JPanel {
 
-    public final SelectPanelController controller = new SelectPanelController();
+    private final SelectPanelController controller = new SelectPanelController();
     private JTree tree;
 
     public SelectPanel() {
@@ -24,6 +24,8 @@ public class SelectPanel extends JPanel {
         setBackground(tree.getBackground());
         add(tree, BorderLayout.CENTER);
     }
+
+    public SelectPanelController getController() { return controller; }
 
     private void constructTree() {
         DefaultMutableTreeNode root = new DefaultMutableTreeNode();

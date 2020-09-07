@@ -62,15 +62,15 @@ public class App extends JFrame implements WindowListener, ActionListener {
         pack();
         setMinimumSize(getSize());
         setLocationRelativeTo(null);
-        statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
-        statusPanel.controller.pushLog("flower v" + version_string, StatusPanelController.INFO);
+        statusPanel.getController().setStatus("Ready", StatusPanelController.INFO);
+        statusPanel.getController().pushLog("flower v" + version_string, StatusPanelController.INFO);
     }
 
     public void resetApp() {
         project.clear();
-        selectPanel.controller.clear();
-        drawPanel.controller.clear();
-        toolbarPanel.controller.clear();
+        selectPanel.getController().clear();
+        drawPanel.getController().clear();
+        toolbarPanel.getController().clear();
         setTitle("flower - Untitled");
     }
 
@@ -81,8 +81,8 @@ public class App extends JFrame implements WindowListener, ActionListener {
                 if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
                     return;
                 resetApp();
-                statusPanel.controller.pushLog("Created new project.", StatusPanelController.INFO);
-                statusPanel.controller.setStatus("Ready", StatusPanelController.INFO);
+                statusPanel.getController().pushLog("Created new project.", StatusPanelController.INFO);
+                statusPanel.getController().setStatus("Ready", StatusPanelController.INFO);
                 break;
             case "Open":
                 Dialogs.showOpenDialog(this);
@@ -266,7 +266,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
     public void windowClosing(WindowEvent e) {
         if (JOptionPane.showConfirmDialog(this, "Are you sure?", "Exit", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
             return;
-        statusPanel.controller.pushLog("Exiting application...", StatusPanelController.INFO);
+        statusPanel.getController().pushLog("Exiting application...", StatusPanelController.INFO);
         setVisible(false);
         dispose();
         System.exit(0);

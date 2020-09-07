@@ -29,8 +29,8 @@ public class Interpreter extends Thread {
         try {
             // init environment
             isRunning = true;
-            App.getInstance().statusPanel.controller.setStatus("Simulation started...", StatusPanelController.INFO);
-            App.getInstance().statusPanel.controller.pushLog("Simulation started", StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().setStatus("Simulation started...", StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().pushLog("Simulation started", StatusPanelController.INFO);
             for (String param : App.getInstance().project.inputParams.split("\\s+"))
                 if (!param.isEmpty()) parameters.add(param);
 
@@ -105,13 +105,13 @@ public class Interpreter extends Thread {
             }
 
             double diffTime = (System.currentTimeMillis() - beginTime) / 1000.f;
-            App.getInstance().statusPanel.controller.setStatus(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
-            App.getInstance().statusPanel.controller.pushLog(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().setStatus(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().pushLog(String.format("Simulation finished in %.4f seconds", diffTime), StatusPanelController.INFO);
         } catch (InterpreterException ex) {
-            App.getInstance().statusPanel.controller.pushLog("Simulation stopped due to: " + ex.description, ex.severity);
-            App.getInstance().statusPanel.controller.setStatus(ex.tip, ex.severity);
+            App.getInstance().statusPanel.getController().pushLog("Simulation stopped due to: " + ex.description, ex.severity);
+            App.getInstance().statusPanel.getController().setStatus(ex.tip, ex.severity);
         } finally {
-            App.getInstance().toolbarPanel.controller.stopSimulation();
+            App.getInstance().toolbarPanel.getController().stopSimulation();
         }
     }
 

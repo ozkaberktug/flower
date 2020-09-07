@@ -38,8 +38,8 @@ import static flower.view.ViewConstants.TILESIZE;
 public class FileOperations {
 
     public static void save(File ff) {
-        App.getInstance().statusPanel.controller.setStatus("Saving...", StatusPanelController.INFO);
-        App.getInstance().statusPanel.controller.pushLog("Saving project...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().setStatus("Saving...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().pushLog("Saving project...", StatusPanelController.INFO);
 
         // correct file extension
         if (!ff.getName().toUpperCase().endsWith(".FP")) ff = new File(ff.getAbsolutePath() + ".fp");
@@ -102,20 +102,20 @@ public class FileOperations {
             transformer.transform(source, result);
 
             // inform user
-            App.getInstance().statusPanel.controller.setStatus("Project saved successfully", StatusPanelController.INFO);
-            App.getInstance().statusPanel.controller.pushLog("Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().setStatus("Project saved successfully", StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().pushLog("Project saved to " + ff.getAbsolutePath(), StatusPanelController.INFO);
 
         } catch (Exception e) {
             App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-            App.getInstance().statusPanel.controller.setStatus("Project could not saved", StatusPanelController.ERROR);
-            App.getInstance().statusPanel.controller.pushLog("Project could not saved due to " + e.toString(), StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().setStatus("Project could not saved", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().pushLog("Project could not saved due to " + e.toString(), StatusPanelController.ERROR);
         }
 
     }
 
     public static void open(File ff) {
-        App.getInstance().statusPanel.controller.setStatus("Loading...", StatusPanelController.INFO);
-        App.getInstance().statusPanel.controller.pushLog("Loading project", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().setStatus("Loading...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().pushLog("Loading project", StatusPanelController.INFO);
 
         try {
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -194,23 +194,23 @@ public class FileOperations {
 
             // todo: in the future libs tag will be added
 
-            App.getInstance().drawPanel.controller.relocate();
+            App.getInstance().drawPanel.getController().relocate();
 
             // inform user
-            App.getInstance().statusPanel.controller.setStatus("Project loaded successfully", StatusPanelController.INFO);
-            App.getInstance().statusPanel.controller.pushLog("Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().setStatus("Project loaded successfully", StatusPanelController.INFO);
+            App.getInstance().statusPanel.getController().pushLog("Project loaded from " + ff.getAbsolutePath(), StatusPanelController.INFO);
 
         } catch (Exception e) {
             App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-            App.getInstance().statusPanel.controller.setStatus("Project could not load", StatusPanelController.ERROR);
-            App.getInstance().statusPanel.controller.pushLog("Project could not load due to " + e.toString(), StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().setStatus("Project could not load", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().pushLog("Project could not load due to " + e.toString(), StatusPanelController.ERROR);
         }
 
     }
 
     public static void export(File ff) {
-        App.getInstance().statusPanel.controller.setStatus("Exporting...", StatusPanelController.INFO);
-        App.getInstance().statusPanel.controller.pushLog("Exporting project...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().setStatus("Exporting...", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().pushLog("Exporting project...", StatusPanelController.INFO);
 
         if (!ff.getName().toUpperCase().endsWith(".PNG")) ff = new File(ff.getAbsolutePath() + ".png");
 
@@ -224,8 +224,8 @@ public class FileOperations {
 
         // check if there is anything
         if (App.getInstance().project.lines.isEmpty() && App.getInstance().project.blocks.isEmpty()) {
-            App.getInstance().statusPanel.controller.setStatus("There is no element to be export", StatusPanelController.ERROR);
-            App.getInstance().statusPanel.controller.pushLog("Project could not exported because there is no element", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().setStatus("There is no element to be export", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().pushLog("Project could not exported because there is no element", StatusPanelController.ERROR);
             return;
         }
 
@@ -280,12 +280,12 @@ public class FileOperations {
 
         } catch (Exception e) {
             App.getInstance().exceptionHandler.handle(e, ExceptionHandler.NORMAL);
-            App.getInstance().statusPanel.controller.setStatus("Project could not export", StatusPanelController.ERROR);
-            App.getInstance().statusPanel.controller.pushLog("Project could not export due to " + e.toString(), StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().setStatus("Project could not export", StatusPanelController.ERROR);
+            App.getInstance().statusPanel.getController().pushLog("Project could not export due to " + e.toString(), StatusPanelController.ERROR);
         }
 
-        App.getInstance().statusPanel.controller.setStatus("Project exported successfully", StatusPanelController.INFO);
-        App.getInstance().statusPanel.controller.pushLog("Project exported to " + ff.getAbsolutePath(), StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().setStatus("Project exported successfully", StatusPanelController.INFO);
+        App.getInstance().statusPanel.getController().pushLog("Project exported to " + ff.getAbsolutePath(), StatusPanelController.INFO);
     }
 
 }

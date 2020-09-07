@@ -16,7 +16,7 @@ import java.awt.event.ActionEvent;
 
 public class ToolbarPanel extends JPanel {
 
-    public final ToolbarPanelController controller = new ToolbarPanelController();
+    private final ToolbarPanelController controller = new ToolbarPanelController();
 
     private JLabel runBtn;
     private JLabel stopBtn;
@@ -24,25 +24,13 @@ public class ToolbarPanel extends JPanel {
     private JLabel gridBtn;
     private JLabel qualityBtn;
 
-    public JLabel getRunBtn() {
-        return runBtn;
-    }
+    public JLabel getRunBtn() { return runBtn; }
+    public JLabel getStopBtn() { return stopBtn; }
+    public JLabel getRelocateBtn() { return relocateBtn; }
+    public JLabel getGridBtn() { return gridBtn; }
+    public JLabel getQualityBtn() { return qualityBtn; }
 
-    public JLabel getStopBtn() {
-        return stopBtn;
-    }
-
-    public JLabel getRelocateBtn() {
-        return relocateBtn;
-    }
-
-    public JLabel getGridBtn() {
-        return gridBtn;
-    }
-
-    public JLabel getQualityBtn() {
-        return qualityBtn;
-    }
+    public ToolbarPanelController getController() { return controller; }
 
     public ToolbarPanel() {
         super();
@@ -54,16 +42,14 @@ public class ToolbarPanel extends JPanel {
         getActionMap().put("runBtn", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (runBtn.isEnabled())
-                    controller.runSimulation();
+                if (runBtn.isEnabled()) controller.runSimulation();
             }
         });
         getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("F6"), "stopBtn");
         getActionMap().put("stopBtn", new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (stopBtn.isEnabled())
-                    controller.stopSimulation();
+                if (stopBtn.isEnabled()) controller.stopSimulation();
             }
         });
     }

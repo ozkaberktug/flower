@@ -122,7 +122,7 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 toScreen.translate((App.getInstance().drawPanel.getWidth() - rect.width * TILESIZE) / 2.f, (App.getInstance().drawPanel.getHeight() - rect.height * TILESIZE) / 2.f);
                 return;
             }
-        App.getInstance().statusPanel.controller.setStatus("There is no block with id " + id, StatusPanelController.ERROR);
+        App.getInstance().statusPanel.getController().setStatus("There is no block with id " + id, StatusPanelController.ERROR);
     }
 
 
@@ -169,18 +169,18 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     @Override
                     public void execute() {
                         App.getInstance().project.blocks.add(block);
-                        App.getInstance().statusPanel.controller.setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
-                        App.getInstance().statusPanel.controller.pushLog(String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().setStatus(block.getTypeString() + " added", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog(String.format("%s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
 
                     @Override
                     public void undo() {
                         App.getInstance().project.blocks.remove(block);
-                        App.getInstance().statusPanel.controller.setStatus("Undo: " + block.getTypeString() + " added", StatusPanelController.INFO);
-                        App.getInstance().statusPanel.controller.pushLog(String.format("Undo: %s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().setStatus("Undo: " + block.getTypeString() + " added", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog(String.format("Undo: %s block created with id %d at %d, %d", block.getTypeString(), block.getId(), cellCoords.x, cellCoords.y), StatusPanelController.INFO);
                     }
                 });
-                App.getInstance().selectPanel.controller.clear();
+                App.getInstance().selectPanel.getController().clear();
             }
         }
 
@@ -220,14 +220,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                                 @Override
                                 public void execute() {
                                     App.getInstance().project.lines.remove(line);
-                                    App.getInstance().statusPanel.controller.setStatus("Line deleted", StatusPanelController.INFO);
-                                    App.getInstance().statusPanel.controller.pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
+                                    App.getInstance().statusPanel.getController().setStatus("Line deleted", StatusPanelController.INFO);
+                                    App.getInstance().statusPanel.getController().pushLog("Line deleted " + line.toString(), StatusPanelController.INFO);
                                 }
                                 @Override
                                 public void undo() {
                                     App.getInstance().project.lines.add(line);
-                                    App.getInstance().statusPanel.controller.setStatus("Undo: Line deleted", StatusPanelController.INFO);
-                                    App.getInstance().statusPanel.controller.pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
+                                    App.getInstance().statusPanel.getController().setStatus("Undo: Line deleted", StatusPanelController.INFO);
+                                    App.getInstance().statusPanel.getController().pushLog("Undo: Line deleted " + line.toString(), StatusPanelController.INFO);
                                 }
                             });
                             break;
@@ -237,14 +237,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                     App.getInstance().project.add(new Command() {
                         @Override
                         public void execute() {
-                            App.getInstance().statusPanel.controller.setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
-                            App.getInstance().statusPanel.controller.pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
+                            App.getInstance().statusPanel.getController().setStatus(b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.getInstance().statusPanel.getController().pushLog(String.format("Block with id %d deleted", b.getId()), StatusPanelController.INFO);
                             App.getInstance().project.blocks.remove(b);
                         }
                         @Override
                         public void undo() {
-                            App.getInstance().statusPanel.controller.setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
-                            App.getInstance().statusPanel.controller.pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
+                            App.getInstance().statusPanel.getController().setStatus("Undo: " + b.getTypeString() + " deleted", StatusPanelController.INFO);
+                            App.getInstance().statusPanel.getController().pushLog(String.format("Undo: Block with id %d deleted", b.getId()), StatusPanelController.INFO);
                             App.getInstance().project.blocks.add(b);
                         }
                     });
@@ -294,14 +294,14 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                             @Override
                             public void execute() {
                                 App.getInstance().project.lines.add(created);
-                                App.getInstance().statusPanel.controller.setStatus("Line added", StatusPanelController.INFO);
-                                App.getInstance().statusPanel.controller.pushLog("Line added " + created.toString(), StatusPanelController.INFO);
+                                App.getInstance().statusPanel.getController().setStatus("Line added", StatusPanelController.INFO);
+                                App.getInstance().statusPanel.getController().pushLog("Line added " + created.toString(), StatusPanelController.INFO);
                             }
                             @Override
                             public void undo() {
                                 App.getInstance().project.lines.remove(created);
-                                App.getInstance().statusPanel.controller.setStatus("Undo: Line added", StatusPanelController.INFO);
-                                App.getInstance().statusPanel.controller.pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
+                                App.getInstance().statusPanel.getController().setStatus("Undo: Line added", StatusPanelController.INFO);
+                                App.getInstance().statusPanel.getController().pushLog("Undo: Line added " + created.toString(), StatusPanelController.INFO);
                             }
                         });
 
@@ -330,15 +330,15 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
                 App.getInstance().project.lines.add(d1);
                 App.getInstance().project.lines.add(d2);
                 App.getInstance().project.lines.remove(line);
-                App.getInstance().statusPanel.controller.pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().pushLog("Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
             }
             @Override
             public void undo() {
                 App.getInstance().project.lines.remove(d1);
                 App.getInstance().project.lines.remove(d2);
                 App.getInstance().project.lines.add(line);
-                App.getInstance().statusPanel.controller.pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
-                App.getInstance().statusPanel.controller.setStatus("Undo: Line separation", StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().pushLog("Undo: Line " + line.toString() + " spliced into " + d1.toString() + " and " + d2.toString(), StatusPanelController.INFO);
+                App.getInstance().statusPanel.getController().setStatus("Undo: Line separation", StatusPanelController.INFO);
             }
         });
     }

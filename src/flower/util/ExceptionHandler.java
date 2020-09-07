@@ -41,7 +41,7 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
         try {
             PrintStream ps = new PrintStream(logFile);
-            ps.println(App.getInstance().statusPanel.controller.getLog());
+            ps.println(App.getInstance().statusPanel.getController().getLog());
             ex.printStackTrace(ps);
             ps.close();
         } catch (IOException e) {
