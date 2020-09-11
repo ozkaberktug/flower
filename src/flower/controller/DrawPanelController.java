@@ -13,9 +13,11 @@ import flower.model.elements.StartBlock;
 import flower.model.elements.StopBlock;
 import flower.util.Command;
 
+import javax.swing.AbstractAction;
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -24,6 +26,7 @@ import java.awt.event.MouseWheelListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 
 import static flower.view.ViewConstants.TILESIZE;
 
@@ -34,6 +37,37 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
     public static final int NO_OPERATION = 0;
     public static final int DRAW_LINE = 1;
     public static final int DRAG_BLOCK = 3;
+    public static final AbstractAction ACTION_DELETE = new AbstractAction() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            ArrayList<AbstractBlock> selection = new ArrayList<>();
+            for (AbstractBlock block : App.getInstance().project.blocks) if (block.isSelected()) selection.add(block);
+            if (!selection.isEmpty()) {
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < selection.size() - 1; i++) {
+                    sb.append("#");
+                    sb.append(selection.get(i).getId());
+                    sb.append(", ");
+                }
+                sb.append("#");
+                sb.append(selection.get(selection.size() - 1).getId());
+                App.getInstance().project.add(new Command() {
+                    @Override
+                    public void execute() {
+                        App.getInstance().project.blocks.removeAll(selection);
+                        App.getInstance().statusPanel.getController().setStatus(selection.size() + " item(s) deleted", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog("Item(s) deleted: " + sb.toString(), StatusPanelController.INFO);
+                    }
+                    @Override
+                    public void undo() {
+                        App.getInstance().project.blocks.addAll(selection);
+                        App.getInstance().statusPanel.getController().setStatus("Undo: " + selection.size() + " item(s) deleted", StatusPanelController.INFO);
+                        App.getInstance().statusPanel.getController().pushLog("Undo: Item(s) deleted: " + sb.toString(), StatusPanelController.INFO);
+                    }
+                });
+            }
+        }
+    };
 
 
     /* PRIVATE FIELDS */
