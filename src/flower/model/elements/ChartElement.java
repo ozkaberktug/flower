@@ -13,6 +13,11 @@ abstract public class ChartElement {
     public static final int LABEL_BLOCK = 7;
     public static final int LINE = 8;
 
+    protected boolean selected;
+    public void setSelected(boolean val) {selected = val;}
+    public boolean isSelected() {return selected;}
+
+
     private static int id_counter = 0;
     private int id;
     private final int type;
