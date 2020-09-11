@@ -21,7 +21,6 @@ import static flower.view.ViewConstants.TILESIZE;
 
 abstract public class AbstractBlock extends ChartElement {
 
-    protected boolean selected;
     protected boolean hovered;
     protected boolean breakpoint;
     protected boolean processing;
@@ -133,7 +132,6 @@ abstract public class AbstractBlock extends ChartElement {
 
 
     /* setter functions */
-    public void setSelected(boolean val) {selected = val;}
     public void setHovered(boolean val) {hovered = val;}
     public void setBreakpoint(boolean val) {breakpoint = val;}
     public void setProcessing(boolean val) {processing = val;}
@@ -142,7 +140,6 @@ abstract public class AbstractBlock extends ChartElement {
 
 
     /* test functions */
-    public boolean isSelected() {return selected;}
     public boolean isHovered() {return hovered;}
     public boolean isBreakpoint() {return breakpoint;}
 //    public boolean isProcessing() {return processing;}
