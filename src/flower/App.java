@@ -3,6 +3,7 @@ package flower;
 import flower.controller.StatusPanelController;
 import flower.interpreter.Interpreter;
 import flower.model.Project;
+import flower.resources.ResourceManager;
 import flower.util.Dialogs;
 import flower.util.ExceptionHandler;
 import flower.view.DrawPanel;
@@ -63,6 +64,7 @@ public class App extends JFrame implements WindowListener, ActionListener {
         setLocationRelativeTo(null);
         statusPanel.getController().setStatus("Ready", StatusPanelController.INFO);
         statusPanel.getController().pushLog("flower v" + version_string, StatusPanelController.INFO);
+        setIconImage(ResourceManager.getImageIcon(ResourceManager.APP_ICON).getImage());
     }
 
     public void resetApp() {

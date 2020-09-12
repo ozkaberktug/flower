@@ -16,6 +16,7 @@ public class ResourceManager {
     public static final String QUALITY_OFF = "quality-off.png";
     public static final String GRIDS_ON = "grids-on.png";
     public static final String GRIDS_OFF = "grids-off.png";
+    public static final String APP_ICON = "icon.png";
 
     public static final URL ABOUT_PAGE = App.class.getResource("resources/about-page.html");
 

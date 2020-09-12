@@ -20,7 +20,7 @@ public class LabelBlock extends AbstractBlock {
     public LabelBlock(Point offset) {
         super(LABEL_BLOCK);
         code = "Type your comment";
-        area = new Rectangle(offset.x, offset.y, code.length() / 2, 1);
+        area = new Rectangle(offset.x, offset.y, code.length() / 2 + 1, 1);
     }
 
     public LabelBlock() {
@@ -62,8 +62,9 @@ public class LabelBlock extends AbstractBlock {
         final JComponent[] inputs = new JComponent[]{new JLabel("Enter your comment:"), codeField};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        if (result == JOptionPane.OK_OPTION && !codeField.getText().isEmpty() && !codeField.getText().matches("\\s+"))
-            saveChanges(codeField.getText(), code.length() / 2, 1);
+        if (result == JOptionPane.OK_OPTION && !codeField.getText().isEmpty() && !codeField.getText().matches("\\s+")) {
+            saveChanges(codeField.getText(), codeField.getText().length() / 2 + 1, 1);
+        }
     }
 
 
