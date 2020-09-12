@@ -9,7 +9,7 @@ import java.awt.geom.GeneralPath;
 
 import static flower.view.ViewConstants.TILESIZE;
 
-public class IfBlock extends AbstractBlock {
+public class IfBlock extends ExpressionBlock {
 
     public static final int TRUE_OUTPUT = 0;
     public static final int FALSE_OUTPUT = 1;

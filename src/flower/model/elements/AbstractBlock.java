@@ -4,10 +4,6 @@ import flower.App;
 import flower.controller.StatusPanelController;
 import flower.util.Command;
 
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -58,19 +54,8 @@ abstract public class AbstractBlock extends ChartElement {
         graphics2D.setColor(Color.BLACK);
     }
 
-    public void showDialog() {
-        String title = "Block #" + getId();
-
-        JTextField codeField = new JTextField(code, 40);
-        codeField.setFont(CODE_FONT);
-
-        final JComponent[] inputs = new JComponent[]{new JLabel("Enter expression:"), codeField};
-        int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-
-        if (result == JOptionPane.OK_OPTION && !codeField.getText().isEmpty() && !codeField.getText().matches("\\s+"))
-            saveChanges(codeField.getText());
-    }
-
+    abstract public void showDialog();
+    abstract public void normalizeSize();
     protected void saveChanges(String newCode) {
         App.getInstance().project.add(new Command() {
             final String backup = code;
@@ -88,6 +73,7 @@ abstract public class AbstractBlock extends ChartElement {
             }
         });
     }
+
 
     public void moveTo(Point delta) {
         if (delta.x == 0 && delta.y == 0) return;
@@ -111,13 +97,6 @@ abstract public class AbstractBlock extends ChartElement {
         });
 
     }
-
-
-    public void normalizeSize() {
-        area.width = Math.max((int) (code.length() * 0.8f), 9);
-        if (area.width % 2 == 0) area.width++;
-    }
-
 
     /* getter functions */
     abstract public Shape getShape();

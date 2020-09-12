@@ -9,7 +9,7 @@ import java.awt.geom.GeneralPath;
 
 import static flower.view.ViewConstants.TILESIZE;
 
-public class InputBlock extends AbstractBlock {
+public class InputBlock extends ExpressionBlock {
 
     public InputBlock(Point offset) {
         super(INPUT_BLOCK);
