@@ -80,13 +80,9 @@ public class LabelBlock extends AbstractBlock {
     }
 
     @Override
-    public Point[] getInputPins() {
-        return null;
-    }
+    public Point[] getInputPins() { return null; }
 
     @Override
-    public Point[] getOutputPins() {
-        return null;
-    }
+    public Point[] getOutputPins() { return null; }
 
 }

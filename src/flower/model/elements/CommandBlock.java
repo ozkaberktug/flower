@@ -1,5 +1,6 @@
 package flower.model.elements;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -59,12 +60,16 @@ public class CommandBlock extends AbstractBlock {
         JTextArea codeArea = new JTextArea(code, 5, 40);
         codeArea.setFont(CODE_FONT);
         JScrollPane codeScrollPane = new JScrollPane(codeArea);
+        JCheckBox bpCheckBox = new JCheckBox("Set breakpoint");
+        bpCheckBox.setSelected(breakpoint);
 
-        final JComponent[] inputs = new JComponent[]{new JLabel("Enter statement:"), codeScrollPane};
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter statements:"), codeScrollPane, bpCheckBox};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
-        if (result == JOptionPane.OK_OPTION && !codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+"))
-            saveChanges(codeArea.getText());
+        if (result == JOptionPane.OK_OPTION) {
+            if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) saveChanges(codeArea.getText());
+            breakpoint = bpCheckBox.isSelected();
+        }
     }
 
     @Override
