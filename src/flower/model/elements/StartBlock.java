@@ -10,7 +10,7 @@ import java.awt.geom.RoundRectangle2D;
 import static flower.view.ViewConstants.HEAD_FONT;
 import static flower.view.ViewConstants.TILESIZE;
 
-public class StartBlock extends AbstractBlock {
+public class StartBlock extends SentinelBlock {
 
     public StartBlock(Point offset) {
         super(START_BLOCK);
@@ -42,11 +42,7 @@ public class StartBlock extends AbstractBlock {
         graphics2D.drawString(code, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(code)) / 2, (area.y * TILESIZE) + (area.height * TILESIZE + fm.getAscent()) / 2);
     }
 
-    @Override
-    public void showDialog() { }
 
-    @Override
-    public void normalizeSize() { }
 
     @Override
     public Shape getShape() {
