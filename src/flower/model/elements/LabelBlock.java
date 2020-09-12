@@ -63,15 +63,9 @@ public class LabelBlock extends AbstractBlock {
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION && !codeField.getText().isEmpty() && !codeField.getText().matches("\\s+"))
-            saveChanges(codeField.getText());
+            saveChanges(codeField.getText(), code.length() / 2, 1);
     }
 
-
-    @Override
-    public void normalizeSize() {
-        area.width = code.length() / 2;
-        if (area.width % 2 == 0) area.width++;
-    }
 
     @Override
     public Shape getShape() {

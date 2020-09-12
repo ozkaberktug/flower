@@ -21,7 +21,4 @@ abstract public class SentinelBlock extends AbstractBlock {
         if (result == JOptionPane.OK_OPTION) breakpoint = bpCheckBox.isSelected();
     }
 
-    @Override
-    public void normalizeSize() { }
-
 }

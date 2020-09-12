@@ -55,20 +55,23 @@ abstract public class AbstractBlock extends ChartElement {
     }
 
     abstract public void showDialog();
-    abstract public void normalizeSize();
-    protected void saveChanges(String newCode) {
+    protected void saveChanges(String newCode, int w, int h) {
         App.getInstance().project.add(new Command() {
             final String backup = code;
+            final int backupW = area.width;
+            final int backupH = area.height;
             @Override
             public void execute() {
                 code = newCode;
-                normalizeSize();
+                area.width = w;
+                area.height = h;
                 App.getInstance().statusPanel.getController().pushLog("Edited block #" + getId(), StatusPanelController.INFO);
             }
             @Override
             public void undo() {
                 code = backup;
-                normalizeSize();
+                area.width = backupW;
+                area.height = backupH;
                 App.getInstance().statusPanel.getController().pushLog("Undo: Edited block #" + getId(), StatusPanelController.INFO);
             }
         });

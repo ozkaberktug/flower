@@ -1,11 +1,16 @@
 package flower.model.elements;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextArea;
+import javax.swing.SpinnerNumberModel;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -17,7 +22,6 @@ import static flower.view.ViewConstants.TILESIZE;
 
 public class CommandBlock extends AbstractBlock {
 
-    private int codeLenMaxH = 0;
 
     public CommandBlock(Point offset) {
         super(COMMAND_BLOCK);
@@ -27,7 +31,6 @@ public class CommandBlock extends AbstractBlock {
 
     public CommandBlock(CommandBlock block) {
         super(COMMAND_BLOCK);
-        this.codeLenMaxH = block.codeLenMaxH;
         this.code = block.code;
         this.area = block.area;
         this.breakpoint = block.breakpoint;
@@ -48,7 +51,7 @@ public class CommandBlock extends AbstractBlock {
         FontMetrics fm = graphics2D.getFontMetrics();
         int index = 1;
         for (String line : code.split("\\n")) {
-            graphics2D.drawString(line, (area.x * TILESIZE) + (area.width * TILESIZE - fm.stringWidth(line)) / 2, (area.y * TILESIZE) + fm.getHeight() * index + (area.height * TILESIZE - fm.getHeight() * codeLenMaxH) / 2);
+            graphics2D.drawString(line, (area.x + 1) * TILESIZE, (area.y + 1 + index) * TILESIZE);
             index++;
         }
     }
@@ -63,28 +66,38 @@ public class CommandBlock extends AbstractBlock {
         JCheckBox bpCheckBox = new JCheckBox("Set breakpoint");
         bpCheckBox.setSelected(breakpoint);
 
-        final JComponent[] inputs = new JComponent[]{new JLabel("Enter statements:"), codeScrollPane, bpCheckBox};
+        JSpinner widthSpinner = new JSpinner(new SpinnerNumberModel(area.width, 1, 100, 1));
+        JSpinner heightSpinner = new JSpinner(new SpinnerNumberModel(area.height, 1, 100, 1));
+        JPanel spinnerPanel = new JPanel();
+        spinnerPanel.setLayout(new BoxLayout(spinnerPanel, BoxLayout.X_AXIS));
+        spinnerPanel.add(new JLabel("Width:"));
+        spinnerPanel.add(widthSpinner);
+        spinnerPanel.add(Box.createGlue());
+        spinnerPanel.add(new JLabel("Height:"));
+        spinnerPanel.add(heightSpinner);
+
+        final JComponent[] inputs = new JComponent[]{new JLabel("Enter statements:"), codeScrollPane, spinnerPanel, bpCheckBox};
         int result = JOptionPane.showConfirmDialog(null, inputs, title, JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
 
         if (result == JOptionPane.OK_OPTION) {
-            if (!codeArea.getText().isEmpty() && !codeArea.getText().matches("\\s+")) saveChanges(codeArea.getText());
+            saveChanges(codeArea.getText(), (int) widthSpinner.getValue(), (int) heightSpinner.getValue());
             breakpoint = bpCheckBox.isSelected();
         }
     }
 
-    @Override
-    public void normalizeSize() {
-        codeLenMaxH = 0;
-        int codeLenMaxW = 0;
-        for (String line : code.split("\\n")) {
-            if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
-            codeLenMaxH++;
-        }
-        area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
-        if (area.width % 2 == 0) area.width++;
-        area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
-        if (area.height % 2 == 0) area.height++;
-    }
+//    @Override
+//    public void normalizeSize() {
+//        codeLenMaxH = 0;
+//        int codeLenMaxW = 0;
+//        for (String line : code.split("\\n")) {
+//            if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
+//            codeLenMaxH++;
+//        }
+//        area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
+//        if (area.width % 2 == 0) area.width++;
+//        area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
+//        if (area.height % 2 == 0) area.height++;
+//    }
 
     @Override
     public Shape getShape() {

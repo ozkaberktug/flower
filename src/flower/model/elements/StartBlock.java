@@ -43,7 +43,6 @@ public class StartBlock extends SentinelBlock {
     }
 
 
-
     @Override
     public Shape getShape() {
         return new RoundRectangle2D.Float(area.x * TILESIZE, area.y * TILESIZE, area.width * TILESIZE, area.height * TILESIZE, TILESIZE * 2, TILESIZE * 2);

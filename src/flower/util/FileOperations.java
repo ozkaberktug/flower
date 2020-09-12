@@ -189,7 +189,7 @@ public class FileOperations {
                 block.setId(id);
                 block.setInnerBounds(new Rectangle(Integer.parseInt(area[0]), Integer.parseInt(area[1]), Integer.parseInt(area[2]), Integer.parseInt(area[3])));
                 block.setCode(code);
-                block.normalizeSize();
+//                block.normalizeSize();
                 App.getInstance().project.blocks.add(block);
             }
 
