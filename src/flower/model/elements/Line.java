@@ -84,6 +84,7 @@ public class Line extends ChartElement {
         return false;
     }
 
+    @Override
     public void draw(Graphics2D graphics2D) {
         graphics2D.setStroke(BOLD_STROKE);
         if (ghost) graphics2D.setColor(Color.GRAY);

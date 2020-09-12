@@ -380,19 +380,6 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
         });
     }
 
-    @Override
-    public void mouseEntered(MouseEvent e) {
-        App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-        App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-        if (hoveringBlock != null) {
-            hoveringBlock.setHovered(false);
-            hoveringBlock = null;
-        }
-    }
 
     @Override
     public void mouseDragged(MouseEvent mouseEvent) {
@@ -423,6 +410,20 @@ public class DrawPanelController implements MouseMotionListener, MouseListener, 
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+        App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+        App.getInstance().drawPanel.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+        if (hoveringBlock != null) {
+            hoveringBlock.setHovered(false);
+            hoveringBlock = null;
+        }
     }
 
     @Override

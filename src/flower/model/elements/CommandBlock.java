@@ -11,7 +11,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.SpinnerNumberModel;
-import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -48,7 +47,6 @@ public class CommandBlock extends AbstractBlock {
     @Override
     public void draw(Graphics2D graphics2D) {
         super.draw(graphics2D);
-        FontMetrics fm = graphics2D.getFontMetrics();
         int index = 1;
         for (String line : code.split("\\n")) {
             graphics2D.drawString(line, (area.x + 1) * TILESIZE, (area.y + 1 + index) * TILESIZE);
@@ -63,6 +61,7 @@ public class CommandBlock extends AbstractBlock {
         JTextArea codeArea = new JTextArea(code, 5, 40);
         codeArea.setFont(CODE_FONT);
         JScrollPane codeScrollPane = new JScrollPane(codeArea);
+
         JCheckBox bpCheckBox = new JCheckBox("Set breakpoint");
         bpCheckBox.setSelected(breakpoint);
 
@@ -84,20 +83,6 @@ public class CommandBlock extends AbstractBlock {
             breakpoint = bpCheckBox.isSelected();
         }
     }
-
-//    @Override
-//    public void normalizeSize() {
-//        codeLenMaxH = 0;
-//        int codeLenMaxW = 0;
-//        for (String line : code.split("\\n")) {
-//            if (line.length() > codeLenMaxW) codeLenMaxW = line.length();
-//            codeLenMaxH++;
-//        }
-//        area.width = Math.max((int) (codeLenMaxW * 0.5f), 9);
-//        if (area.width % 2 == 0) area.width++;
-//        area.height = Math.max((int) (codeLenMaxH * 1.3f), 5);
-//        if (area.height % 2 == 0) area.height++;
-//    }
 
     @Override
     public Shape getShape() {
