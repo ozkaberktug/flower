@@ -15,10 +15,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.event.HyperlinkEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import static flower.view.ViewConstants.CODE_FONT;
 
@@ -195,8 +198,20 @@ public class Dialogs {
     public static void showAboutDialog() {
         try {
             JEditorPane editorPane = new JEditorPane();
+            editorPane.setEditorKit(JEditorPane.createEditorKitForContentType("text/html"));
             editorPane.setEditable(false);
             editorPane.setPage(ResourceManager.ABOUT_PAGE);
+            editorPane.addHyperlinkListener(e -> {
+                if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                    if (Desktop.isDesktopSupported()) {
+                        try {
+                            Desktop.getDesktop().browse(e.getURL().toURI());
+                        } catch (IOException | URISyntaxException ioException) {
+                            JOptionPane.showMessageDialog(App.getInstance(), "Please visit github.com/ozkaberktug/flower");
+                        }
+                    }
+                }
+            });
             JScrollPane editorScrollPane = new JScrollPane(editorPane);
             editorScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
             editorScrollPane.setPreferredSize(new Dimension(400, 500));
